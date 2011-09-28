@@ -1,6 +1,6 @@
 This is a [Sublime Text][1] plugin which makes writing [JSDoc comments][2] a little bit easier.
 
-The installing the plugin will assist by automatically adding code as you type:
+Installing the plugin will assist by automatically adding code as you type:
 
 Below are some examples of what the plugin does. The pipe (`|`) indicates where the cursor will be after the action has run.
 
@@ -96,6 +96,13 @@ Exhaustively, these tags are:
 - `{@link}`
 
 This is my first package for Sublime Text, so I heartily welcome feedback and [feature requests or bug reports][4].
+
+## Installation ##
+
+Go to your Sublime Text 2 Packages directory and clone the repository using the command below:
+
+    git clone https://github.com/spadgos/sublime-jsdocs.git JSDocs
+
 
 [1]: http://www.sublimetext.com/
 [2]: http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
