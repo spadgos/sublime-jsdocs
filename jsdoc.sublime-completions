@@ -5,7 +5,6 @@
         { "trigger" : "@param",         "contents": "@param {${1:type}} ${2:varname} ${3:description}" },
         { "trigger" : "@return",        "contents": "@return {${1:type}} ${2:description}" },
         { "trigger" : "@author",        "contents": "@author ${1:author}" },
-
         { "trigger" : "@augments",      "contents": "@augments {${1:type}}"},
         { "trigger" : "@borrows",       "contents": "@borrows ${1:otherMemberName} as ${1:thisMemberName}"},
         { "trigger" : "@class",         "contents": "@class {$1:description}"},
