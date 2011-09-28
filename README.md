@@ -1,8 +1,8 @@
-This is a [Sublime Text][1] plugin which makes writing [JSDoc comments][2] a little bit easier.
+This is a [Sublime Text][1] package which makes writing [JSDoc comments][2] a little bit easier.
 
-Installing the plugin will assist by automatically adding code as you type:
+Installing the package will assist by automatically adding code as you type:
 
-Below are some examples of what the plugin does. The pipe (`|`) indicates where the cursor will be after the action has run.
+Below are some examples of what the package does. The pipe (`|`) indicates where the cursor will be after the action has run.
 
 Pressing enter after `/**` will yield a new line and will close the comment for you.
 
@@ -38,11 +38,11 @@ Pressing enter inside a docblock will automatically insert a leading asterisk an
 
     /**
      *  @param foo Lorem ipsum dolor sit amet, consectetur
-     *             adipisicing elit, sed do eiusmod tempor<<enter>>
+     *             adipisicing elit, sed do eiusmod tempor
      *             |
      */
 
-Finally, typing `@` inside a docblock will show a completion list for all tags supported by [JSDoc][2] or the [Google Closure Compiler][3]. Extra help is provided for each of these tags by prefilling the arguments each expects. Pressing tab will move the cursor to the next argument.
+Finally, typing `@` inside a docblock will show a completion list for all tags supported by [JSDoc][2] or the [Google Closure Compiler][3]. Extra help is provided for each of these tags by prefilling the arguments each expects. Pressing `tab` will move the cursor to the next argument.
 
 Exhaustively, these tags are:
 
