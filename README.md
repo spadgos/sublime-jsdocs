@@ -1,4 +1,4 @@
-This is a [Sublime Text][1] package which makes writing [JSDoc comments][2] a little bit easier.
+This is a [Sublime Text][sublime] package which makes writing [JSDoc comments][jsdoc] a little bit easier.
 
 Installing the package will assist by automatically adding code as you type:
 
@@ -42,7 +42,7 @@ Pressing enter inside a docblock will automatically insert a leading asterisk an
      *             |
      */
 
-Finally, typing `@` inside a docblock will show a completion list for all tags supported by [JSDoc][2] or the [Google Closure Compiler][3]. Extra help is provided for each of these tags by prefilling the arguments each expects. Pressing `tab` will move the cursor to the next argument.
+Finally, typing `@` inside a docblock will show a completion list for all tags supported by [JSDoc][jsdoc] or the [Google Closure Compiler][closure]. Extra help is provided for each of these tags by prefilling the arguments each expects. Pressing `tab` will move the cursor to the next argument.
 
 Exhaustively, these tags are:
 
@@ -95,16 +95,23 @@ Exhaustively, these tags are:
 - `@version`
 - `{@link}`
 
-This is my first package for Sublime Text, so I heartily welcome feedback and [feature requests or bug reports][4].
+This is my first package for Sublime Text, so I heartily welcome feedback and [feature requests or bug reports][issues].
 
 ## Installation ##
+
+### With Package Control ###
+
+If you have the [Package Control][package_control] package installed, you can install JSDocs from inside Sublime Text itself. Open the Command Palette and select "Package Control: Install Package", then search for JSDocs and you're done!
+
+### Without Package Control ###
 
 Go to your Sublime Text 2 Packages directory and clone the repository using the command below:
 
     git clone https://github.com/spadgos/sublime-jsdocs.git JSDocs
 
 
-[1]: http://www.sublimetext.com/
-[2]: http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
-[3]: http://code.google.com/closure/compiler/docs/js-for-compiler.html
-[4]: https://github.com/spadgos/sublime-jsdocs/issues
+[sublime]: http://www.sublimetext.com/
+[jsdoc]: http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
+[closure]: http://code.google.com/closure/compiler/docs/js-for-compiler.html
+[issues]: https://github.com/spadgos/sublime-jsdocs/issues
+[package_control]: http://wbond.net/sublime_packages/package_control
