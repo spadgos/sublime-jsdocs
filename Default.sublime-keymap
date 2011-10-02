@@ -1,5 +1,5 @@
 [
-    { "keys": ["enter"], "command": "insert_snippet", "args": {"contents": "\n *  $0\n */"}, "context" :
+    { "keys": ["enter"], "command": "prefill_params", "context" :
         [
             { "key": "setting.auto_indent", "operator": "equal", "operand": true },
             { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
