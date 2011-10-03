@@ -63,7 +63,7 @@ class PrefillParamsCommand(sublime_plugin.TextCommand):
                 name = res.group('name1') or res.group('name2')
                 args = res.group('args')
 
-                out.append("${%d:%s description}" % (tabIndex.next(), name))
+                out.append("${%d:[%s description]}" % (tabIndex.next(), name))
 
                 def replaceUserTabs(m):
                     return "%s%d%s" % (m.group(1), tabIndex.next(), m.group(2))
@@ -77,11 +77,11 @@ class PrefillParamsCommand(sublime_plugin.TextCommand):
                     # remove comments inside the argument list.
                     args = re.sub("/\*.*?\*/", '', args)
                     for arg in re.split('\s*,\s*', args):
-                        out.append("@param {${%d:type}} %s ${%d:description}" % (tabIndex.next(), arg, tabIndex.next()))
+                        out.append("@param {${%d:[type]}} %s ${%d:[description]}" % (tabIndex.next(), arg, tabIndex.next()))
 
                 # unless the function starts with 'set' or 'add', add a @return tag
                 if not re.match('[$_]?(?:set|add)[A-Z_]', name):
-                    out.append("@return {${%d:type}}" % (tabIndex.next()))
+                    out.append("@return {${%d:[type]}}" % (tabIndex.next()))
 
                 if alignTags:
                     maxWidth = 0

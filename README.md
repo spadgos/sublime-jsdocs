@@ -36,10 +36,10 @@ However, if the line directly afterwards contains a function definition, then it
     -- becomes --
 
     /**
-     * foobar description
-     * @param  {type} baz description
-     * @param  {type} quux description
-     * @return {type}
+     * [foobar description]
+     * @param  {[type]} baz [description]
+     * @param  {[type]} quux [description]
+     * @return {[type]}
      */
     function foobar (baz, quux) { }
 
@@ -83,21 +83,29 @@ Finally, typing `@` inside a docblock will show a completion list for all tags s
 
 Exhaustively, these tags are:
 
-    @param, @return, @author, @augments, @borrows, @class, @const,
-    @constant, @constructor, @constructs, @default, @define,
-    @deprecated, @description, @enum, @event, @example, @extends, 
-    @field, @fileOverview, @function, @ignore, @implements, 
-    @inheritDoc, @inner, @interface, @lends, @license, @memberOf, 
-    @name, @namespace, @nosideeffects, @override, @preserve, 
-    @private, @property, @protected, @public, @requires, @see, 
-    @since, @static, @this, @throws, @type, @typedef, @version, 
-    {@link}
+    @param, @return, @author,
+    @augments,
+    @borrows,
+    @class, @const, @constant, @constructor, @constructs,
+    @default, @define, @deprecated, @description,
+    @enum, @event, @example, @extends,
+    @field, @fileOverview, @function,
+    @ignore, @implements, @inheritDoc, @inner, @interface,
+    @lends, @license, {@link}
+    @memberOf,
+    @name, @namespace, @nosideeffects,
+    @override,
+    @preserve, @private, @property, @protected, @public,
+    @requires,
+    @see, @since, @static,
+    @this, @throws, @type, @typedef,
+    @version
 
 ## Configuration ##
 
 You can access the configuration settings by selecting `Prefences -> Package Settings -> JSDocs`. Currently there are three settings:
 
-- **`indentation_spaces`** *(Number)* the number of spaces to indent after the leading asterisk.
+- **`indentation_spaces`** *(Number)* The number of spaces to indent after the leading asterisk.
 
         // indentation_spaces = 1
         /**
@@ -109,7 +117,7 @@ You can access the configuration settings by selecting `Prefences -> Package Set
          *     foo
          */
 
-- **`align_tags`** *(Boolean)* whether to align the text following the tags.
+- **`align_tags`** *(Boolean)* Whether to align the text following the tags.
 
         // align_tags = false
         /**
@@ -125,16 +133,17 @@ You can access the configuration settings by selecting `Prefences -> Package Set
 
 - **`extra_tags`** *(Array.String)* An array of strings, each representing extra boilerplate comments to add to *functions*. These can also include arbitrary text (not just tags).
 
-        // extra_tags = ['This is a cool function', '@author nickf']
+        // extra_tags = ['This is a cool function', '@author nickf', '@version ${1:version}']
         /**<<enter>>
         function foo (x) {}
 
         /**
-         * foo description
+         * [foo description]
          * This is a cool function
          * @author nickf
-         * @param  {type} x description
-         * @return {type}
+         * @version [version]
+         * @param  {[type]} x [description]
+         * @return {[type]}
          */
         function foo (x) {}
 
