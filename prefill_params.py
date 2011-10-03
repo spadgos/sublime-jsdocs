@@ -62,8 +62,11 @@ class PrefillParamsCommand(sublime_plugin.TextCommand):
                 # grab the name out of "name1 = function name2(foo)" preferring name1
                 name = res.group('name1') or res.group('name2')
                 args = res.group('args')
+                isClass = re.match("[A-Z]", name)
 
                 out.append("${%d:[%s description]}" % (tabIndex.next(), name))
+                if isClass:
+                    out.append("@class ${%d:[description]}" % (tabIndex.next()))
 
                 def replaceUserTabs(m):
                     return "%s%d%s" % (m.group(1), tabIndex.next(), m.group(2))
@@ -80,7 +83,7 @@ class PrefillParamsCommand(sublime_plugin.TextCommand):
                         out.append("@param {${%d:[type]}} %s ${%d:[description]}" % (tabIndex.next(), arg, tabIndex.next()))
 
                 # unless the function starts with 'set' or 'add', add a @return tag
-                if not re.match('[$_]?(?:set|add)[A-Z_]', name):
+                if not isClass and not re.match('[$_]?(?:set|add)[A-Z_]', name):
                     out.append("@return {${%d:[type]}}" % (tabIndex.next()))
 
                 if alignTags:

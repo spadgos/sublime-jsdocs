@@ -47,6 +47,8 @@ You can then press `tab` to move between the different fields.
 
 If the function name begins with "set" or "add", then no `@return` is inserted.
 
+If the function name begins with an uppercase letter `[A-Z]`, then it is assumed that the function is a class definition. No `@return` tag is added - instead replaced with `@class`.
+
 ### Writing extra documentation ###
 
 Pressing enter inside a docblock will automatically insert a leading asterisk and maintain your indentation.
