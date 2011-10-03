@@ -7,7 +7,7 @@
         { "trigger" : "@author",        "contents": "@author ${1:author}" },
         { "trigger" : "@augments",      "contents": "@augments {${1:type}}"},
         { "trigger" : "@borrows",       "contents": "@borrows ${1:otherMemberName} as ${1:thisMemberName}"},
-        { "trigger" : "@class",         "contents": "@class {$1:description}"},
+        { "trigger" : "@class",         "contents": "@class ${1:description}"},
         { "trigger" : "@const",         "contents": ""},
         { "trigger" : "@constant",      "contents": ""},
         { "trigger" : "@constructor",   "contents": ""},
