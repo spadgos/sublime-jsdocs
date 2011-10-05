@@ -31,6 +31,36 @@ def escape(str):
     return string.replace(str, '$', '\$')
 
 
+def is_numeric(val):
+    try:
+        float(val)
+        return True
+    except ValueError:
+        return False
+
+
+def guessType(val):
+    if not val or val == '':  # quick short circuit
+        return '[type]'
+    if is_numeric(val):
+        return "Number"
+    elif val[0] == '"' or val[0] == "'":
+        return "String"
+    elif val[0] == '[':
+        return "Array"
+    elif val[0] == '{':
+        return "Object"
+    elif val == 'true' or val == 'false':
+        return 'Boolean'
+    elif re.match('RegExp\\b|\\/[^\\/]', val):
+        return 'RegExp'
+    elif val[:4] == 'new ':
+        res = re.search('new ([a-zA-Z_$][a-zA-Z_$0-9]*)', val)
+        return res.group(1)
+    else:
+        return '[type]'
+
+
 class JsdocsCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
@@ -39,79 +69,119 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         point = v.sel()[0].end()
         indentSpaces = max(0, settings.get("indentation_spaces", 1))
         alignTags = settings.get("align_tags", True)
-        extraTags = settings.get('extra_tags', [])
         prefix = "\n*" + (" " * indentSpaces)
-        tabIndex = counter()
-        out = []
+
+        # part of a regex. this detects a valid identifier
+        self.identifier = '[a-zA-Z_$][a-zA-Z_$0-9]*'
 
         # read the next line
         line = read_next_line(v, point + 1)
+        out = None
 
         # write the first linebreak and star. this sets the indentation for the following snippets
         write(v, "\n *" + (" " * indentSpaces))
 
         # if there is a line following this
-        if (line):
+        if line:
             # match against a javascript function declaration. TODO: extend for other languages
-            res = re.search(
-                #   fnName = function,  fnName : function
-                '(?:(?P<name1>[a-zA-Z_$][a-zA-Z_$0-9]*)\s*[:=]\s*)?'
-                + 'function'
-                # function fnName
-                + '(?:\s+(?P<name2>[a-zA-Z_$][a-zA-Z_$0-9]*))?'
-                # (arg1, arg2)
-                + '\s*\((?P<args>.*)\)',
-                line
-            )
-            if (res):
-                # grab the name out of "name1 = function name2(foo)" preferring name1
-                name = escape(res.group('name1') or res.group('name2') or '')
-                args = res.group('args')
-                isClass = re.match("[A-Z]", name)
+            out = self.parseFunction(line) or self.parseVar(line)
 
-                out.append("${%d:[%s description]}" % (tabIndex.next(), name))
-                if isClass:
-                    out.append("@class ${%d:[description]}" % (tabIndex.next()))
+        if out:
+            if alignTags:
+                maxWidth = 0
+                regex = re.compile("(@\S+)")
+                for line in out:
+                    res = regex.match(line)
+                    if res:
+                        maxWidth = max(maxWidth, res.end())
 
-                def replaceUserTabs(m):
-                    return "%s%d%s" % (m.group(1), tabIndex.next(), m.group(2))
+                for index, line in enumerate(out):
+                    res = regex.match(line)
+                    if res:
+                        out[index] = line[:res.end()] \
+                            + (" " * (1 + maxWidth - res.end())) \
+                            + line[res.end():].strip(' \t')
 
-                for index, extra in enumerate(extraTags):
-                    extraTags[index] = re.sub("(\$\{)\d*(:[^}]+})", replaceUserTabs, extra)
-                out.extend(extraTags)
-
-                # if there are arguments, add a @param for each
-                if (args):
-                    # remove comments inside the argument list.
-                    args = re.sub("/\*.*?\*/", '', args)
-                    for arg in re.split('\s*,\s*', args):
-                        out.append("@param {${%d:[type]}} %s ${%d:[description]}" % (
-                            tabIndex.next(),
-                            escape(arg),
-                            tabIndex.next()
-                        ))
-
-                # unless the function starts with 'set' or 'add', add a @return tag
-                if not isClass and not re.match('[$_]?(?:set|add)[A-Z_]', name):
-                    out.append("@return {${%d:[type]}}" % (tabIndex.next()))
-
-                if alignTags:
-                    maxWidth = 0
-                    regex = re.compile("(@\S+)")
-                    for line in out:
-                        res = regex.match(line)
-                        if res:
-                            maxWidth = max(maxWidth, res.end())
-
-                    for index, line in enumerate(out):
-                        res = regex.match(line)
-                        if res:
-                            out[index] = line[:res.end()] \
-                                + (" " * (1 + maxWidth - res.end())) \
-                                + line[res.end():].strip(' \t')
-
-                write(v, prefix.join(out) + "\n*/")
-
-        # if there was no line, or no match, then just close the comment and carry on
-        if not line or not res:
+            write(v, prefix.join(out) + "\n*/")
+        else:
             write(v, "$0\n*/")
+
+    def parseFunction(self, line):
+
+        res = re.search(
+            #   fnName = function,  fnName : function
+            '(?:(?P<name1>' + self.identifier + ')\s*[:=]\s*)?'
+            + 'function'
+            # function fnName
+            + '(?:\s+(?P<name2>' + self.identifier + '))?'
+            # (arg1, arg2)
+            + '\s*\((?P<args>.*)\)',
+            line
+        )
+        if not res:
+            return None
+
+        settings = sublime.load_settings("jsdocs.sublime-settings")
+        extraTags = settings.get('extra_tags', [])
+
+        # grab the name out of "name1 = function name2(foo)" preferring name1
+        name = escape(res.group('name1') or res.group('name2') or '')
+        args = res.group('args')
+        isClass = re.match("[A-Z]", name)
+        tabIndex = counter()
+        out = []
+
+        out.append("${%d:[%s description]}" % (tabIndex.next(), name))
+        if isClass:
+            out.append("@class ${%d:[description]}" % (tabIndex.next()))
+
+        def replaceUserTabs(m):
+            return "%s%d%s" % (m.group(1), tabIndex.next(), m.group(2))
+
+        for index, extra in enumerate(extraTags):
+            extraTags[index] = re.sub("(\$\{)\d*(:[^}]+})", replaceUserTabs, extra)
+        out.extend(extraTags)
+
+        # if there are arguments, add a @param for each
+        if (args):
+            # remove comments inside the argument list.
+            args = re.sub("/\*.*?\*/", '', args)
+            for arg in re.split('\s*,\s*', args):
+                out.append("@param {${%d:[type]}} %s ${%d:[description]}" % (
+                    tabIndex.next(),
+                    escape(arg.strip()),
+                    tabIndex.next()
+                ))
+
+        # unless the function starts with 'set' or 'add', add a @return tag
+        if not isClass and not re.match('[$_]?(?:set|add)[A-Z_]', name):
+            out.append("@return {${%d:[type]}}" % (tabIndex.next()))
+
+        return out
+
+    def parseVar(self, line):
+        res = re.search(
+            #   var foo = blah,
+            #       foo = blah;
+            #   baz.foo = blah;
+            #   baz = {
+            #        foo : blah
+            #   }
+
+            '\\b(?P<name>' + self.identifier + ')\s*[=:]\s*(?P<val>.*?)(?:[;,]|$)',
+            line
+        )
+        if not res:
+            return None
+
+        out = []
+        name = res.group('name')
+        val = res.group('val').strip()
+        tabIndex = counter()
+
+        valType = guessType(val)
+
+        out.append("${%d:[%s description]}" % (tabIndex.next(), name))
+        out.append("@type {${%d:%s}}" % (tabIndex.next(), valType))
+
+        return out
