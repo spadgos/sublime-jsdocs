@@ -63,13 +63,15 @@ def guessType(val):
 
 class JsdocsCommand(sublime_plugin.TextCommand):
 
-    def run(self, edit):
+    def run(self, edit, inline=False):
         v = self.view
         settings = sublime.load_settings("jsdocs.sublime-settings")
         point = v.sel()[0].end()
         indentSpaces = max(0, settings.get("indentation_spaces", 1))
         alignTags = settings.get("align_tags", True)
         prefix = "\n*" + (" " * indentSpaces)
+
+        self.inline = inline
 
         # part of a regex. this detects a valid identifier
         self.identifier = '[a-zA-Z_$][a-zA-Z_$0-9]*'
@@ -78,33 +80,38 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         line = read_next_line(v, point + 1)
         out = None
 
-        # write the first linebreak and star. this sets the indentation for the following snippets
-        write(v, "\n *" + (" " * indentSpaces))
-
         # if there is a line following this
         if line:
             # match against a javascript function declaration. TODO: extend for other languages
             out = self.parseFunction(line) or self.parseVar(line)
 
-        if out:
-            if alignTags:
-                maxWidth = 0
-                regex = re.compile("(@\S+)")
-                for line in out:
-                    res = regex.match(line)
-                    if res:
-                        maxWidth = max(maxWidth, res.end())
+        if out and alignTags and not self.inline:
+            maxWidth = 0
+            regex = re.compile("(@\S+)")
+            for line in out:
+                res = regex.match(line)
+                if res:
+                    maxWidth = max(maxWidth, res.end())
 
-                for index, line in enumerate(out):
-                    res = regex.match(line)
-                    if res:
-                        out[index] = line[:res.end()] \
-                            + (" " * (1 + maxWidth - res.end())) \
-                            + line[res.end():].strip(' \t')
+            for index, line in enumerate(out):
+                res = regex.match(line)
+                if res:
+                    out[index] = line[:res.end()] \
+                        + (" " * (1 + maxWidth - res.end())) \
+                        + line[res.end():].strip(' \t')
 
-            write(v, prefix.join(out) + "\n*/")
+        if self.inline:
+            if out:
+                write(v, " " + out[0] + " */")
+            else:
+                write(v, " $0 */")
         else:
-            write(v, "$0\n*/")
+            # write the first linebreak and star. this sets the indentation for the following snippets
+            write(v, "\n *" + (" " * indentSpaces))
+            if out:
+                write(v, prefix.join(out) + "\n*/")
+            else:
+                write(v, "$0\n*/")
 
     def parseFunction(self, line):
 
@@ -120,6 +127,8 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         )
         if not res:
             return None
+
+        self.inline = False  # because wtf is an inline function docblock?
 
         settings = sublime.load_settings("jsdocs.sublime-settings")
         extraTags = settings.get('extra_tags', [])
@@ -180,8 +189,10 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         tabIndex = counter()
 
         valType = guessType(val)
-
-        out.append("${%d:[%s description]}" % (tabIndex.next(), name))
-        out.append("@type {${%d:%s}}" % (tabIndex.next(), valType))
+        if self.inline:
+            out.append("@type {${%d:%s}} ${%d:[description]}" % (tabIndex.next(), valType, tabIndex.next()))
+        else:
+            out.append("${%d:[%s description]}" % (tabIndex.next(), name))
+            out.append("@type {${%d:%s}}" % (tabIndex.next(), valType))
 
         return out
