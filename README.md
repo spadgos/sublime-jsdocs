@@ -12,6 +12,19 @@ Go to your Sublime Text 2 Packages directory and clone the repository using the 
 
     git clone https://github.com/spadgos/sublime-jsdocs.git JSDocs
 
+## Changelog ##
+
+- **v1.2.0**, *6 October 2011*
+  - Variable declarations can be documented. `Shift+enter` to make these inline
+  - Double slash comments (`// like this`) are extended when `enter` is pressed
+  - Class definitions detected and treated slightly differently (no return values pre-filled)
+- **v1.1.0**, *3 October 2011*
+  - JSDocs parses the line following the comment to automatically prefill some documentation for you.
+  - Settings available via menu
+- **v1.0.0**, *28 September 2011*
+  - Initial release
+  - Comments are automatically closed, extended and indented.
+
 ## Usage ##
 
 > Below are some examples of what the package does. The pipe (`|`) indicates where the cursor will be after the action has run. Note that there are no keyboard shortcuts required to trigger these completions - just type as normal and it happens for you!
@@ -49,7 +62,31 @@ If the function name begins with "set" or "add", then no `@return` is inserted.
 
 If the function name begins with an uppercase letter `[A-Z]`, then it is assumed that the function is a class definition. No `@return` tag is added - instead replaced with `@class`.
 
-### Writing extra documentation ###
+### Variable documentation ###
+
+If the line following your docblock contains a variable declaration, JSDocs will try to determine the data type of the variable and insert that into the comment.
+
+    /**<<enter>>
+    foo = 1
+
+    -- becomes --
+
+    /**
+     * [foo description]
+     * @type {Number}
+     */
+    foo = 1
+
+If you press `shift+enter` after the opening `/**` then the docblock will be inserted inline.
+
+    /**<<shift+enter>>
+    bar = new Module();
+
+    -- becomes --
+    /** @type {Module} [bar description] */
+    bar = new Module();
+
+### Comment extension ###
 
 Pressing enter inside a docblock will automatically insert a leading asterisk and maintain your indentation.
 
@@ -78,6 +115,17 @@ Pressing enter inside a docblock will automatically insert a leading asterisk an
      *             adipisicing elit, sed do eiusmod tempor
      *             |
      */
+
+This applies to docblock comments `/** like this */` as well as inline double-slash comments `// like this`
+
+    //   foo<<enter>>
+
+    -- becomes
+
+    //   foo
+    //   |
+
+In either case, you can press `shift+enter` to stop the automatic extension.
 
 ### Adding extra tags ###
 
