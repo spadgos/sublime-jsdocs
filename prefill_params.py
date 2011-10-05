@@ -1,6 +1,7 @@
 import sublime
 import sublime_plugin
 import re
+import string
 
 
 def read_next_line(view, point):
@@ -24,6 +25,10 @@ def counter():
     while True:
         count += 1
         yield(count)
+
+
+def escape(str):
+    return string.replace(str, '$', '\$')
 
 
 class PrefillParamsCommand(sublime_plugin.TextCommand):
@@ -60,7 +65,7 @@ class PrefillParamsCommand(sublime_plugin.TextCommand):
             )
             if (res):
                 # grab the name out of "name1 = function name2(foo)" preferring name1
-                name = res.group('name1') or res.group('name2')
+                name = escape(res.group('name1') or res.group('name2'))
                 args = res.group('args')
                 isClass = re.match("[A-Z]", name)
 
@@ -80,7 +85,11 @@ class PrefillParamsCommand(sublime_plugin.TextCommand):
                     # remove comments inside the argument list.
                     args = re.sub("/\*.*?\*/", '', args)
                     for arg in re.split('\s*,\s*', args):
-                        out.append("@param {${%d:[type]}} %s ${%d:[description]}" % (tabIndex.next(), arg, tabIndex.next()))
+                        out.append("@param {${%d:[type]}} %s ${%d:[description]}" % (
+                            tabIndex.next(),
+                            escape(arg),
+                            tabIndex.next()
+                        ))
 
                 # unless the function starts with 'set' or 'add', add a @return tag
                 if not isClass and not re.match('[$_]?(?:set|add)[A-Z_]', name):
