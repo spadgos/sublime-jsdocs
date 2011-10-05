@@ -31,7 +31,7 @@ def escape(str):
     return string.replace(str, '$', '\$')
 
 
-class PrefillParamsCommand(sublime_plugin.TextCommand):
+class JsdocsCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
         v = self.view
@@ -65,7 +65,7 @@ class PrefillParamsCommand(sublime_plugin.TextCommand):
             )
             if (res):
                 # grab the name out of "name1 = function name2(foo)" preferring name1
-                name = escape(res.group('name1') or res.group('name2'))
+                name = escape(res.group('name1') or res.group('name2') or '')
                 args = res.group('args')
                 isClass = re.match("[A-Z]", name)
 
