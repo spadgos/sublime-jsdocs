@@ -162,9 +162,13 @@ class JsdocsCommand(sublime_plugin.TextCommand):
                     tabIndex.next()
                 ))
 
-        # unless the function starts with 'set' or 'add', add a @return tag
-        if not isClass and not re.match('[$_]?(?:set|add)[A-Z_]', name):
-            out.append("@return {${%d:[type]}}" % (tabIndex.next()))
+        if not isClass:
+            # unless the function starts with 'set' or 'add', add a @return tag
+            if not re.match('[$_]?(?:set|add)[A-Z_]', name):
+                retType = '[type]'
+                if re.match('[$_]?(?:is|has)[A-Z_]', name):  # functions starting with 'is' or 'has'
+                    retType = 'Boolean'
+                out.append("@return {${%d:%s}}" % (tabIndex.next(), retType))
 
         return out
 
