@@ -4,7 +4,7 @@ import re
 import string
 
 
-def read_next_line(view, point):
+def read_line(view, point):
     if (point >= view.size()):
         return
 
@@ -76,7 +76,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         self.identifier = '[a-zA-Z_$][a-zA-Z_$0-9]*'
 
         # read the next line
-        line = read_next_line(v, point + 1)
+        line = read_line(v, point + 1)
         out = None
 
         # if there is a line following this
@@ -206,3 +206,16 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
     def isExistingComment(self, line):
         return re.search('^\\s*\\*', line)
+
+
+class JsdocsIndentCommand(sublime_plugin.TextCommand):
+
+    def run(self, edit):
+        v = self.view
+        currPos = v.sel()[0].begin()
+        currLineRegion = v.line(currPos)
+        currLine = v.substr(currLineRegion)
+        prevLine = v.substr(v.line(v.line(currPos).begin() - 1))
+        res = re.search("^\\s*\\*(?P<fromStar>\\s*@param\\s+{[^}]+}\\s+[a-zA-Z_$][a-zA-Z_$0-9]*\\s+)", prevLine)
+        replacement = re.sub("(\\s+\\*)(\\s*)", '\\1' + (' ' * len(res.group('fromStar'))), currLine)
+        v.replace(edit, currLineRegion, replacement)
