@@ -1,3 +1,10 @@
 {
+  // If true, when in a docblock, pressing tab after a @tag line (like @param, @return)
+  // will indent to the description. This is useful if you are writing a long description
+  // and want that block of text to stay aligned.
+  "jsdocs_deep_indent": true,
+
+  // If true, then pressing enter while in a double-slash comment (like this one)
+  // will automatically add two slashes to the next line as well
   "jsdocs_extend_double_slash": true
 }
