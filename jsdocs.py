@@ -44,21 +44,20 @@ def guessType(val):
         return '[type]'
     if is_numeric(val):
         return "Number"
-    elif val[0] == '"' or val[0] == "'":
+    if val[0] == '"' or val[0] == "'":
         return "String"
-    elif val[0] == '[':
+    if val[0] == '[':
         return "Array"
-    elif val[0] == '{':
+    if val[0] == '{':
         return "Object"
-    elif val == 'true' or val == 'false':
+    if val == 'true' or val == 'false':
         return 'Boolean'
-    elif re.match('RegExp\\b|\\/[^\\/]', val):
+    if re.match('RegExp\\b|\\/[^\\/]', val):
         return 'RegExp'
-    elif val[:4] == 'new ':
+    if val[:4] == 'new ':
         res = re.search('new ([a-zA-Z_$][a-zA-Z_$0-9]*)', val)
         return res.group(1)
-    else:
-        return '[type]'
+    return '[type]'
 
 
 class JsdocsCommand(sublime_plugin.TextCommand):
@@ -82,8 +81,12 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
         # if there is a line following this
         if line:
+            if self.isExistingComment(line):
+                write(v, "\n *" + (" " * indentSpaces))
+                return
             # match against a javascript function declaration. TODO: extend for other languages
-            out = self.parseFunction(line) or self.parseVar(line)
+            out = self.parseFunction(line) \
+                or self.parseVar(line)
 
         if out and alignTags and not self.inline:
             maxWidth = 0
@@ -200,3 +203,6 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             out.append("@type {${%d:%s}}" % (tabIndex.next(), valType))
 
         return out
+
+    def isExistingComment(self, line):
+        return re.search('^\\s*\\*', line)
