@@ -214,8 +214,16 @@ class JsdocsIndentCommand(sublime_plugin.TextCommand):
         v = self.view
         currPos = v.sel()[0].begin()
         currLineRegion = v.line(currPos)
-        currLine = v.substr(currLineRegion)
+        currCol = currPos - currLineRegion.begin()  # which column we're currently in
         prevLine = v.substr(v.line(v.line(currPos).begin() - 1))
-        res = re.search("^\\s*\\*(?P<fromStar>\\s*@param\\s+{[^}]+}\\s+[a-zA-Z_$][a-zA-Z_$0-9]*\\s+)", prevLine)
-        replacement = re.sub("(\\s+\\*)(\\s*)", '\\1' + (' ' * len(res.group('fromStar'))), currLine)
-        v.replace(edit, currLineRegion, replacement)
+        res = re.search("^(?P<toStar>\\s*)\\*(?P<fromStar>\\s*@param\\s+{[^}]+}\\s+[a-zA-Z_$][a-zA-Z_$0-9]*\\s+)", prevLine)
+        if not res:
+            v.run_command(
+                'insert_snippet', {
+                    'contents': "\t"
+                }
+            )
+            return
+
+        spaces = len(res.group('fromStar'))  # how many spaces there SHOULD be from the star
+        v.insert(edit, currPos, " " * (spaces - currCol + len(res.group('toStar')) + 1))
