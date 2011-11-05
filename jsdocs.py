@@ -1,3 +1,8 @@
+"""
+JSDocs v1.3.0
+by Nick Fisher
+https://github.com/spadgos/sublime-jsdocs
+"""
 import sublime
 import sublime_plugin
 import re
