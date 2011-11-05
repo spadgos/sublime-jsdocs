@@ -216,8 +216,10 @@ class JsdocsIndentCommand(sublime_plugin.TextCommand):
         currLineRegion = v.line(currPos)
         currCol = currPos - currLineRegion.begin()  # which column we're currently in
         prevLine = v.substr(v.line(v.line(currPos).begin() - 1))
-        res = re.search("^(?P<toStar>\\s*)\\*(?P<fromStar>\\s*@param\\s+{[^}]+}\\s+[a-zA-Z_$][a-zA-Z_$0-9]*\\s+)", prevLine)
-        if not res:
+        spaces = self.getIndentSpaces(prevLine)
+        toStar = len(re.search("^(\\s*\\*)", prevLine).group(1))
+        toInsert = spaces - currCol + toStar
+        if spaces is None or toInsert <= 0:
             v.run_command(
                 'insert_snippet', {
                     'contents': "\t"
@@ -225,5 +227,13 @@ class JsdocsIndentCommand(sublime_plugin.TextCommand):
             )
             return
 
-        spaces = len(res.group('fromStar'))  # how many spaces there SHOULD be from the star
-        v.insert(edit, currPos, " " * (spaces - currCol + len(res.group('toStar')) + 1))
+        v.insert(edit, currPos, " " * toInsert)
+
+    def getIndentSpaces(self, line):
+        res = re.search("^\\s*\\*(?P<fromStar>\\s*@(?:param|property)\\s+\\{[^}]+\\}\\s+\\S+\\s+)\\S", line) \
+           or re.search("^\\s*\\*(?P<fromStar>\\s*@(?:return|define)\\s+\\{[^}]+\\}\\s+)\\S", line) \
+           or re.search("^\\s*\\*(?P<fromStar>\\s*@[a-z]+\\s+)\\S", line) \
+           or re.search("^\\s*\\*(?P<fromStar>\\s*)", line)
+        if res:
+            return len(res.group('fromStar'))
+        return None
