@@ -6,5 +6,19 @@
 
   // If true, then pressing enter while in a double-slash comment (like this one)
   // will automatically add two slashes to the next line as well
-  "jsdocs_extend_double_slash": true
+  "jsdocs_extend_double_slash": true,
+
+  // the number of spaces to add after the leading *
+  "jsdocs_indentation_spaces" : 1,
+
+  // whether the words following the @tags should align, eg:
+  // @param    {Boolean}
+  // @return   {String}
+  // @property {Number}
+  "jsdocs_align_tags" : true,
+
+  // Any additional boilerplate tags which should be added to each block. Should be an array of strings.
+  // Note that this only applies when a docblock is opened directly preceding a function.
+  // Tab points can be added by using snippet syntax, eg: ${1:default text}
+  "jsdocs_extra_tags" : []
 }

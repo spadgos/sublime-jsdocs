@@ -64,10 +64,10 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, inline=False):
         v = self.view
-        settings = sublime.load_settings("jsdocs.sublime-settings")
+        settings = v.settings()
         point = v.sel()[0].end()
-        indentSpaces = max(0, settings.get("indentation_spaces", 1))
-        alignTags = settings.get("align_tags", True)
+        indentSpaces = max(0, settings.get("jsdocs_indentation_spaces", 1))
+        alignTags = settings.get("jsdocs_align_tags", True)
         prefix = "\n*" + (" " * indentSpaces)
 
         self.inline = inline
@@ -133,8 +133,8 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
         self.inline = False  # because wtf is an inline function docblock?
 
-        settings = sublime.load_settings("jsdocs.sublime-settings")
-        extraTags = settings.get('extra_tags', [])
+        settings = self.view.settings()
+        extraTags = settings.get('jsdocs_extra_tags', [])
 
         # grab the name out of "name1 = function name2(foo)" preferring name1
         name = escape(res.group('name1') or res.group('name2') or '')
