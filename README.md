@@ -12,8 +12,16 @@ Go to your Sublime Text 2 Packages directory and clone the repository using the 
 
     git clone https://github.com/spadgos/sublime-jsdocs.git JSDocs
 
+Don't forget to keep updating it, though!
+
 ## Changelog ##
 
+- **v1.3.0**, *5 November 2011*
+  - Improvements to handling of single-line comments
+  - Functions beginning with `is` or `has` are assumed to return Booleans
+  - Consolidated settings files into `Base File.sublime-settings`. **If you had configured your settings in `jsdocs.sublime-settings`, please move them to the Base File settings.**
+  - Setting `jsdocs_extend_double_slashes` controls whether single-line comments are extended.
+  - Pressing `tab` in a docblock will tab to match the description block of the previous tag. Use `jsdocs_deep_indent` to toggle this behaviour.
 - **v1.2.0**, *6 October 2011*
   - Variable declarations can be documented. `Shift+enter` to make these inline
   - Double slash comments (`// like this`) are extended when `enter` is pressed
@@ -127,6 +135,20 @@ This applies to docblock comments `/** like this */` as well as inline double-sl
 
 In either case, you can press `shift+enter` to stop the automatic extension.
 
+Oftentimes, when documenting a parameter, or adding a description to a tag, your description will cover multiple lines. If the line you are on is directly following a tag line, pressing `tab` will move the indentation to the correct position.
+
+    /**
+     * @param {String} foo Lorem ipsum dolor sit amet
+     * |<<tab>>
+     */
+
+     -- becomes
+
+    /**
+     * @param {String} foo Lorem ipsum dolor sit amet
+     *                     |
+     */
+
 ### Adding extra tags ###
 
 Finally, typing `@` inside a docblock will show a completion list for all tags supported by [JSDoc][jsdoc] or the [Google Closure Compiler][closure]. Extra help is provided for each of these tags by prefilling the arguments each expects. Pressing `tab` will move the cursor to the next argument.
@@ -153,23 +175,23 @@ Exhaustively, these tags are:
 
 ## Configuration ##
 
-You can access the configuration settings by selecting `Prefences -> Package Settings -> JSDocs`. Currently there are three settings:
+You can access the configuration settings by selecting `Preferences -> Package Settings -> JSDocs`.
 
-- **`indentation_spaces`** *(Number)* The number of spaces to indent after the leading asterisk.
+- **`jsdocs_indentation_spaces`** *(Number)* The number of spaces to indent after the leading asterisk.
 
-        // indentation_spaces = 1
+        // jsdocs_indentation_spaces = 1
         /**
          * foo
          */
 
-        // indentation_spaces = 5
+        // jsdocs_indentation_spaces = 5
         /**
          *     foo
          */
 
-- **`align_tags`** *(Boolean)* Whether to align the text following the tags.
+- **`jsdocs_align_tags`** *(Boolean)* Whether to align the text following the tags.
 
-        // align_tags = false
+        // jsdocs_align_tags = false
         /**
          * @param {Number} x
          * @return {Number}
@@ -181,9 +203,9 @@ You can access the configuration settings by selecting `Prefences -> Package Set
          * @return {Number}
          */
 
-- **`extra_tags`** *(Array.String)* An array of strings, each representing extra boilerplate comments to add to *functions*. These can also include arbitrary text (not just tags).
+- **`jsdocs_extra_tags`** *(Array.String)* An array of strings, each representing extra boilerplate comments to add to *functions*. These can also include arbitrary text (not just tags).
 
-        // extra_tags = ['This is a cool function', '@author nickf', '@version ${1:version}']
+        // jsdocs_extra_tags = ['This is a cool function', '@author nickf', '@version ${1:version}']
         /**<<enter>>
         function foo (x) {}
 
@@ -197,6 +219,9 @@ You can access the configuration settings by selecting `Prefences -> Package Set
          */
         function foo (x) {}
 
+- **`jsdocs_extend_double_slash`** *(Boolean)* Whether double-slash comments should be extended. An example of this feature is described above.
+
+- **`jsdocs_deep_indent`** *(Boolean)* Whether pressing tab at the start of a line in docblock should indent to match the previous line's description field. An example of this feature is described above.
 
 This is my first package for Sublime Text, and the first time I've written any Python, so I heartily welcome feedback and [feature requests or bug reports][issues].
 

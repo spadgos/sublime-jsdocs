@@ -1,10 +1,15 @@
+"""
+JSDocs v1.3.0
+by Nick Fisher
+https://github.com/spadgos/sublime-jsdocs
+"""
 import sublime
 import sublime_plugin
 import re
 import string
 
 
-def read_next_line(view, point):
+def read_line(view, point):
     if (point >= view.size()):
         return
 
@@ -64,10 +69,10 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, inline=False):
         v = self.view
-        settings = sublime.load_settings("jsdocs.sublime-settings")
+        settings = v.settings()
         point = v.sel()[0].end()
-        indentSpaces = max(0, settings.get("indentation_spaces", 1))
-        alignTags = settings.get("align_tags", True)
+        indentSpaces = max(0, settings.get("jsdocs_indentation_spaces", 1))
+        alignTags = settings.get("jsdocs_align_tags", True)
         prefix = "\n*" + (" " * indentSpaces)
 
         self.inline = inline
@@ -76,7 +81,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         self.identifier = '[a-zA-Z_$][a-zA-Z_$0-9]*'
 
         # read the next line
-        line = read_next_line(v, point + 1)
+        line = read_line(v, point + 1)
         out = None
 
         # if there is a line following this
@@ -133,8 +138,8 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
         self.inline = False  # because wtf is an inline function docblock?
 
-        settings = sublime.load_settings("jsdocs.sublime-settings")
-        extraTags = settings.get('extra_tags', [])
+        settings = self.view.settings()
+        extraTags = settings.get('jsdocs_extra_tags', [])
 
         # grab the name out of "name1 = function name2(foo)" preferring name1
         name = escape(res.group('name1') or res.group('name2') or '')
@@ -206,3 +211,34 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
     def isExistingComment(self, line):
         return re.search('^\\s*\\*', line)
+
+
+class JsdocsIndentCommand(sublime_plugin.TextCommand):
+
+    def run(self, edit):
+        v = self.view
+        currPos = v.sel()[0].begin()
+        currLineRegion = v.line(currPos)
+        currCol = currPos - currLineRegion.begin()  # which column we're currently in
+        prevLine = v.substr(v.line(v.line(currPos).begin() - 1))
+        spaces = self.getIndentSpaces(prevLine)
+        toStar = len(re.search("^(\\s*\\*)", prevLine).group(1))
+        toInsert = spaces - currCol + toStar
+        if spaces is None or toInsert <= 0:
+            v.run_command(
+                'insert_snippet', {
+                    'contents': "\t"
+                }
+            )
+            return
+
+        v.insert(edit, currPos, " " * toInsert)
+
+    def getIndentSpaces(self, line):
+        res = re.search("^\\s*\\*(?P<fromStar>\\s*@(?:param|property)\\s+\\{[^}]+\\}\\s+\\S+\\s+)\\S", line) \
+           or re.search("^\\s*\\*(?P<fromStar>\\s*@(?:return|define)\\s+\\{[^}]+\\}\\s+)\\S", line) \
+           or re.search("^\\s*\\*(?P<fromStar>\\s*@[a-z]+\\s+)\\S", line) \
+           or re.search("^\\s*\\*(?P<fromStar>\\s*)", line)
+        if res:
+            return len(res.group('fromStar'))
+        return None

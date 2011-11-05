@@ -31,8 +31,17 @@
     { "keys": ["@"], "command": "auto_complete", "context":
         [
             { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
-            { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*(?:\\*|\\/\\*{2})\\s+$", "match_all": true },
+            { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*(?:\\*|\\/\\*{2})\\s*$", "match_all": true },
             { "key": "selector", "operator" : "equal", "operand" : "comment.block.documentation"}
+        ]
+    },
+    { "keys": ["tab"], "command": "jsdocs_indent", "context":
+        [
+            { "key": "setting.jsdocs_deep_indent", "operator": "equal", "operand": true, "match_all": true},
+            { "key": "setting.auto_indent", "operator": "equal", "operand": true, "match_all": true },
+            { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
+            { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*\\*\\s*$", "match_all": true },
+            { "key": "selector", "operator": "equal", "operand": "comment.block.documentation" }
         ]
     }
 ]
