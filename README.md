@@ -100,7 +100,11 @@ JSDocs will try to make an intelligent guess about the return value of the funct
 - If the function name begins with "set" or "add", then no `@return` is inserted.
 - If the function name beings with "is" or "has", then it is assumed to return a `Boolean`.
 - In Javascript, if the function begins with an uppercase letter then it is assumed that the function is a class definition. No `@return` tag is added.
-- In PHP, the "magic" methods `__construct` and `__set` do not get a `@return` tag.
+- In PHP, some of the [magic methods][magicmethods] have their values prefilled:
+  - `__construct`, `__set`, `__unset`, `__wakeup` have no `@return` tag.
+  - `__sleep` returns an `Array`.
+  - `__toString` returns a `string`.
+  - `__isset` returns a `bool`.
 
 ### Variable documentation ###
 
@@ -266,3 +270,4 @@ This is my first package for Sublime Text, and the first time I've written any P
 [package_control]: http://wbond.net/sublime_packages/package_control
 [typehinting]: http://php.net/manual/en/language.oop5.typehinting.php
 [tags]: https://github.com/spadgos/sublime-jsdocs/tags
+[magicmethods]: http://www.php.net/manual/en/language.oop5.magic.php

@@ -368,7 +368,7 @@ class JsdocsPHP(JsdocsParser):
             return "string"
         if val[:5] == 'array':
             return "Array"
-        if val.lower() == 'true' or val.lower() == 'false':
+        if val.lower() in ('true', 'false', 'filenotfound'):
             return 'bool'
         if val[:4] == 'new ':
             res = re.search('new (' + self.settings['fnIdentifier'] + ')', val)
@@ -376,11 +376,15 @@ class JsdocsPHP(JsdocsParser):
         return None
 
     def getFunctionReturnType(self, name):
-        if (name == '__construct' or name == '__set'):
-            return None
-        if (name == '__isset'):
-            return 'bool'
-
+        if (name[:2] == '__'):
+            if name in ('__construct', '__set', '__unset', '__wakeup'):
+                return None
+            if name == '__sleep':
+                return 'Array'
+            if name == '__toString':
+                return 'string'
+            if name == '__isset':
+                return 'bool'
         return JsdocsParser.getFunctionReturnType(self, name)
 
 
