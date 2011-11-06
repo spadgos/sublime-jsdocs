@@ -1,4 +1,4 @@
-This is a [Sublime Text][sublime] package which makes writing [JSDoc comments][jsdoc] a little bit easier.
+This is a [Sublime Text 2][sublime] package which makes writing [JSDoc comments][jsdoc] and [PHPDoc comments][phpdoc] a little bit easier.
 
 ## Installation ##
 
@@ -14,8 +14,15 @@ Go to your Sublime Text 2 Packages directory and clone the repository using the 
 
 Don't forget to keep updating it, though!
 
+## Feature requests & bug reports ##
+
+You can leave either of these things [here][issues].
+
 ## Changelog ##
 
+- **v2.0.0**
+  - PHP support added!
+  - (Almost) complete rewrite to allow for any new languages to be added easily
 - **v1.3.0**, *5 November 2011*
   - Improvements to handling of single-line comments
   - Functions beginning with `is` or `has` are assumed to return Booleans
@@ -66,9 +73,28 @@ However, if the line directly afterwards contains a function definition, then it
 
 You can then press `tab` to move between the different fields.
 
-If the function name begins with "set" or "add", then no `@return` is inserted.
+In PHP, if [type hinting][typehinting] or default values are used, then those types are prefilled as the datatypes.
 
-If the function name begins with an uppercase letter `[A-Z]`, then it is assumed that the function is a class definition. No `@return` tag is added - instead replaced with `@class`.
+    /**|<<enter>>
+    function foo(Array $arr, MyClass $cls, $str = "abc", $i = 0, $b = false) {}
+
+    /**
+     * [foo description]
+     * @param  Array $arr [description]
+     * @param  MyClass $cls [description]
+     * @param  string $str [description]
+     * @param  int $i [description]
+     * @param  bool $b [description]
+     * @return [type]
+     */
+    function foo(Array $arr, MyClass $cls, $str = "abc", $i = 0) {}
+
+JSDocs will try to make an intelligent guess about the return value of the function.
+
+- If the function name begins with "set" or "add", then no `@return` is inserted.
+- If the function name beings with "is" or "has", then it is assumed to return a `Boolean`.
+- In Javascript, if the function begins with an uppercase letter then it is assumed that the function is a class definition. No `@return` tag is added.
+- In PHP, the "magic" methods `__construct` and `__set` do not get a `@return` tag.
 
 ### Variable documentation ###
 
@@ -228,6 +254,8 @@ This is my first package for Sublime Text, and the first time I've written any P
 
 [sublime]: http://www.sublimetext.com/
 [jsdoc]: http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
+[phpdoc]: http://phpdoc.org/
 [closure]: http://code.google.com/closure/compiler/docs/js-for-compiler.html
 [issues]: https://github.com/spadgos/sublime-jsdocs/issues
 [package_control]: http://wbond.net/sublime_packages/package_control
+[typehinting]: http://php.net/manual/en/language.oop5.typehinting.php
