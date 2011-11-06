@@ -14,6 +14,11 @@ Go to your Sublime Text 2 Packages directory and clone the repository using the 
 
 Don't forget to keep updating it, though!
 
+
+### Without Git ###
+
+Download the latest version from the [tags page][tags]. Unzip to your Sublime Text Packages folder (you can find this by opening ST2 and selecting `Preferences -> Browse Packages...`). I'd recommend renaming the folder from the default (which will be something like `spadgos-sublime-jsdocs-a4bc2a`) to `JSDocs`. That's it -- you shouldn't even need to restart ST2.
+
 ## Feature requests & bug reports ##
 
 You can leave either of these things [here][issues].
@@ -23,6 +28,7 @@ You can leave either of these things [here][issues].
 - **v2.0.0**
   - PHP support added!
   - (Almost) complete rewrite to allow for any new languages to be added easily
+    - Please send feature requests or pull requests for new languages you'd like to add
 - **v1.3.0**, *5 November 2011*
   - Improvements to handling of single-line comments
   - Functions beginning with `is` or `has` are assumed to return Booleans
@@ -259,3 +265,4 @@ This is my first package for Sublime Text, and the first time I've written any P
 [issues]: https://github.com/spadgos/sublime-jsdocs/issues
 [package_control]: http://wbond.net/sublime_packages/package_control
 [typehinting]: http://php.net/manual/en/language.oop5.typehinting.php
+[tags]: https://github.com/spadgos/sublime-jsdocs/tags
