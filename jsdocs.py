@@ -208,6 +208,7 @@ class JsdocsParser:
         """ an array of tuples, the first being the best guess at the type, the second being the name """
         out = []
         for arg in re.split('\s*,\s*', args):
+            arg = arg.strip()
             out.append((self.getArgType(arg), self.getArgName(arg)))
         return out
 
@@ -215,7 +216,7 @@ class JsdocsParser:
         return None
 
     def getArgName(self, arg):
-        return arg.strip()
+        return arg
 
     def addExtraTags(self, out):
         extraTags = self.viewSettings.get('jsdocs_extra_tags', [])
@@ -297,7 +298,6 @@ class JsdocsPHP(JsdocsParser):
 
     def parseFunction(self, line):
         res = re.search(
-            #   fnName = function,  fnName : function
             'function\\s+'
             + '(?P<name>' + self.settings['fnIdentifier'] + ')'
             # function fnName
@@ -309,6 +309,15 @@ class JsdocsPHP(JsdocsParser):
             return None
 
         return (res.group('name'), res.group('args'))
+
+    def getArgType(self, arg):
+        if re.search('\\S\\s', arg):
+            return re.search("^(\\S+)", arg).group(1)
+        else:
+            return None
+
+    def getArgName(self, arg):
+        return re.search("(\\S+)$", arg).group(1)
 
 
 class JsdocsIndentCommand(sublime_plugin.TextCommand):
