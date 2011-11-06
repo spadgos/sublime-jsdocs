@@ -25,10 +25,11 @@ You can leave either of these things [here][issues].
 
 ## Changelog ##
 
-- **v2.0.0**
+- **v2.0.0**, *6 November 2011*
   - PHP support added!
   - (Almost) complete rewrite to allow for any new languages to be added easily
-    - Please send feature requests or pull requests for new languages you'd like to add
+    - *Please send feature requests or pull requests for new languages you'd like to add*
+  - More options for aligning tags
 - **v1.3.0**, *5 November 2011*
   - Improvements to handling of single-line comments
   - Functions beginning with `is` or `has` are assumed to return Booleans
