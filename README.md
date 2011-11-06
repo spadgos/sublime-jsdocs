@@ -225,19 +225,22 @@ You can access the configuration settings by selecting `Preferences -> Package S
          *     foo
          */
 
-- **`jsdocs_align_tags`** *(Boolean)* Whether to align the text following the tags.
+- **`jsdocs_align_tags`** *(String)* Whether the words following the tags should align. Possible values are `'no'`, `'shallow'` and `'deep'`
+   
+    > For backwards compatibility, `false` is equivalent to `'no'`, `true` is equivalent to `'shallow'`
+  
+    `'shallow'` will align only the first words after the tag. eg:
 
-        // jsdocs_align_tags = false
-        /**
-         * @param {Number} x
-         * @return {Number}
-         */
-        
-        // align_tags = true
-        /**
-         * @param  {Number} x
-         * @return {Number}
-         */
+        @param    {MyCustomClass} myVariable desc1
+        @return   {String} foo desc2
+        @property {Number} blahblah desc3
+  
+    `'deep'` will align each component of the tags, eg:
+
+        @param    {MyCustomClass} myVariable desc1
+        @return   {String}        foo        desc2
+        @property {Number}        blahblah   desc3
+  
 
 - **`jsdocs_extra_tags`** *(Array.String)* An array of strings, each representing extra boilerplate comments to add to *functions*. These can also include arbitrary text (not just tags).
 
