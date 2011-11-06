@@ -3,7 +3,6 @@ JSDocs v1.3.0
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
-import sublime
 import sublime_plugin
 import re
 import string
@@ -65,20 +64,29 @@ def guessType(val):
     return '[type]'
 
 
+def getParser(view):
+    #  scope = view.scope_name(view.sel()[0].end())
+    viewSettings = view.settings()
+
+    #  if re.search("source\\.php", scope):
+    #      return JsdocsPHP(viewSettings)
+
+    return JsdocsJavascript(viewSettings)
+
+
 class JsdocsCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, inline=False):
         v = self.view
+
         settings = v.settings()
         point = v.sel()[0].end()
         indentSpaces = max(0, settings.get("jsdocs_indentation_spaces", 1))
         alignTags = settings.get("jsdocs_align_tags", True)
         prefix = "\n*" + (" " * indentSpaces)
 
-        self.inline = inline
-
-        # part of a regex. this detects a valid identifier
-        self.identifier = '[a-zA-Z_$][a-zA-Z_$0-9]*'
+        parser = getParser(v)
+        parser.inline = inline
 
         # read the next line
         line = read_line(v, point + 1)
@@ -86,14 +94,13 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
         # if there is a line following this
         if line:
-            if self.isExistingComment(line):
+            if parser.isExistingComment(line):
                 write(v, "\n *" + (" " * indentSpaces))
                 return
-            # match against a javascript function declaration. TODO: extend for other languages
-            out = self.parseFunction(line) \
-                or self.parseVar(line)
+            # match against a function declaration.
+            out = parser.parse(line)
 
-        if out and alignTags and not self.inline:
+        if out and alignTags and not inline:
             maxWidth = 0
             regex = re.compile("(@\S+)")
             for line in out:
@@ -108,7 +115,16 @@ class JsdocsCommand(sublime_plugin.TextCommand):
                         + (" " * (1 + maxWidth - res.end())) \
                         + line[res.end():].strip(' \t')
 
-        if self.inline:
+        if out:
+            tabIndex = counter()
+
+            def swapTabs(m):
+                return "%s%d%s" % (m.group(1), tabIndex.next(), m.group(2))
+
+            for index, outputLine in enumerate(out):
+                out[index] = re.sub("(\\$\\{)\\d+(:[^}]+\\})", swapTabs, outputLine)
+
+        if inline:
             if out:
                 write(v, " " + out[0] + " */")
             else:
@@ -121,14 +137,111 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             else:
                 write(v, "$0\n*/")
 
-    def parseFunction(self, line):
 
+class JsdocsParser:
+
+    def __init__(self, viewSettings):
+        self.viewSettings = viewSettings
+        self.setupSettings()
+
+    def isExistingComment(self, line):
+        return re.search('^\\s*\\*', line)
+
+    def parse(self, line):
+        out = self.parseFunction(line)  # (name, args)
+        if (out):
+            return self.formatFunction(*out)
+
+        #  out = self.parseVar(line)
+        #  if out:
+        #      return out
+
+        return None
+
+    def formatFunction(self, name, args):
+        out = []
+
+        out.append("${1:[%s description]}" % (name))
+
+        self.addExtraTags(out)
+
+        # if there are arguments, add a @param for each
+        if (args):
+            # remove comments inside the argument list.
+            args = re.sub("/\*.*?\*/", '', args)
+            for arg in self.parseArgs(args):
+                out.append("@param %s${1:%s}%s %s ${1:[description]}" % (
+                    "{" if self.settings['curlyTypes'] else "",
+                    escape(arg[0] or "[type]"),
+                    "}" if self.settings['curlyTypes'] else "",
+                    escape(arg[1])
+                ))
+
+        retType = self.getFunctionReturnType(name)
+        if retType is not None:
+            out.append("@return %s${1:%s}%s" % (
+                "{" if self.settings['curlyTypes'] else "",
+                retType or "[type]",
+                "}" if self.settings['curlyTypes'] else ""
+            ))
+
+        return out
+
+    def getFunctionReturnType(self, name):
+        """ returns None for no return type. False meaning unknown, or a string """
+        name = re.sub("^[$_]", "", name)
+
+        if re.match("[A-Z]", name):
+            # no return, but should add a class
+            return None
+
+        if re.match('(?:set|add)[A-Z_]', name):
+            # setter/mutator, no return
+            return None
+
+        if re.match('(?:is|has)[A-Z_]', name):  # functions starting with 'is' or 'has'
+            return self.settings['bool']
+
+        return False
+
+    def parseArgs(self, args):
+        """ an array of tuples, the first being the best guess at the type, the second being the name """
+        out = []
+        for arg in re.split('\s*,\s*', args):
+            out.append((self.getArgType(arg), self.getArgName(arg)))
+        return out
+
+    def getArgType(self, arg):
+        return None
+
+    def getArgName(self, arg):
+        return arg.strip()
+
+    def addExtraTags(self, out):
+        extraTags = self.viewSettings.get('jsdocs_extra_tags', [])
+        if (len(extraTags) > 0):
+            out.extend(extraTags)
+
+
+class JsdocsJavascript(JsdocsParser):
+    def setupSettings(self):
+        self.settings = {
+            # curly brackets around the type information
+            "curlyTypes": True,
+            # technically, they can contain all sorts of unicode, but w/e
+            "varIdentifier": '[a-zA-Z_$][a-zA-Z_$0-9]*',
+            "fnIdentifier": '[a-zA-Z_$][a-zA-Z_$0-9]*',
+
+            "bool": "Boolean"
+        }
+
+    def parseFunction(self, line):
         res = re.search(
             #   fnName = function,  fnName : function
-            '(?:(?P<name1>' + self.identifier + ')\s*[:=]\s*)?'
+            '(?:(?P<name1>' + self.settings['varIdentifier'] + ')\s*[:=]\s*)?'
             + 'function'
             # function fnName
-            + '(?:\s+(?P<name2>' + self.identifier + '))?'
+            + '(?:\s+(?P<name2>' + self.settings['fnIdentifier'] + '))?'
             # (arg1, arg2)
             + '\s*\((?P<args>.*)\)',
             line
@@ -136,51 +249,13 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         if not res:
             return None
 
-        self.inline = False  # because wtf is an inline function docblock?
-
-        settings = self.view.settings()
-        extraTags = settings.get('jsdocs_extra_tags', [])
-
         # grab the name out of "name1 = function name2(foo)" preferring name1
         name = escape(res.group('name1') or res.group('name2') or '')
         args = res.group('args')
-        isClass = re.match("[A-Z]", name)
-        tabIndex = counter()
-        out = []
 
-        out.append("${%d:[%s description]}" % (tabIndex.next(), name))
-        if isClass:
-            out.append("@class ${%d:[description]}" % (tabIndex.next()))
+        return (name, args)
 
-        def replaceUserTabs(m):
-            return "%s%d%s" % (m.group(1), tabIndex.next(), m.group(2))
-
-        for index, extra in enumerate(extraTags):
-            extraTags[index] = re.sub("(\$\{)\d*(:[^}]+})", replaceUserTabs, extra)
-        out.extend(extraTags)
-
-        # if there are arguments, add a @param for each
-        if (args):
-            # remove comments inside the argument list.
-            args = re.sub("/\*.*?\*/", '', args)
-            for arg in re.split('\s*,\s*', args):
-                out.append("@param {${%d:[type]}} %s ${%d:[description]}" % (
-                    tabIndex.next(),
-                    escape(arg.strip()),
-                    tabIndex.next()
-                ))
-
-        if not isClass:
-            # unless the function starts with 'set' or 'add', add a @return tag
-            if not re.match('[$_]?(?:set|add)[A-Z_]', name):
-                retType = '[type]'
-                if re.match('[$_]?(?:is|has)[A-Z_]', name):  # functions starting with 'is' or 'has'
-                    retType = 'Boolean'
-                out.append("@return {${%d:%s}}" % (tabIndex.next(), retType))
-
-        return out
-
-    def parseVar(self, line):
+"""    def parseVar(self, line):
         res = re.search(
             #   var foo = blah,
             #       foo = blah;
@@ -189,7 +264,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             #        foo : blah
             #   }
 
-            '\\b(?P<name>' + self.identifier + ')\s*[=:]\s*(?P<val>.*?)(?:[;,]|$)',
+            '\\b(?P<name>' + self.settings['varIdentifier'] + ')\s*[=:]\s*(?P<val>.*?)(?:[;,]|$)',
             line
         )
         if not res:
@@ -198,7 +273,6 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         out = []
         name = res.group('name')
         val = res.group('val').strip()
-        tabIndex = counter()
 
         valType = guessType(val)
         if self.inline:
@@ -208,9 +282,14 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             out.append("@type {${%d:%s}}" % (tabIndex.next(), valType))
 
         return out
-
-    def isExistingComment(self, line):
-        return re.search('^\\s*\\*', line)
+"""
+"""
+class JsdocsPHP:
+    setting = {
+        curlyTypes: False
+        settings.varIdentifier: '\\$[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*'
+        settings.fnIdentifier: '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*'
+    }
 
 
 class JsdocsIndentCommand(sublime_plugin.TextCommand):
@@ -235,10 +314,11 @@ class JsdocsIndentCommand(sublime_plugin.TextCommand):
         v.insert(edit, currPos, " " * toInsert)
 
     def getIndentSpaces(self, line):
-        res = re.search("^\\s*\\*(?P<fromStar>\\s*@(?:param|property)\\s+\\{[^}]+\\}\\s+\\S+\\s+)\\S", line) \
-           or re.search("^\\s*\\*(?P<fromStar>\\s*@(?:return|define)\\s+\\{[^}]+\\}\\s+)\\S", line) \
+        res = re.search("^\\s*\\*(?P<fromStar>\\s*@(?:param|property)\\s+\\S+\\s+\\S+\\s+)\\S", line) \
+           or re.search("^\\s*\\*(?P<fromStar>\\s*@(?:returns?|define)\\s+\\S+\\s+)\\S", line) \
            or re.search("^\\s*\\*(?P<fromStar>\\s*@[a-z]+\\s+)\\S", line) \
            or re.search("^\\s*\\*(?P<fromStar>\\s*)", line)
         if res:
             return len(res.group('fromStar'))
         return None
+"""
