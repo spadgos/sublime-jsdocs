@@ -9,16 +9,25 @@
   "jsdocs_extend_double_slash": true,
 
   // the number of spaces to add after the leading *
-  "jsdocs_indentation_spaces" : 1,
+  "jsdocs_indentation_spaces": 1,
 
-  // whether the words following the @tags should align, eg:
-  // @param    {Boolean}
-  // @return   {String}
-  // @property {Number}
-  "jsdocs_align_tags" : true,
+  // whether the words following the @tags should align.
+  // Possible values are 'no', 'shallow', 'deep'
+  // For backwards compatibility, false is equivalent to 'no', true is equivalent to 'shallow'
+  //
+  // 'shallow' will just align the first words after the tag. eg:
+  // @param    {MyCustomClass} myVariable desc1
+  // @return   {String} foo desc2
+  // @property {Number} blahblah desc3
+  //
+  // 'deep' will align each component of the tags, eg:
+  // @param    {MyCustomClass} myVariable desc1
+  // @return   {String}        foo        desc2
+  // @property {Number}        blahblah   desc3
+  "jsdocs_align_tags": "deep",
 
   // Any additional boilerplate tags which should be added to each block. Should be an array of strings.
   // Note that this only applies when a docblock is opened directly preceding a function.
   // Tab points can be added by using snippet syntax, eg: ${1:default text}
-  "jsdocs_extra_tags" : []
+  "jsdocs_extra_tags": []
 }

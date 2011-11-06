@@ -60,9 +60,13 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
         settings = v.settings()
         point = v.sel()[0].end()
+
         indentSpaces = max(0, settings.get("jsdocs_indentation_spaces", 1))
-        alignTags = settings.get("jsdocs_align_tags", True)
         prefix = "\n*" + (" " * indentSpaces)
+
+        alignTags = settings.get("jsdocs_align_tags", 'deep')
+        deepAlignTags = alignTags == 'deep'
+        shallowAlignTags = alignTags in ('shallow', True)
 
         parser = getParser(v)
         parser.inline = inline
@@ -79,21 +83,42 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             # match against a function declaration.
             out = parser.parse(line)
 
-        if out and alignTags and not inline:
-            maxWidth = 0
-            regex = re.compile("(@\S+)")
-            for line in out:
-                res = regex.match(line)
-                if res:
-                    maxWidth = max(maxWidth, res.end())
+        # align the tags
+        if out and (shallowAlignTags or deepAlignTags) and not inline:
+            def outputWidth(str):
+                # get the length of a string, after it is output as a snippet,
+                # "${1:foo}" --> 3
+                return len(string.replace(re.sub("[$][{]\\d+:([^}]+)[}]", "\\1", str), '\$', '$'))
+
+            # count how many columns we have
+            maxCols = 0
+            # this is a 2d list of the widths per column per line
+            widths = []
+            #  skip the first one, since that's always the "description" line
+            for line in out[1:]:
+                widths.append(map(outputWidth, line.split(" ")))
+                maxCols = max(maxCols, len(widths[-1]))
+
+            #  i'm quite sure there's a better way to initialise a list to 0
+            maxWidths = map(lambda x: 0, range(0, maxCols))
+
+            if (shallowAlignTags):
+                maxCols = 1
+
+            for i in range(0, maxCols):
+                for width in widths:
+                    if (i < len(width)):
+                        maxWidths[i] = max(maxWidths[i], width[i])
 
             for index, line in enumerate(out):
-                res = regex.match(line)
-                if res:
-                    out[index] = line[:res.end()] \
-                        + (" " * (1 + maxWidth - res.end())) \
-                        + line[res.end():].strip(' \t')
+                if (index > 0):
+                    newOut = []
+                    for partIndex, part in enumerate(line.split(" ")):
+                        newOut.append(part)
+                        newOut.append(" " + (" " * (maxWidths[partIndex] - outputWidth(part))))
+                    out[index] = "".join(newOut).strip()
 
+        # fix all the tab stops so they're consecutive
         if out:
             tabIndex = counter()
 
