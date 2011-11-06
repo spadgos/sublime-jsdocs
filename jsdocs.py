@@ -267,7 +267,7 @@ class JsdocsJavascript(JsdocsParser):
             #        foo : blah
             #   }
 
-            '\\b(?P<name>' + self.settings['varIdentifier'] + ')\s*[=:]\s*(?P<val>.*?)(?:[;,]|$)',
+            '(?P<name>' + self.settings['varIdentifier'] + ')\s*[=:]\s*(?P<val>.*?)(?:[;,]|$)',
             line
         )
         if not res:
