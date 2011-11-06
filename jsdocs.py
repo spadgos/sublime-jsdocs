@@ -43,27 +43,6 @@ def is_numeric(val):
         return False
 
 
-def guessType(val):
-    if not val or val == '':  # quick short circuit
-        return '[type]'
-    if is_numeric(val):
-        return "Number"
-    if val[0] == '"' or val[0] == "'":
-        return "String"
-    if val[0] == '[':
-        return "Array"
-    if val[0] == '{':
-        return "Object"
-    if val == 'true' or val == 'false':
-        return 'Boolean'
-    if re.match('RegExp\\b|\\/[^\\/]', val):
-        return 'RegExp'
-    if val[:4] == 'new ':
-        res = re.search('new ([a-zA-Z_$][a-zA-Z_$0-9]*)', val)
-        return res.group(1)
-    return '[type]'
-
-
 def getParser(view):
     scope = view.scope_name(view.sel()[0].end())
     viewSettings = view.settings()
@@ -152,11 +131,34 @@ class JsdocsParser:
         if (out):
             return self.formatFunction(*out)
 
-        #  out = self.parseVar(line)
-        #  if out:
-        #      return out
+        out = self.parseVar(line)
+        if out:
+            return self.formatVar(*out)
 
         return None
+
+    def formatVar(self, name, val):
+        out = []
+        if not val or val == '':  # quick short circuit
+            valType = "[type]"
+        else:
+            valType = self.guessTypeFromValue(val) or "[type]"
+
+        if self.inline:
+            out.append("@type %s${1:%s}%s ${1:[description]}" % (
+                "{" if self.settings['curlyTypes'] else "",
+                valType,
+                "}" if self.settings['curlyTypes'] else ""
+            ))
+        else:
+            out.append("${1:[%s description]}" % (escape(name)))
+            out.append("@type %s${1:%s}%s" % (
+                "{" if self.settings['curlyTypes'] else "",
+                valType,
+                "}" if self.settings['curlyTypes'] else ""
+            ))
+
+        return out
 
     def formatFunction(self, name, args):
         out = []
@@ -256,7 +258,7 @@ class JsdocsJavascript(JsdocsParser):
 
         return (name, args)
 
-"""    def parseVar(self, line):
+    def parseVar(self, line):
         res = re.search(
             #   var foo = blah,
             #       foo = blah;
@@ -271,28 +273,35 @@ class JsdocsJavascript(JsdocsParser):
         if not res:
             return None
 
-        out = []
-        name = res.group('name')
-        val = res.group('val').strip()
+        return (res.group('name'), res.group('val').strip())
 
-        valType = guessType(val)
-        if self.inline:
-            out.append("@type {${%d:%s}} ${%d:[description]}" % (tabIndex.next(), valType, tabIndex.next()))
-        else:
-            out.append("${%d:[%s description]}" % (tabIndex.next(), name))
-            out.append("@type {${%d:%s}}" % (tabIndex.next(), valType))
-
-        return out
-"""
+    def guessTypeFromValue(self, val):
+        if is_numeric(val):
+            return "Number"
+        if val[0] == '"' or val[0] == "'":
+            return "String"
+        if val[0] == '[':
+            return "Array"
+        if val[0] == '{':
+            return "Object"
+        if val == 'true' or val == 'false':
+            return 'Boolean'
+        if re.match('RegExp\\b|\\/[^\\/]', val):
+            return 'RegExp'
+        if val[:4] == 'new ':
+            res = re.search('new (' + self.settings['fnIdentifier'] + ')', val)
+            return res and res.group(1) or None
+        return None
 
 
 class JsdocsPHP(JsdocsParser):
     def setupSettings(self):
+        nameToken = '[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*'
         self.settings = {
             # curly brackets around the type information
             'curlyTypes': False,
-            'varIdentifier': '\\$[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*',
-            'fnIdentifier': '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*',
+            'varIdentifier': '[$]' + nameToken + '(?:->' + nameToken + ')*',
+            'fnIdentifier': nameToken,
             "bool": "bool"
         }
 
@@ -318,6 +327,44 @@ class JsdocsPHP(JsdocsParser):
 
     def getArgName(self, arg):
         return re.search("(\\S+)$", arg).group(1)
+
+    def parseVar(self, line):
+        res = re.search(
+            #   var $foo = blah,
+            #       $foo = blah;
+            #   $baz->foo = blah;
+            #   $baz = array(
+            #        'foo' => blah
+            #   )
+
+            '(?P<name>' + self.settings['varIdentifier'] + ')\\s*=>?\\s*(?P<val>.*?)(?:[;,]|$)',
+            line
+        )
+        if res:
+            return (res.group('name'), res.group('val').strip())
+
+        res = re.search(
+            '\\b(?:var|public|private|protected|static)\\s+(?P<name>' + self.settings['varIdentifier'] + ')',
+            line
+        )
+        if res:
+            return (res.group('name'), None)
+
+        return None
+
+    def guessTypeFromValue(self, val):
+        if is_numeric(val):
+            return "float" if '.' in val else "int"
+        if val[0] == '"' or val[0] == "'":
+            return "string"
+        if val[:5] == 'array':
+            return "Array"
+        if val.lower() == 'true' or val.lower() == 'false':
+            return 'bool'
+        if val[:4] == 'new ':
+            res = re.search('new (' + self.settings['fnIdentifier'] + ')', val)
+            return res and res.group(1) or None
+        return None
 
 
 class JsdocsIndentCommand(sublime_plugin.TextCommand):
