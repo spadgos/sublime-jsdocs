@@ -65,11 +65,11 @@ def guessType(val):
 
 
 def getParser(view):
-    #  scope = view.scope_name(view.sel()[0].end())
+    scope = view.scope_name(view.sel()[0].end())
     viewSettings = view.settings()
 
-    #  if re.search("source\\.php", scope):
-    #      return JsdocsPHP(viewSettings)
+    if re.search("source\\.php", scope):
+        return JsdocsPHP(viewSettings)
 
     return JsdocsJavascript(viewSettings)
 
@@ -283,13 +283,32 @@ class JsdocsJavascript(JsdocsParser):
 
         return out
 """
-"""
-class JsdocsPHP:
-    setting = {
-        curlyTypes: False
-        settings.varIdentifier: '\\$[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*'
-        settings.fnIdentifier: '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*'
-    }
+
+
+class JsdocsPHP(JsdocsParser):
+    def setupSettings(self):
+        self.settings = {
+            # curly brackets around the type information
+            'curlyTypes': False,
+            'varIdentifier': '\\$[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*',
+            'fnIdentifier': '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*',
+            "bool": "bool"
+        }
+
+    def parseFunction(self, line):
+        res = re.search(
+            #   fnName = function,  fnName : function
+            'function\\s+'
+            + '(?P<name>' + self.settings['fnIdentifier'] + ')'
+            # function fnName
+            # (arg1, arg2)
+            + '\\s*\\((?P<args>.*)\)',
+            line
+        )
+        if not res:
+            return None
+
+        return (res.group('name'), res.group('args'))
 
 
 class JsdocsIndentCommand(sublime_plugin.TextCommand):
@@ -321,4 +340,3 @@ class JsdocsIndentCommand(sublime_plugin.TextCommand):
         if res:
             return len(res.group('fromStar'))
         return None
-"""
