@@ -320,13 +320,22 @@ class JsdocsPHP(JsdocsParser):
         return (res.group('name'), res.group('args'))
 
     def getArgType(self, arg):
+        #  function add($x, $y = 1)
+        res = re.search(
+            '(?P<name>' + self.settings['varIdentifier'] + ")\\s*=\\s*(?P<val>.*)",
+            arg
+        )
+        if res:
+            return self.guessTypeFromValue(res.group('val'))
+
+        #  function sum(Array $x)
         if re.search('\\S\\s', arg):
             return re.search("^(\\S+)", arg).group(1)
         else:
             return None
 
     def getArgName(self, arg):
-        return re.search("(\\S+)$", arg).group(1)
+        return re.search("(\\S+)(?:\\s*=.*)?$", arg).group(1)
 
     def parseVar(self, line):
         res = re.search(
@@ -365,6 +374,14 @@ class JsdocsPHP(JsdocsParser):
             res = re.search('new (' + self.settings['fnIdentifier'] + ')', val)
             return res and res.group(1) or None
         return None
+
+    def getFunctionReturnType(self, name):
+        if (name == '__construct' or name == '__set'):
+            return None
+        if (name == '__isset'):
+            return 'bool'
+
+        return JsdocsParser.getFunctionReturnType(self, name)
 
 
 class JsdocsIndentCommand(sublime_plugin.TextCommand):
