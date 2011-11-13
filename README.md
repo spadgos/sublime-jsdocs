@@ -25,6 +25,8 @@ You can leave either of these things [here][issues].
 
 ## Changelog ##
 
+- **v2.1.0**
+  - Added a command to join lines inside a docblock which is smart to leading asterisks
 - **v2.0.0**, *6 November 2011*
   - PHP support added!
   - (Almost) complete rewrite to allow for any new languages to be added easily
