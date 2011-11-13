@@ -1,11 +1,12 @@
 """
-JSDocs v2.0.0
+JSDocs v2.1.0pre
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
 import sublime_plugin
 import re
 import string
+import sublime
 
 
 def read_line(view, point):
@@ -442,3 +443,11 @@ class JsdocsIndentCommand(sublime_plugin.TextCommand):
         if res:
             return len(res.group('fromStar'))
         return None
+
+
+class JsdocsJoinCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        v = self.view
+        for sel in v.sel():
+            for lineRegion in reversed(v.lines(sel)):
+                v.replace(edit, v.find("[ \\t]*\\n[ \\t]*(\\*[ \\t]*)?", lineRegion.begin()), ' ')
