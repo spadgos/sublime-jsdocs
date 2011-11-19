@@ -28,6 +28,35 @@
             { "key": "preceding_text", "operator" : "regex_contains", "operand": "^\\s*\\/\\/", "match_all": true}
         ]
     },
+    { "keys": ["keypad_enter"], "command": "jsdocs", "context" :
+        [
+            { "key": "setting.auto_indent", "operator": "equal", "operand": true, "match_all": "true" },
+            { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
+            { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*\\/\\*{2}$", "match_all": true }
+        ]
+    },
+    { "keys": ["shift+keypad_enter"], "command": "jsdocs", "args": {"inline": true}, "context" :
+        [
+            { "key": "setting.auto_indent", "operator": "equal", "operand": true, "match_all": true },
+            { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
+            { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*\\/\\*{2}$", "match_all": true }
+        ]
+    },
+    { "keys": ["keypad_enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^\\s*(\\*\\s*).*$/$1/}"}, "context":
+        [
+            { "key": "setting.auto_indent", "operator": "equal", "operand": true },
+            { "key": "selector", "operator" : "equal", "operand" : "comment.block.documentation"},
+            { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*\\*", "match_all": true }
+        ]
+    },
+    { "keys": ["keypad_enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^\\s*(\\/\\/\\s*).*$/$1/}"}, "context":
+        [
+            { "key": "setting.auto_indent", "operator": "equal", "operand": true, "match_all": true },
+            { "key": "setting.jsdocs_extend_double_slash", "operator": "equal", "operand": true, "match_all": true},
+            { "key": "selector", "operator" : "equal", "operand" : "comment.line.double-slash", "match_all": true},
+            { "key": "preceding_text", "operator" : "regex_contains", "operand": "^\\s*\\/\\/", "match_all": true}
+        ]
+    },
     { "keys": ["@"], "command": "run_macro_file", "args": {"file": "Packages/JSDocs/jsdocs-auto-complete.sublime-macro"}, "context":
         [
             { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
