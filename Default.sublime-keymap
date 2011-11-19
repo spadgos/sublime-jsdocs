@@ -28,7 +28,7 @@
             { "key": "preceding_text", "operator" : "regex_contains", "operand": "^\\s*\\/\\/", "match_all": true}
         ]
     },
-    { "keys": ["@"], "command": "auto_complete", "context":
+    { "keys": ["@"], "command": "run_macro_file", "args": {"file": "Packages/JSDocs/jsdocs-auto-complete.sublime-macro"}, "context":
         [
             { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
             { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*(?:\\*|\\/\\*{2})\\s*$", "match_all": true },
