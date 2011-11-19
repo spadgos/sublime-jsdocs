@@ -29,6 +29,7 @@ You can leave either of these things [here][issues].
   - Added a command to join lines inside a docblock which is smart to leading asterisks
   - Variable types are guessed from their name. `is` and `has` are assumed to be Booleans, and `callback`, `cb`, `done`, `fn` and `next` are assumed to be Functions.
   - You can now define your own patterns for mapping a variable name to a type.
+  - Autocomplete works better now. `@` will also insert the "@" character, allowing you to add any tag you like, even if it isn't in the autocomplete list.
 - **v2.0.0**, *6 November 2011*
   - PHP support added!
   - (Almost) complete rewrite to allow for any new languages to be added easily
