@@ -253,6 +253,20 @@ class JsdocsParser:
 
     def guessTypeFromName(self, name):
         name = re.sub("^[$_]", "", name)
+        hungarian_map = self.viewSettings.get('jsdocs_notation_map', [])
+        if len(hungarian_map):
+            for rule in hungarian_map:
+                print rule
+                matched = False
+                if 'prefix' in rule:
+                    matched = re.match(rule['prefix'] + "[A-Z_]", name)
+                elif 'regex' in rule:
+                    matched = re.search(rule['regex'], name)
+
+                if matched:
+
+                    return self.settings[rule['type']] if rule['type'] in self.settings else rule['type']
+
         if (re.match("(?:is|has)[A-Z_]", name)):
             return self.settings['bool']
 

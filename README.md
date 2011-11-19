@@ -27,6 +27,8 @@ You can leave either of these things [here][issues].
 
 - **v2.1.0**
   - Added a command to join lines inside a docblock which is smart to leading asterisks
+  - Variable types are guessed from their name. `is` and `has` are assumed to be Booleans, and `callback`, `cb`, `done`, `fn` and `next` are assumed to be Functions.
+  - You can now define your own patterns for mapping a variable name to a type.
 - **v2.0.0**, *6 November 2011*
   - PHP support added!
   - (Almost) complete rewrite to allow for any new languages to be added easily
@@ -132,6 +134,23 @@ If you press `shift+enter` after the opening `/**` then the docblock will be ins
     -- becomes --
     /** @type {Module} [bar description] */
     bar = new Module();
+
+JSDocs will also try to determine the type of the variable from its name. Variables starting with `is` or `has` are assumed to be booleans, and `callback`, `cb`, `done`, `fn`, and `next` are assumed to be functions. If you use your own variable naming system (eg: hungarian notation: booleans all start with `b`, arrays start with `arr`), you can define these rules yourself. Modify the `jsdocs_notation_map` setting *(in `Base File.sublime-settings`)* like so:
+
+```javascript
+{
+    "jsdocs_notation_map": [
+        {
+            "prefix": "b", // a prefix, matches only if followed by an underscore or A-Z
+            "type": "bool" // translates to "Boolean" in javascript, "bool" in PHP
+        },
+        {
+            "regex": "tbl_?[Rr]ow", // any arbitrary regex to test against the variable name
+            "type": "TableRow"      // you can add your own types
+        }
+    ]
+}
+```
 
 ### Comment extension ###
 
@@ -264,6 +283,8 @@ You can access the configuration settings by selecting `Preferences -> Package S
 - **`jsdocs_extend_double_slash`** *(Boolean)* Whether double-slash comments should be extended. An example of this feature is described above.
 
 - **`jsdocs_deep_indent`** *(Boolean)* Whether pressing tab at the start of a line in docblock should indent to match the previous line's description field. An example of this feature is described above.
+
+- **`jsdocs_notation_map`** *(Array)* An array of notation objects. Each notation object must define either a `prefix` OR a `regex` property, and a `type` property.
 
 This is my first package for Sublime Text, and the first time I've written any Python, so I heartily welcome feedback and [feature requests or bug reports][issues].
 
