@@ -1,5 +1,5 @@
 """
-JSDocs v2.0.0
+JSDocs v2.1.0
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
@@ -167,7 +167,7 @@ class JsdocsParser:
         if not val or val == '':  # quick short circuit
             valType = "[type]"
         else:
-            valType = self.guessTypeFromValue(val) or "[type]"
+            valType = self.guessTypeFromValue(val) or self.guessTypeFromName(name) or "[type]"
 
         if self.inline:
             out.append("@type %s${1:%s}%s ${1:[description]}" % (
@@ -199,7 +199,7 @@ class JsdocsParser:
             for arg in self.parseArgs(args):
                 out.append("@param %s${1:%s}%s %s ${1:[description]}" % (
                     "{" if self.settings['curlyTypes'] else "",
-                    escape(arg[0] or "[type]"),
+                    escape(arg[0] or self.guessTypeFromName(arg[1]) or "[type]"),
                     "}" if self.settings['curlyTypes'] else "",
                     escape(arg[1])
                 ))
@@ -250,6 +250,30 @@ class JsdocsParser:
         if (len(extraTags) > 0):
             out.extend(extraTags)
 
+    def guessTypeFromName(self, name):
+        name = re.sub("^[$_]", "", name)
+        hungarian_map = self.viewSettings.get('jsdocs_notation_map', [])
+        if len(hungarian_map):
+            for rule in hungarian_map:
+                print rule
+                matched = False
+                if 'prefix' in rule:
+                    matched = re.match(rule['prefix'] + "[A-Z_]", name)
+                elif 'regex' in rule:
+                    matched = re.search(rule['regex'], name)
+
+                if matched:
+
+                    return self.settings[rule['type']] if rule['type'] in self.settings else rule['type']
+
+        if (re.match("(?:is|has)[A-Z_]", name)):
+            return self.settings['bool']
+
+        if (re.match("^(?:cb|callback|done|next|fn)$", name)):
+            return self.settings['function']
+
+        return False
+
 
 class JsdocsJavascript(JsdocsParser):
     def setupSettings(self):
@@ -260,7 +284,8 @@ class JsdocsJavascript(JsdocsParser):
             "varIdentifier": '[a-zA-Z_$][a-zA-Z_$0-9]*',
             "fnIdentifier": '[a-zA-Z_$][a-zA-Z_$0-9]*',
 
-            "bool": "Boolean"
+            "bool": "Boolean",
+            "function": "Function"
         }
 
     def parseFunction(self, line):
@@ -327,7 +352,8 @@ class JsdocsPHP(JsdocsParser):
             'curlyTypes': False,
             'varIdentifier': '[$]' + nameToken + '(?:->' + nameToken + ')*',
             'fnIdentifier': nameToken,
-            "bool": "bool"
+            "bool": "bool",
+            "function": "function"
         }
 
     def parseFunction(self, line):
@@ -442,3 +468,11 @@ class JsdocsIndentCommand(sublime_plugin.TextCommand):
         if res:
             return len(res.group('fromStar'))
         return None
+
+
+class JsdocsJoinCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        v = self.view
+        for sel in v.sel():
+            for lineRegion in reversed(v.lines(sel)):
+                v.replace(edit, v.find("[ \\t]*\\n[ \\t]*(\\*[ \\t]*)?", lineRegion.begin()), ' ')

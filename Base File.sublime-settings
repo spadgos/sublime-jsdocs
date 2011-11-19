@@ -29,5 +29,8 @@
   // Any additional boilerplate tags which should be added to each block. Should be an array of strings.
   // Note that this only applies when a docblock is opened directly preceding a function.
   // Tab points can be added by using snippet syntax, eg: ${1:default text}
-  "jsdocs_extra_tags": []
+  "jsdocs_extra_tags": [],
+
+  // A map to determine the value of variables, should hungarian notation (or similar) be in use
+  "jsdocs_notation_map": []
 }
