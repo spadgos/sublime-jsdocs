@@ -14,7 +14,6 @@ Go to your Sublime Text 2 Packages directory and clone the repository using the 
 
 Don't forget to keep updating it, though!
 
-
 ### Without Git ###
 
 Download the latest version from the [tags page][tags]. Unzip to your Sublime Text Packages folder (you can find this by opening ST2 and selecting `Preferences -> Browse Packages...`). I'd recommend renaming the folder from the default (which will be something like `spadgos-sublime-jsdocs-a4bc2a`) to `JSDocs`. That's it -- you shouldn't even need to restart ST2.
@@ -25,7 +24,7 @@ You can leave either of these things [here][issues].
 
 ## Changelog ##
 
-- **v2.1.0**
+- **v2.1.0**, *19 November 2011*
   - Added a command to join lines inside a docblock which is smart to leading asterisks
   - Variable types are guessed from their name. `is` and `has` are assumed to be Booleans, and `callback`, `cb`, `done`, `fn` and `next` are assumed to be Functions.
   - You can now define your own patterns for mapping a variable name to a type.
