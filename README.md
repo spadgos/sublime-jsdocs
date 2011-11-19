@@ -30,6 +30,7 @@ You can leave either of these things [here][issues].
   - Variable types are guessed from their name. `is` and `has` are assumed to be Booleans, and `callback`, `cb`, `done`, `fn` and `next` are assumed to be Functions.
   - You can now define your own patterns for mapping a variable name to a type.
   - Autocomplete works better now. `@` will also insert the "@" character, allowing you to add any tag you like, even if it isn't in the autocomplete list.
+  - Added the full set of [PHPDoc][phpdoc] tags.
 - **v2.0.0**, *6 November 2011*
   - PHP support added!
   - (Almost) complete rewrite to allow for any new languages to be added easily
@@ -210,27 +211,30 @@ Oftentimes, when documenting a parameter, or adding a description to a tag, your
 
 ### Adding extra tags ###
 
-Finally, typing `@` inside a docblock will show a completion list for all tags supported by [JSDoc][jsdoc] or the [Google Closure Compiler][closure]. Extra help is provided for each of these tags by prefilling the arguments each expects. Pressing `tab` will move the cursor to the next argument.
+Finally, typing `@` inside a docblock will show a completion list for all tags supported by [JSDoc][jsdoc], the [Google Closure Compiler][closure] or [PHPDoc][phpdoc]. Extra help is provided for each of these tags by prefilling the arguments each expects. Pressing `tab` will move the cursor to the next argument.
 
 Exhaustively, these tags are:
 
-    @param, @return, @author,
-    @augments,
-    @borrows,
-    @class, @const, @constant, @constructor, @constructs,
-    @default, @define, @deprecated, @description,
-    @enum, @event, @example, @extends,
-    @field, @fileOverview, @function,
-    @ignore, @implements, @inheritDoc, @inner, @interface,
-    @lends, @license, {@link}
-    @memberOf,
-    @name, @namespace, @nosideeffects,
-    @override,
-    @preserve, @private, @property, @protected, @public,
-    @requires,
-    @see, @since, @static,
-    @this, @throws, @type, @typedef,
-    @version
+    @param @return @author
+    @abstract @access @augments
+    @borrows
+    @category @class @const @constant @constructor @constructs @copyright
+    @default @define @deprecated @description
+    @enum @event @example @extends
+    @field @fileOverview @filesource @final @function
+    @global
+    @ignore @implements @inheritDoc @inner @interface @internal
+    @lends @license @link
+    @memberOf @method
+    @name @namespace @nosideeffects
+    @override
+    @package @preserve @private @property @protected @public
+    @requires
+    @see @since @static @staticvar @subpackage
+    @this @throws @todo @tutorial @type @typedef
+    @uses
+    @var @version
+
 
 ## Configuration ##
 
