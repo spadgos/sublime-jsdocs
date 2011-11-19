@@ -1,12 +1,11 @@
 """
-JSDocs v2.1.0pre
+JSDocs v2.1.0
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
 import sublime_plugin
 import re
 import string
-import sublime
 
 
 def read_line(view, point):
