@@ -294,7 +294,7 @@ This is my first package for Sublime Text, and the first time I've written any P
 
 ## Show your love ##
 
-<a href='http://www.pledgie.com/campaigns/16316'><img alt='Click here to lend your support to: JSDocs and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/16316.png?skin_name=chrome' border='0' /></a>
+[![Click here to lend your support to: JSDocs and make a donation at www.pledgie.com !](https://www.pledgie.com/campaigns/16316.png?skin_name=chrome)](http://www.pledgie.com/campaigns/16316)
 
 [sublime]: http://www.sublimetext.com/
 [jsdoc]: http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
