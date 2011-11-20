@@ -292,6 +292,9 @@ You can access the configuration settings by selecting `Preferences -> Package S
 
 This is my first package for Sublime Text, and the first time I've written any Python, so I heartily welcome feedback and [feature requests or bug reports][issues].
 
+## Show your love ##
+
+<a href='http://www.pledgie.com/campaigns/16316'><img alt='Click here to lend your support to: JSDocs and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/16316.png?skin_name=chrome' border='0' /></a>
 
 [sublime]: http://www.sublimetext.com/
 [jsdoc]: http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
