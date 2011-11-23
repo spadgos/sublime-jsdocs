@@ -23,7 +23,8 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
-
+- **v2.1.1**, *23 November 2011*
+  - Fixed bug which broke the completions list
 - **v2.1.0**, *19 November 2011*
   - Added a command to join lines inside a docblock which is smart to leading asterisks
   - Variable types are guessed from their name. `is` and `has` are assumed to be Booleans, and `callback`, `cb`, `done`, `fn` and `next` are assumed to be Functions.

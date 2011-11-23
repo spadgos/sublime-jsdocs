@@ -1,5 +1,5 @@
 """
-JSDocs v2.1.0
+JSDocs v2.1.1
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
