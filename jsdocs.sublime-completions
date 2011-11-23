@@ -40,7 +40,7 @@
         { "trigger" : "@license",       "contents": "@license ${1:[url]} ${2:[description]}"},
         { "trigger" : "@memberOf",      "contents": "@memberOf ${1:parentNamePath"},
         { "trigger" : "@method",        "contents": "@method {${1:[return type]}} ${2:[name]}() ${2:[name]}(${3:[args]}) ${4:[description]}"},
-        { "trigger" : "@name",          "contents": "@name {$1:[name]}",
+        { "trigger" : "@name",          "contents": "@name {$1:[name]}"},
         { "trigger" : "@namespace",     "contents": "@namespace ${1:[description]}"},
         { "trigger" : "@nosideeffects", "contents": ""},
         { "trigger" : "@override",      "contents": "@preserve ${1:[description]}"},
