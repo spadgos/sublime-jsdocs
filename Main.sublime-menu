@@ -12,13 +12,13 @@
                 "children":
                 [
                     {
-                        "caption": "JSDocs",
+                        "caption": "DocBlockr",
                         "children":
                         [
                             {
                                 "command": "open_file", "args":
                                 {
-                                    "file": "${packages}/JSDocs/Base File.sublime-settings"
+                                    "file": "${packages}/DocBlockr/Base File.sublime-settings"
                                 },
                                 "caption": "Settings – Default"
                             },
