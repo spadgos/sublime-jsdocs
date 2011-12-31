@@ -4,25 +4,27 @@ This is a [Sublime Text 2][sublime] package which makes writing [JSDoc comments]
 
 ### With Package Control ###
 
-If you have the [Package Control][package_control] package installed, you can install JSDocs from inside Sublime Text itself. Open the Command Palette and select "Package Control: Install Package", then search for JSDocs and you're done!
+If you have the [Package Control][package_control] package installed, you can install DocBlockr from inside Sublime Text itself. Open the Command Palette and select "Package Control: Install Package", then search for DocBlockr and you're done!
 
 ### Without Package Control ###
 
 Go to your Sublime Text 2 Packages directory and clone the repository using the command below:
 
-    git clone https://github.com/spadgos/sublime-jsdocs.git JSDocs
+    git clone https://github.com/spadgos/sublime-jsdocs.git DocBlockr
 
 Don't forget to keep updating it, though!
 
 ### Without Git ###
 
-Download the latest version from the [tags page][tags]. Unzip to your Sublime Text Packages folder (you can find this by opening ST2 and selecting `Preferences -> Browse Packages...`). I'd recommend renaming the folder from the default (which will be something like `spadgos-sublime-jsdocs-a4bc2a`) to `JSDocs`. That's it -- you shouldn't even need to restart ST2.
+Download the latest version from the [tags page][tags]. Unzip to your Sublime Text Packages folder (you can find this by opening ST2 and selecting `Preferences -> Browse Packages...`). I'd recommend renaming the folder from the default (which will be something like `spadgos-sublime-jsdocs-a4bc2a`) to `DocBlockr`. That's it -- you shouldn't even need to restart ST2.
 
 ## Feature requests & bug reports ##
 
 You can leave either of these things [here][issues].
 
 ## Changelog ##
+- **v2.1.2**, *31 December 2011*
+  - Renamed from *JSDocs* to *DocBlockr*, since it now does more than just Javascript.
 - **v2.1.1**, *23 November 2011*
   - Fixed bug which broke the completions list
 - **v2.1.0**, *19 November 2011*
@@ -47,7 +49,7 @@ You can leave either of these things [here][issues].
   - Double slash comments (`// like this`) are extended when `enter` is pressed
   - Class definitions detected and treated slightly differently (no return values pre-filled)
 - **v1.1.0**, *3 October 2011*
-  - JSDocs parses the line following the comment to automatically prefill some documentation for you.
+  - DocBlockr parses the line following the comment to automatically prefill some documentation for you.
   - Settings available via menu
 - **v1.0.0**, *28 September 2011*
   - Initial release
@@ -102,7 +104,7 @@ In PHP, if [type hinting][typehinting] or default values are used, then those ty
      */
     function foo(Array $arr, MyClass $cls, $str = "abc", $i = 0) {}
 
-JSDocs will try to make an intelligent guess about the return value of the function.
+DocBlockr will try to make an intelligent guess about the return value of the function.
 
 - If the function name begins with "set" or "add", then no `@return` is inserted.
 - If the function name beings with "is" or "has", then it is assumed to return a `Boolean`.
@@ -115,7 +117,7 @@ JSDocs will try to make an intelligent guess about the return value of the funct
 
 ### Variable documentation ###
 
-If the line following your docblock contains a variable declaration, JSDocs will try to determine the data type of the variable and insert that into the comment.
+If the line following your docblock contains a variable declaration, DocBlockr will try to determine the data type of the variable and insert that into the comment.
 
     /**<<enter>>
     foo = 1
@@ -137,7 +139,7 @@ If you press `shift+enter` after the opening `/**` then the docblock will be ins
     /** @type {Module} [bar description] */
     bar = new Module();
 
-JSDocs will also try to determine the type of the variable from its name. Variables starting with `is` or `has` are assumed to be booleans, and `callback`, `cb`, `done`, `fn`, and `next` are assumed to be functions. If you use your own variable naming system (eg: hungarian notation: booleans all start with `b`, arrays start with `arr`), you can define these rules yourself. Modify the `jsdocs_notation_map` setting *(in `Base File.sublime-settings`)* like so:
+DocBlockr will also try to determine the type of the variable from its name. Variables starting with `is` or `has` are assumed to be booleans, and `callback`, `cb`, `done`, `fn`, and `next` are assumed to be functions. If you use your own variable naming system (eg: hungarian notation: booleans all start with `b`, arrays start with `arr`), you can define these rules yourself. Modify the `jsdocs_notation_map` setting *(in `Base File.sublime-settings`)* like so:
 
 ```javascript
 {
@@ -238,9 +240,11 @@ Exhaustively, these tags are:
 
 ## Configuration ##
 
-You can access the configuration settings by selecting `Preferences -> Package Settings -> JSDocs`.
+You can access the configuration settings by selecting `Preferences -> Package Settings -> DocBlockr`.
 
-- **`jsdocs_indentation_spaces`** *(Number)* The number of spaces to indent after the leading asterisk.
+*The `jsdocs_*` prefix is a legacy from days gone by...*
+
+- `jsdocs_indentation_spaces` *(Number)* The number of spaces to indent after the leading asterisk.
 
         // jsdocs_indentation_spaces = 1
         /**
@@ -252,7 +256,7 @@ You can access the configuration settings by selecting `Preferences -> Package S
          *     foo
          */
 
-- **`jsdocs_align_tags`** *(String)* Whether the words following the tags should align. Possible values are `'no'`, `'shallow'` and `'deep'`
+- `jsdocs_align_tags` *(String)* Whether the words following the tags should align. Possible values are `'no'`, `'shallow'` and `'deep'`
    
     > For backwards compatibility, `false` is equivalent to `'no'`, `true` is equivalent to `'shallow'`
   
@@ -269,7 +273,7 @@ You can access the configuration settings by selecting `Preferences -> Package S
         @property {Number}        blahblah   desc3
   
 
-- **`jsdocs_extra_tags`** *(Array.String)* An array of strings, each representing extra boilerplate comments to add to *functions*. These can also include arbitrary text (not just tags).
+- `jsdocs_extra_tags` *(Array.String)* An array of strings, each representing extra boilerplate comments to add to *functions*. These can also include arbitrary text (not just tags).
 
         // jsdocs_extra_tags = ['This is a cool function', '@author nickf', '@version ${1:version}']
         /**<<enter>>
@@ -285,17 +289,17 @@ You can access the configuration settings by selecting `Preferences -> Package S
          */
         function foo (x) {}
 
-- **`jsdocs_extend_double_slash`** *(Boolean)* Whether double-slash comments should be extended. An example of this feature is described above.
+- `jsdocs_extend_double_slash` *(Boolean)* Whether double-slash comments should be extended. An example of this feature is described above.
 
-- **`jsdocs_deep_indent`** *(Boolean)* Whether pressing tab at the start of a line in docblock should indent to match the previous line's description field. An example of this feature is described above.
+- `jsdocs_deep_indent` *(Boolean)* Whether pressing tab at the start of a line in docblock should indent to match the previous line's description field. An example of this feature is described above.
 
-- **`jsdocs_notation_map`** *(Array)* An array of notation objects. Each notation object must define either a `prefix` OR a `regex` property, and a `type` property.
+- `jsdocs_notation_map` *(Array)* An array of notation objects. Each notation object must define either a `prefix` OR a `regex` property, and a `type` property.
 
 This is my first package for Sublime Text, and the first time I've written any Python, so I heartily welcome feedback and [feature requests or bug reports][issues].
 
 ## Show your love ##
 
-[![Click here to lend your support to: JSDocs and make a donation at www.pledgie.com !](https://www.pledgie.com/campaigns/16316.png?skin_name=chrome)](http://www.pledgie.com/campaigns/16316)
+[![Click here to lend your support to: DocBlockr and make a donation at www.pledgie.com !](https://www.pledgie.com/campaigns/16316.png?skin_name=chrome)](http://www.pledgie.com/campaigns/16316)
 
 [sublime]: http://www.sublimetext.com/
 [jsdoc]: http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
