@@ -23,6 +23,8 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
+- **v2.1.3**, *31 December 2011*
+  - Changed path for macro file to point to `Packages/DocBlockr`. If you are having issues, make sure that the plugin is installed in that location (**not** the previous location `Packages/JSDocs`).
 - **v2.1.2**, *31 December 2011*
   - Renamed from *JSDocs* to *DocBlockr*, since it now does more than just Javascript.
 - **v2.1.1**, *23 November 2011*
