@@ -1,0 +1,14 @@
+{
+  "scope": "source.php comment.block.documentation",
+  "completions":
+  [
+    { "trigger" : "@abstract",      "contents": ""},
+    { "trigger" : "@access",        "contents": "@access ${1:[public]}"},
+    { "trigger" : "@category",      "contents": "@category ${1:[category]}"},
+    { "trigger" : "@filesource",    "contents": ""},
+    { "trigger" : "@final",         "contents": ""},
+    { "trigger" : "@global",        "contents": "@global {${1:[type]}} ${2:name}"},
+    { "trigger" : "@method",        "contents": "@method {${1:[return type]}} ${2:[name]}() ${2:[name]}(${3:[args]}) ${4:[description]}"},
+    { "trigger" : "@staticvar",     "contents": "@staticvar {${1:[type]}} ${2:[description]}"}
+  ]
+}

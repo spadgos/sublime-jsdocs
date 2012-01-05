@@ -1,0 +1,29 @@
+{
+  "scope": "source.js comment.block.documentation",
+  "completions":
+  [
+    { "trigger" : "@augments",      "contents": "@augments {${1:[type]}}"},
+    { "trigger" : "@borrows",       "contents": "@borrows ${1:[otherMemberName]} as ${2:[thisMemberName]}"},
+    { "trigger" : "@class",         "contents": "@class ${1:[description]}"},
+    { "trigger" : "@const",         "contents": ""},
+    { "trigger" : "@constant",      "contents": ""},
+    { "trigger" : "@constructor",   "contents": ""},
+    { "trigger" : "@constructs",    "contents": ""},
+    { "trigger" : "@default",       "contents": "@default ${1:[value]}"},
+    { "trigger" : "@define",        "contents": "@define {${1:[type]}} ${2:[description]}"},
+    { "trigger" : "@enum",          "contents": "@enum {${1:[type]}}"},
+    { "trigger" : "@event",         "contents": ""},
+    { "trigger" : "@field",         "contents": ""},
+    { "trigger" : "@function",      "contents": ""},
+    { "trigger" : "@inner",         "contents": ""},
+    { "trigger" : "@interface",     "contents": ""},
+    { "trigger" : "@lends",         "contents": "@lends ${1:[symbolAlias]}"},
+    { "trigger" : "@memberOf",      "contents": "@memberOf ${1:parentNamePath"},
+    { "trigger" : "@nosideeffects", "contents": ""},
+    { "trigger" : "@private",       "contents": ""},
+    { "trigger" : "@protected",     "contents": ""},
+    { "trigger" : "@public",        "contents": ""},
+    { "trigger" : "@this",          "contents": "@this {${1:[type]}}"},
+    { "trigger" : "@typedef",       "contents": "@typedef {${1:[type]}}"}
+  ]
+}
