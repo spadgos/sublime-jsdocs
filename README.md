@@ -1,4 +1,4 @@
-This is a [Sublime Text 2][sublime] package which makes writing [JSDoc comments][jsdoc] and [PHPDoc comments][phpdoc] a little bit easier.
+DocBlockr is a [Sublime Text 2][sublime] package which makes writing [JSDoc comments][jsdoc] and [PHPDoc comments][phpdoc] a breeze.
 
 ## Installation ##
 
@@ -23,6 +23,9 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
+- **v2.2.0**, *5 January 2012*
+  - A configuration option can be set so that either `@return` or `@returns` is used in your documentation. 
+  - Language-specific tags now will only show for that language (eg: PHP has no `@interface` tag).
 - **v2.1.3**, *31 December 2011*
   - Changed path for macro file to point to `Packages/DocBlockr`. If you are having issues, make sure that the plugin is installed in that location (**not** the previous location `Packages/JSDocs`).
 - **v2.1.2**, *31 December 2011*
@@ -219,7 +222,7 @@ Finally, typing `@` inside a docblock will show a completion list for all tags s
 
 Exhaustively, these tags are:
 
-    @param @return @author
+    @param @return @returns @author
     @abstract @access @augments
     @borrows
     @category @class @const @constant @constructor @constructs @copyright
@@ -296,6 +299,8 @@ You can access the configuration settings by selecting `Preferences -> Package S
 - `jsdocs_deep_indent` *(Boolean)* Whether pressing tab at the start of a line in docblock should indent to match the previous line's description field. An example of this feature is described above.
 
 - `jsdocs_notation_map` *(Array)* An array of notation objects. Each notation object must define either a `prefix` OR a `regex` property, and a `type` property.
+
+- `jsdocs_return_tag` *(String)* The text which should be used for a `@return` tag. By default, `@return` is used, however this can be changed to `@returns` if you use that style.
 
 This is my first package for Sublime Text, and the first time I've written any Python, so I heartily welcome feedback and [feature requests or bug reports][issues].
 
