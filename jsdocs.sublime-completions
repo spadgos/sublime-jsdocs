@@ -4,6 +4,7 @@
     [
         { "trigger" : "@param",         "contents": "@param {${1:[type]}} ${2:[varname]} ${3:[description]}" },
         { "trigger" : "@return",        "contents": "@return {${1:[type]}} ${2:[description]}" },
+        { "trigger" : "@returns",       "contents": "@returns {${1:[type]}} ${2:[description]}" },
         { "trigger" : "@author",        "contents": "@author ${1:[author]}" },
         { "trigger" : "@abstract",      "contents": ""},
         { "trigger" : "@access",        "contents": "@access ${1:[public]}"},
