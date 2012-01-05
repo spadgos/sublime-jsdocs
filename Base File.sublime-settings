@@ -32,5 +32,8 @@
   "jsdocs_extra_tags": [],
 
   // A map to determine the value of variables, should hungarian notation (or similar) be in use
-  "jsdocs_notation_map": []
+  "jsdocs_notation_map": [],
+
+  // Since there seems to be no agreed standard for "@return" or "@returns", use this setting to rename it as you wish.
+  "jsdocs_return_tag": "@return"
 }

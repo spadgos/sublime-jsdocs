@@ -16,10 +16,10 @@ def read_line(view, point):
     return view.substr(next_line)
 
 
-def write(view, strng):
+def write(view, str):
     view.run_command(
         'insert_snippet', {
-            'contents': strng
+            'contents': str
         }
     )
 
@@ -206,7 +206,8 @@ class JsdocsParser:
 
         retType = self.getFunctionReturnType(name)
         if retType is not None:
-            out.append("@return %s${1:%s}%s" % (
+            out.append("%s %s${1:%s}%s" % (
+                self.viewSettings.get('jsdocs_return_tag'),
                 "{" if self.settings['curlyTypes'] else "",
                 retType or "[type]",
                 "}" if self.settings['curlyTypes'] else ""
