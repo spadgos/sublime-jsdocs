@@ -23,7 +23,7 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
-- In progress...
+- **v2.2.0**, *5 January 2012*
   - A configuration option can be set so that either `@return` or `@returns` is used in your documentation. 
   - Language-specific tags now will only show for that language (eg: PHP has no `@interface` tag).
 - **v2.1.3**, *31 December 2011*
