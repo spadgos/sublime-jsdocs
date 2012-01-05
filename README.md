@@ -25,6 +25,7 @@ You can leave either of these things [here][issues].
 ## Changelog ##
 - In progress...
   - A configuration option can be set so that either `@return` or `@returns` is used in your documentation. 
+  - Language-specific tags now will only show for that language (eg: PHP has no `@interface` tag).
 - **v2.1.3**, *31 December 2011*
   - Changed path for macro file to point to `Packages/DocBlockr`. If you are having issues, make sure that the plugin is installed in that location (**not** the previous location `Packages/JSDocs`).
 - **v2.1.2**, *31 December 2011*
