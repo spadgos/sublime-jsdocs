@@ -477,3 +477,27 @@ class JsdocsJoinCommand(sublime_plugin.TextCommand):
         for sel in v.sel():
             for lineRegion in reversed(v.lines(sel)):
                 v.replace(edit, v.find("[ \\t]*\\n[ \\t]*(\\*[ \\t]*)?", lineRegion.begin()), ' ')
+
+
+class JsdocsDecorateCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        v = self.view
+        v.run_command('expand_selection', {'to': 'scope'})
+        maxLength = 0
+        #  leadingWS = 0
+        for sel in v.sel():
+            lines = v.lines(sel)
+            for lineRegion in lines:
+                maxLength = max(maxLength, lineRegion.size())
+
+            v.insert(edit, sel.end(), "/" * (maxLength + 3) + "\n")
+
+            for lineRegion in reversed(lines):
+                line = v.substr(lineRegion)
+                print line
+                rPadding = 1 + (maxLength - lineRegion.size())
+                print rPadding
+                v.replace(edit, lineRegion, line + (" " * rPadding) + "//")
+                # break
+
+            v.insert(edit, sel.begin(), "/" * (maxLength + 3) + "\n")
