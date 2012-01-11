@@ -23,6 +23,10 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
+- **v2.2.1**, *11 January 2012*
+  - DocBlocks can be triggered by pressing `tab` after `/**`
+  - Some bugfixes due to auto-complete changes in Sublime Text.
+  - Fixed bug where indenting would not work on the first line of a comment.
 - **v2.2.0**, *5 January 2012*
   - A configuration option can be set so that either `@return` or `@returns` is used in your documentation. 
   - Language-specific tags now will only show for that language (eg: PHP has no `@interface` tag).
@@ -66,7 +70,7 @@ You can leave either of these things [here][issues].
 
 ### Docblock completion ###
 
-Pressing enter after `/**` will yield a new line and will close the comment.
+Pressing **enter** or **tab** after `/**` will yield a new line and will close the comment.
 
     /**<<enter>>
 
