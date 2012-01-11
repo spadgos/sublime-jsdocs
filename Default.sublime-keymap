@@ -1,9 +1,15 @@
 [
     { "keys": ["enter"], "command": "jsdocs", "context" :
         [
-            { "key": "setting.auto_indent", "operator": "equal", "operand": true, "match_all": "true" },
+            { "key": "setting.auto_indent", "operator": "equal", "operand": true, "match_all": true },
             { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
-            { "key": "auto_complete_visible", "operator": "equal", "operand": false, "match_all": true },
+            { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*\\/\\*{2}$", "match_all": true }
+        ]
+    },
+    { "keys": ["tab"], "command": "jsdocs", "context" :
+        [
+            { "key": "setting.auto_indent", "operator": "equal", "operand": true, "match_all": true },
+            { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
             { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*\\/\\*{2}$", "match_all": true }
         ]
     },
@@ -11,15 +17,13 @@
         [
             { "key": "setting.auto_indent", "operator": "equal", "operand": true, "match_all": true },
             { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
-            { "key": "auto_complete_visible", "operator": "equal", "operand": false, "match_all": true },
             { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*\\/\\*{2}$", "match_all": true }
         ]
     },
     { "keys": ["enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^\\s*(\\*\\s*).*$/$1/}"}, "context":
         [
             { "key": "setting.auto_indent", "operator": "equal", "operand": true },
-            { "key": "selector", "operator" : "equal", "operand" : "comment.block.documentation"},
-            { "key": "auto_complete_visible", "operator": "equal", "operand": false, "match_all": true },
+            { "key": "selector", "operator" : "equal", "operand" : "comment.block.documentation", "match_all": true},
             { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*\\*", "match_all": true }
         ]
     },
@@ -28,7 +32,6 @@
             { "key": "setting.auto_indent", "operator": "equal", "operand": true, "match_all": true },
             { "key": "setting.jsdocs_extend_double_slash", "operator": "equal", "operand": true, "match_all": true},
             { "key": "selector", "operator" : "equal", "operand" : "comment.line.double-slash", "match_all": true},
-            { "key": "auto_complete_visible", "operator": "equal", "operand": false, "match_all": true },
             { "key": "preceding_text", "operator" : "regex_contains", "operand": "^\\s*\\/\\/", "match_all": true}
         ]
     },
@@ -36,7 +39,6 @@
         [
             { "key": "setting.auto_indent", "operator": "equal", "operand": true, "match_all": "true" },
             { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
-            { "key": "auto_complete_visible", "operator": "equal", "operand": false, "match_all": true },
             { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*\\/\\*{2}$", "match_all": true }
         ]
     },
@@ -44,15 +46,13 @@
         [
             { "key": "setting.auto_indent", "operator": "equal", "operand": true, "match_all": true },
             { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
-            { "key": "auto_complete_visible", "operator": "equal", "operand": false, "match_all": true },
             { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*\\/\\*{2}$", "match_all": true }
         ]
     },
     { "keys": ["keypad_enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^\\s*(\\*\\s*).*$/$1/}"}, "context":
         [
             { "key": "setting.auto_indent", "operator": "equal", "operand": true },
-            { "key": "selector", "operator" : "equal", "operand" : "comment.block.documentation"},
-            { "key": "auto_complete_visible", "operator": "equal", "operand": false, "match_all": true },
+            { "key": "selector", "operator" : "equal", "operand" : "comment.block.documentation", "match_all": true},
             { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*\\*", "match_all": true }
         ]
     },
@@ -61,7 +61,6 @@
             { "key": "setting.auto_indent", "operator": "equal", "operand": true, "match_all": true },
             { "key": "setting.jsdocs_extend_double_slash", "operator": "equal", "operand": true, "match_all": true},
             { "key": "selector", "operator" : "equal", "operand" : "comment.line.double-slash", "match_all": true},
-            { "key": "auto_complete_visible", "operator": "equal", "operand": false, "match_all": true },
             { "key": "preceding_text", "operator" : "regex_contains", "operand": "^\\s*\\/\\/", "match_all": true}
         ]
     },
@@ -69,7 +68,7 @@
         [
             { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
             { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*(?:\\*|\\/\\*{2})\\s*$", "match_all": true },
-            { "key": "selector", "operator" : "equal", "operand" : "comment.block.documentation"}
+            { "key": "selector", "operator" : "equal", "operand" : "comment.block.documentation", "match_all": true}
         ]
     },
     { "keys": ["tab"], "command": "jsdocs_indent", "context":
@@ -78,7 +77,8 @@
             { "key": "setting.auto_indent", "operator": "equal", "operand": true, "match_all": true },
             { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
             { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*\\*\\s*$", "match_all": true },
-            { "key": "selector", "operator": "equal", "operand": "comment.block.documentation" }
+            { "key": "has_next_field", "operator": "equal", "operand": false, "match_all": true },
+            { "key": "selector", "operator": "equal", "operand": "comment.block.documentation", "match_all": true }
         ]
     },
     { "keys": ["ctrl+j"], "command": "jsdocs_join", "context":

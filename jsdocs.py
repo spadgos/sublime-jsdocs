@@ -1,5 +1,5 @@
 """
-DocBlockr v2.2.0
+DocBlockr v2.2.1
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
@@ -207,7 +207,7 @@ class JsdocsParser:
         retType = self.getFunctionReturnType(name)
         if retType is not None:
             out.append("%s %s${1:%s}%s" % (
-                self.viewSettings.get('jsdocs_return_tag'),
+                self.viewSettings.get('jsdocs_return_tag') or '@return',
                 "{" if self.settings['curlyTypes'] else "",
                 retType or "[type]",
                 "}" if self.settings['curlyTypes'] else ""
@@ -449,17 +449,20 @@ class JsdocsIndentCommand(sublime_plugin.TextCommand):
         currCol = currPos - currLineRegion.begin()  # which column we're currently in
         prevLine = v.substr(v.line(v.line(currPos).begin() - 1))
         spaces = self.getIndentSpaces(prevLine)
-        toStar = len(re.search("^(\\s*\\*)", prevLine).group(1))
-        toInsert = spaces - currCol + toStar
-        if spaces is None or toInsert <= 0:
-            v.run_command(
-                'insert_snippet', {
-                    'contents': "\t"
-                }
-            )
-            return
+        if spaces:
+            toStar = len(re.search("^(\\s*\\*)", prevLine).group(1))
+            toInsert = spaces - currCol + toStar
+            if spaces is None or toInsert <= 0:
+                v.run_command(
+                    'insert_snippet', {
+                        'contents': "\t"
+                    }
+                )
+                return
 
-        v.insert(edit, currPos, " " * toInsert)
+            v.insert(edit, currPos, " " * toInsert)
+        else:
+            v.insert(edit, currPos, "\t")
 
     def getIndentSpaces(self, line):
         res = re.search("^\\s*\\*(?P<fromStar>\\s*@(?:param|property)\\s+\\S+\\s+\\S+\\s+)\\S", line) \
