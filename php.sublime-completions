@@ -36,10 +36,10 @@
     { "trigger" : "@uses",          "contents": "@uses ${1:[object]} ${2:[description]}"},
     { "trigger" : "@var",           "contents": "@var ${1:[type]} ${2:[description]}"},
     { "trigger" : "@version",       "contents": "@version ${1:[version]}"},
-    { "trigger" : "{@example}",     "contents": "{@example ${1:[path]}}"}
-    { "trigger" : "{@inheritdoc}",  "contents": ""}
-    { "trigger" : "{@link}",        "contents": "{@link ${1:[url]}}"}
-    { "trigger" : "{@source}",      "contents": ""}
+    { "trigger" : "{@example}",     "contents": "{@example ${1:[path]}}"},
+    { "trigger" : "{@inheritdoc}",  "contents": ""},
+    { "trigger" : "{@link}",        "contents": "{@link ${1:[url]}}"},
+    { "trigger" : "{@source}",      "contents": ""},
     { "trigger" : "{@tutorial}",    "contents": "{@tutorial ${1:[path]}}"}
   ]
 }
