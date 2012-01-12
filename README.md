@@ -23,6 +23,10 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
+- **v2.2.2**, *12 January 2012*
+  - Separated JS and PHP completions files. PHP completions don't have brackets around type information any more.
+  - PHP now uses `@var` (instead of `@type`) for documenting variable declarations.
+  - *Both of these changes are thanks to [svenax][svenax]*
 - **v2.2.1**, *11 January 2012*
   - DocBlocks can be triggered by pressing `tab` after `/**`
   - Some bugfixes due to auto-complete changes in Sublime Text.
@@ -312,12 +316,13 @@ This is my first package for Sublime Text, and the first time I've written any P
 
 [![Click here to lend your support to: DocBlockr and make a donation at www.pledgie.com !](https://www.pledgie.com/campaigns/16316.png?skin_name=chrome)](http://www.pledgie.com/campaigns/16316)
 
-[sublime]: http://www.sublimetext.com/
-[jsdoc]: http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
-[phpdoc]: http://phpdoc.org/
 [closure]: http://code.google.com/closure/compiler/docs/js-for-compiler.html
 [issues]: https://github.com/spadgos/sublime-jsdocs/issues
-[package_control]: http://wbond.net/sublime_packages/package_control
-[typehinting]: http://php.net/manual/en/language.oop5.typehinting.php
-[tags]: https://github.com/spadgos/sublime-jsdocs/tags
+[jsdoc]: http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
 [magicmethods]: http://www.php.net/manual/en/language.oop5.magic.php
+[package_control]: http://wbond.net/sublime_packages/package_control
+[phpdoc]: http://phpdoc.org/
+[sublime]: http://www.sublimetext.com/
+[svenax]: https://github.com/svenax
+[tags]: https://github.com/spadgos/sublime-jsdocs/tags
+[typehinting]: http://php.net/manual/en/language.oop5.typehinting.php
