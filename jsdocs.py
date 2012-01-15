@@ -99,8 +99,8 @@ class JsdocsCommand(sublime_plugin.TextCommand):
                 widths.append(map(outputWidth, line.split(" ")))
                 maxCols = max(maxCols, len(widths[-1]))
 
-            #  i'm quite sure there's a better way to initialise a list to 0
-            maxWidths = map(lambda x: 0, range(0, maxCols))
+            #  initialise a list to 0
+            maxWidths = [0] * maxCols
 
             if (shallowAlignTags):
                 maxCols = 1
