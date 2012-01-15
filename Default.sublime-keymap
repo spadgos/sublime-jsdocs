@@ -89,6 +89,11 @@
             { "key": "selector", "operator": "equal", "operand": "comment.block.documentation", "match_all": true }
         ]
     },
+    { "keys": ["ctrl+enter"], "command": "jsdocs_decorate", "context":
+        [
+            { "key": "selector", "operator": "equal", "operand": "comment.line.double-slash"}
+        ]
+    },
     { "keys": ["ctrl+j"], "command": "jsdocs_join", "context":
         [
             { "key": "selector", "operator": "equal", "operand": "comment.block.documentation" }
