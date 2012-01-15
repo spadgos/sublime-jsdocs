@@ -1,0 +1,6 @@
+[
+  {
+    "caption": "JSDocs: Decorate line comment",
+    "command": "jsdocs_decorate"
+  }
+]

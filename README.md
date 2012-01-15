@@ -23,6 +23,9 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
+- **v2.3.0**, *15 January 2012*
+  - `Ctrl+Enter` on a double-slash comment will now decorate that comment.
+  - Added a setting (`jsdocs_spacer_between_sections`) to add spacer lines between sections of a docblock.
 - **v2.2.2**, *12 January 2012*
   - Separated JS and PHP completions files. PHP completions don't have brackets around type information any more.
   - PHP now uses `@var` (instead of `@type`) for documenting variable declarations.
@@ -224,6 +227,18 @@ Oftentimes, when documenting a parameter, or adding a description to a tag, your
      *                     |
      */
 
+### Comment decoration ###
+
+If you write a double-slash comment and then press `Ctrl+Enter`, DocBlockr will 'decorate' that line for you.
+
+    // Foo bar baz<<Ctrl+Enter>>
+
+    -- becomes
+
+    /////////////////
+    // Foo bar baz //
+    /////////////////
+    
 ### Adding extra tags ###
 
 Finally, typing `@` inside a docblock will show a completion list for all tags supported by [JSDoc][jsdoc], the [Google Closure Compiler][closure] or [PHPDoc][phpdoc]. Extra help is provided for each of these tags by prefilling the arguments each expects. Pressing `tab` will move the cursor to the next argument.
@@ -309,6 +324,8 @@ You can access the configuration settings by selecting `Preferences -> Package S
 - `jsdocs_notation_map` *(Array)* An array of notation objects. Each notation object must define either a `prefix` OR a `regex` property, and a `type` property.
 
 - `jsdocs_return_tag` *(String)* The text which should be used for a `@return` tag. By default, `@return` is used, however this can be changed to `@returns` if you use that style.
+
+- `jsdocs_spacer_between_sections` *(Boolean)* If true, then extra blank lines are inserted between the sections of the docblock. Default: `false`.
 
 This is my first package for Sublime Text, and the first time I've written any Python, so I heartily welcome feedback and [feature requests or bug reports][issues].
 

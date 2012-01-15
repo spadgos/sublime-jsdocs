@@ -1,5 +1,5 @@
 """
-DocBlockr v2.2.2
+DocBlockr v2.3.0
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
@@ -99,8 +99,8 @@ class JsdocsCommand(sublime_plugin.TextCommand):
                 widths.append(map(outputWidth, line.split(" ")))
                 maxCols = max(maxCols, len(widths[-1]))
 
-            #  i'm quite sure there's a better way to initialise a list to 0
-            maxWidths = map(lambda x: 0, range(0, maxCols))
+            #  initialise a list to 0
+            maxWidths = [0] * maxCols
 
             if (shallowAlignTags):
                 maxCols = 1
@@ -137,6 +137,13 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             # write the first linebreak and star. this sets the indentation for the following snippets
             write(v, "\n *" + (" " * indentSpaces))
             if out:
+                if settings.get('jsdocs_spacer_between_sections'):
+                    lastTag = None
+                    for idx, line in enumerate(out):
+                        res = re.match("^\\s*@([a-zA-Z]+)", line)
+                        if res and (lastTag != res.group(1)):
+                            lastTag = res.group(1)
+                            out.insert(idx, "")
                 write(v, prefix.join(out) + "\n*/")
             else:
                 write(v, "$0\n*/")
@@ -484,3 +491,28 @@ class JsdocsJoinCommand(sublime_plugin.TextCommand):
         for sel in v.sel():
             for lineRegion in reversed(v.lines(sel)):
                 v.replace(edit, v.find("[ \\t]*\\n[ \\t]*(\\*[ \\t]*)?", lineRegion.begin()), ' ')
+
+
+class JsdocsDecorateCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        v = self.view
+        re_whitespace = re.compile("^(\\s*)//")
+        v.run_command('expand_selection', {'to': 'scope'})
+        for sel in v.sel():
+            maxLength = 0
+            lines = v.lines(sel)
+            for lineRegion in lines:
+                leadingWS = len(re_whitespace.match(v.substr(lineRegion)).group(1))
+                maxLength = max(maxLength, lineRegion.size())
+
+            lineLength = maxLength - leadingWS
+            leadingWS = " " * leadingWS
+            v.insert(edit, sel.end(), leadingWS + "/" * (lineLength + 3) + "\n")
+
+            for lineRegion in reversed(lines):
+                line = v.substr(lineRegion)
+                rPadding = 1 + (maxLength - lineRegion.size())
+                v.replace(edit, lineRegion, leadingWS + line + (" " * rPadding) + "//")
+                # break
+
+            v.insert(edit, sel.begin(), "/" * (lineLength + 3) + "\n")
