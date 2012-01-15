@@ -99,8 +99,8 @@ class JsdocsCommand(sublime_plugin.TextCommand):
                 widths.append(map(outputWidth, line.split(" ")))
                 maxCols = max(maxCols, len(widths[-1]))
 
-            #  i'm quite sure there's a better way to initialise a list to 0
-            maxWidths = map(lambda x: 0, range(0, maxCols))
+            #  initialise a list to 0
+            maxWidths = [0] * maxCols
 
             if (shallowAlignTags):
                 maxCols = 1
@@ -137,6 +137,13 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             # write the first linebreak and star. this sets the indentation for the following snippets
             write(v, "\n *" + (" " * indentSpaces))
             if out:
+                if settings.get('jsdocs_spacer_between_sections'):
+                    lastTag = None
+                    for idx, line in enumerate(out):
+                        res = re.match("^\\s*@([a-zA-Z]+)", line)
+                        if res and (lastTag != res.group(1)):
+                            lastTag = res.group(1)
+                            out.insert(idx, "")
                 write(v, prefix.join(out) + "\n*/")
             else:
                 write(v, "$0\n*/")

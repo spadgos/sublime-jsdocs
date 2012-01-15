@@ -35,5 +35,18 @@
   "jsdocs_notation_map": [],
 
   // Since there seems to be no agreed standard for "@return" or "@returns", use this setting to rename it as you wish.
-  "jsdocs_return_tag": "@return"
+  "jsdocs_return_tag": "@return",
+
+  // Whether there should be blank lines added between the description line, and between tags of different types.
+  // If true, the output might look like this:
+  //
+  // /**
+  //  * [description]
+  //  *
+  //  * @param  {String} foo
+  //  * @param  {Number} bar
+  //  *
+  //  * @return {[Type]}
+  //  */
+  "jsdocs_spacer_between_sections": false
 }
