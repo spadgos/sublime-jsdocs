@@ -23,6 +23,8 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
+- In progress
+  - `Ctrl+Enter` on a double-slash comment will now decorate that comment.
 - **v2.2.2**, *12 January 2012*
   - Separated JS and PHP completions files. PHP completions don't have brackets around type information any more.
   - PHP now uses `@var` (instead of `@type`) for documenting variable declarations.
@@ -224,6 +226,18 @@ Oftentimes, when documenting a parameter, or adding a description to a tag, your
      *                     |
      */
 
+### Comment decoration ###
+
+If you write a double-slash comment and then press `Ctrl+Enter`, DocBlockr will 'decorate' that line for you.
+
+    // Foo bar baz<<Ctrl+Enter>>
+
+    -- becomes
+
+    /////////////////
+    // Foo bar baz //
+    /////////////////
+    
 ### Adding extra tags ###
 
 Finally, typing `@` inside a docblock will show a completion list for all tags supported by [JSDoc][jsdoc], the [Google Closure Compiler][closure] or [PHPDoc][phpdoc]. Extra help is provided for each of these tags by prefilling the arguments each expects. Pressing `tab` will move the cursor to the next argument.

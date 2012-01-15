@@ -489,22 +489,23 @@ class JsdocsJoinCommand(sublime_plugin.TextCommand):
 class JsdocsDecorateCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         v = self.view
+        re_whitespace = re.compile("^(\\s*)//")
         v.run_command('expand_selection', {'to': 'scope'})
-        maxLength = 0
-        #  leadingWS = 0
         for sel in v.sel():
+            maxLength = 0
             lines = v.lines(sel)
             for lineRegion in lines:
+                leadingWS = len(re_whitespace.match(v.substr(lineRegion)).group(1))
                 maxLength = max(maxLength, lineRegion.size())
 
-            v.insert(edit, sel.end(), "/" * (maxLength + 3) + "\n")
+            lineLength = maxLength - leadingWS
+            leadingWS = " " * leadingWS
+            v.insert(edit, sel.end(), leadingWS + "/" * (lineLength + 3) + "\n")
 
             for lineRegion in reversed(lines):
                 line = v.substr(lineRegion)
-                print line
                 rPadding = 1 + (maxLength - lineRegion.size())
-                print rPadding
-                v.replace(edit, lineRegion, line + (" " * rPadding) + "//")
+                v.replace(edit, lineRegion, leadingWS + line + (" " * rPadding) + "//")
                 # break
 
-            v.insert(edit, sel.begin(), "/" * (maxLength + 3) + "\n")
+            v.insert(edit, sel.begin(), "/" * (lineLength + 3) + "\n")
