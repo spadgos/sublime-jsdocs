@@ -137,6 +137,16 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             # write the first linebreak and star. this sets the indentation for the following snippets
             write(v, "\n *" + (" " * indentSpaces))
             if out:
+                if settings.get('jsdocs_spacer_between_sections'):
+                    newOut = []
+                    lastTag = None
+                    for line in out:
+                        res = re.match("^\\s*@([a-zA-Z]+)", line)
+                        if res and (lastTag != res.group(1)):
+                            lastTag = res.group(1)
+                            newOut.append("")
+                        newOut.append(line)
+                    out = newOut
                 write(v, prefix.join(out) + "\n*/")
             else:
                 write(v, "$0\n*/")
