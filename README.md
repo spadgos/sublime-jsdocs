@@ -23,6 +23,14 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
+- **v2.2.2**, *12 January 2012*
+  - Separated JS and PHP completions files. PHP completions don't have brackets around type information any more.
+  - PHP now uses `@var` (instead of `@type`) for documenting variable declarations.
+  - *Both of these changes are thanks to [svenax][svenax]*
+- **v2.2.1**, *11 January 2012*
+  - DocBlocks can be triggered by pressing `tab` after `/**`
+  - Some bugfixes due to auto-complete changes in Sublime Text.
+  - Fixed bug where indenting would not work on the first line of a comment.
 - **v2.2.0**, *5 January 2012*
   - A configuration option can be set so that either `@return` or `@returns` is used in your documentation. 
   - Language-specific tags now will only show for that language (eg: PHP has no `@interface` tag).
@@ -66,7 +74,7 @@ You can leave either of these things [here][issues].
 
 ### Docblock completion ###
 
-Pressing enter after `/**` will yield a new line and will close the comment.
+Pressing **enter** or **tab** after `/**` will yield a new line and will close the comment.
 
     /**<<enter>>
 
@@ -308,12 +316,13 @@ This is my first package for Sublime Text, and the first time I've written any P
 
 [![Click here to lend your support to: DocBlockr and make a donation at www.pledgie.com !](https://www.pledgie.com/campaigns/16316.png?skin_name=chrome)](http://www.pledgie.com/campaigns/16316)
 
-[sublime]: http://www.sublimetext.com/
-[jsdoc]: http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
-[phpdoc]: http://phpdoc.org/
 [closure]: http://code.google.com/closure/compiler/docs/js-for-compiler.html
 [issues]: https://github.com/spadgos/sublime-jsdocs/issues
-[package_control]: http://wbond.net/sublime_packages/package_control
-[typehinting]: http://php.net/manual/en/language.oop5.typehinting.php
-[tags]: https://github.com/spadgos/sublime-jsdocs/tags
+[jsdoc]: http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
 [magicmethods]: http://www.php.net/manual/en/language.oop5.magic.php
+[package_control]: http://wbond.net/sublime_packages/package_control
+[phpdoc]: http://phpdoc.org/
+[sublime]: http://www.sublimetext.com/
+[svenax]: https://github.com/svenax
+[tags]: https://github.com/spadgos/sublime-jsdocs/tags
+[typehinting]: http://php.net/manual/en/language.oop5.typehinting.php

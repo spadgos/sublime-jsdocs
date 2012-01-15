@@ -1,5 +1,5 @@
 """
-DocBlockr v2.2.0
+DocBlockr v2.2.2
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
@@ -170,14 +170,16 @@ class JsdocsParser:
             valType = self.guessTypeFromValue(val) or self.guessTypeFromName(name) or "[type]"
 
         if self.inline:
-            out.append("@type %s${1:%s}%s ${1:[description]}" % (
+            out.append("@%s %s${1:%s}%s ${1:[description]}" % (
+                self.settings['typeTag'],
                 "{" if self.settings['curlyTypes'] else "",
                 valType,
                 "}" if self.settings['curlyTypes'] else ""
             ))
         else:
             out.append("${1:[%s description]}" % (escape(name)))
-            out.append("@type %s${1:%s}%s" % (
+            out.append("@%s %s${1:%s}%s" % (
+                self.settings['typeTag'],
                 "{" if self.settings['curlyTypes'] else "",
                 valType,
                 "}" if self.settings['curlyTypes'] else ""
@@ -207,7 +209,7 @@ class JsdocsParser:
         retType = self.getFunctionReturnType(name)
         if retType is not None:
             out.append("%s %s${1:%s}%s" % (
-                self.viewSettings.get('jsdocs_return_tag'),
+                self.viewSettings.get('jsdocs_return_tag') or '@return',
                 "{" if self.settings['curlyTypes'] else "",
                 retType or "[type]",
                 "}" if self.settings['curlyTypes'] else ""
@@ -281,6 +283,7 @@ class JsdocsJavascript(JsdocsParser):
         self.settings = {
             # curly brackets around the type information
             "curlyTypes": True,
+            "typeTag": "type",
             # technically, they can contain all sorts of unicode, but w/e
             "varIdentifier": '[a-zA-Z_$][a-zA-Z_$0-9]*',
             "fnIdentifier": '[a-zA-Z_$][a-zA-Z_$0-9]*',
@@ -351,9 +354,10 @@ class JsdocsPHP(JsdocsParser):
         self.settings = {
             # curly brackets around the type information
             'curlyTypes': False,
+            "typeTag": "var",
             'varIdentifier': '[$]' + nameToken + '(?:->' + nameToken + ')*',
             'fnIdentifier': nameToken,
-            "bool": "bool",
+            "bool": "boolean",
             "function": "function"
         }
 
@@ -415,13 +419,13 @@ class JsdocsPHP(JsdocsParser):
 
     def guessTypeFromValue(self, val):
         if is_numeric(val):
-            return "float" if '.' in val else "int"
+            return "float" if '.' in val else "integer"
         if val[0] == '"' or val[0] == "'":
             return "string"
         if val[:5] == 'array':
-            return "Array"
+            return "array"
         if val.lower() in ('true', 'false', 'filenotfound'):
-            return 'bool'
+            return 'boolean'
         if val[:4] == 'new ':
             res = re.search('new (' + self.settings['fnIdentifier'] + ')', val)
             return res and res.group(1) or None
@@ -432,11 +436,11 @@ class JsdocsPHP(JsdocsParser):
             if name in ('__construct', '__set', '__unset', '__wakeup'):
                 return None
             if name == '__sleep':
-                return 'Array'
+                return 'array'
             if name == '__toString':
                 return 'string'
             if name == '__isset':
-                return 'bool'
+                return 'boolean'
         return JsdocsParser.getFunctionReturnType(self, name)
 
 
@@ -449,17 +453,20 @@ class JsdocsIndentCommand(sublime_plugin.TextCommand):
         currCol = currPos - currLineRegion.begin()  # which column we're currently in
         prevLine = v.substr(v.line(v.line(currPos).begin() - 1))
         spaces = self.getIndentSpaces(prevLine)
-        toStar = len(re.search("^(\\s*\\*)", prevLine).group(1))
-        toInsert = spaces - currCol + toStar
-        if spaces is None or toInsert <= 0:
-            v.run_command(
-                'insert_snippet', {
-                    'contents': "\t"
-                }
-            )
-            return
+        if spaces:
+            toStar = len(re.search("^(\\s*\\*)", prevLine).group(1))
+            toInsert = spaces - currCol + toStar
+            if spaces is None or toInsert <= 0:
+                v.run_command(
+                    'insert_snippet', {
+                        'contents': "\t"
+                    }
+                )
+                return
 
-        v.insert(edit, currPos, " " * toInsert)
+            v.insert(edit, currPos, " " * toInsert)
+        else:
+            v.insert(edit, currPos, "\t")
 
     def getIndentSpaces(self, line):
         res = re.search("^\\s*\\*(?P<fromStar>\\s*@(?:param|property)\\s+\\S+\\s+\\S+\\s+)\\S", line) \
