@@ -23,7 +23,7 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
-- In progress
+- **v2.3.0**, *15 January 2012*
   - `Ctrl+Enter` on a double-slash comment will now decorate that comment.
   - Added a setting (`jsdocs_spacer_between_sections`) to add spacer lines between sections of a docblock.
 - **v2.2.2**, *12 January 2012*
