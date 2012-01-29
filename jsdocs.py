@@ -516,3 +516,11 @@ class JsdocsDecorateCommand(sublime_plugin.TextCommand):
                 # break
 
             v.insert(edit, sel.begin(), "/" * (lineLength + 3) + "\n")
+
+
+class JsdocsDeindent(sublime_plugin.TextCommand):
+    def run(self, edit):
+        v = self.view
+        lineRegion = v.line(v.sel()[0])
+        line = v.substr(lineRegion)
+        v.insert(edit, lineRegion.end(), re.sub("^(\\s*) \\*/.*", "\n\\1", line))
