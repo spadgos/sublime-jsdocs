@@ -16,13 +16,15 @@ Don't forget to keep updating it, though!
 
 ### Without Git ###
 
-Download the latest version from the [tags page][tags]. Unzip to your Sublime Text Packages folder (you can find this by opening ST2 and selecting `Preferences -> Browse Packages...`). I'd recommend renaming the folder from the default (which will be something like `spadgos-sublime-jsdocs-a4bc2a`) to `DocBlockr`. That's it -- you shouldn't even need to restart ST2.
+Download the latest version from the [tags page][tags]. Unzip to your Sublime Text Packages folder (you can find this by opening ST2 and selecting `Preferences -> Browse Packages...`). You will need to rename the folder from the default (which will be something like `spadgos-sublime-jsdocs-a4bc2a`) to `DocBlockr`. That's it -- you shouldn't even need to restart ST2.
 
 ## Feature requests & bug reports ##
 
 You can leave either of these things [here][issues].
 
 ## Changelog ##
+- **Current**
+  - `Enter` at the end of a comment block (ie: after the closing `*/`) will insert a newline and de-indent by one space.
 - **v2.3.0**, *15 January 2012*
   - `Ctrl+Enter` on a double-slash comment will now decorate that comment.
   - Added a setting (`jsdocs_spacer_between_sections`) to add spacer lines between sections of a docblock.
