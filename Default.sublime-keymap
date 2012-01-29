@@ -39,6 +39,18 @@
             { "key": "preceding_text", "operator" : "regex_contains", "operand": "^\\s*\\/\\/", "match_all": true}
         ]
     },
+    { "keys": ["enter"], "command": "jsdocs_deindent", "context":
+        [
+            { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
+            { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s+\\*/", "match_all": true}
+        ]
+    },
+    { "keys": ["keypad_enter"], "command": "jsdocs_deindent", "context":
+        [
+            { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
+            { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s+\\*/", "match_all": true}
+        ]
+    },
     { "keys": ["keypad_enter"], "command": "jsdocs", "context" :
         [
             { "key": "setting.auto_indent", "operator": "equal", "operand": true, "match_all": true },
