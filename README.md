@@ -23,7 +23,7 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
-- **Current**
+- **v2.4.0**, *29 January 2012*
   - `Enter` at the end of a comment block (ie: after the closing `*/`) will insert a newline and de-indent by one space.
 - **v2.3.0**, *15 January 2012*
   - `Ctrl+Enter` on a double-slash comment will now decorate that comment.
