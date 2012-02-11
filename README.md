@@ -23,7 +23,7 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
-- In progress
+- **v2.5.0**, *11 February 2012*
   - Implemented DocBlock reparsing to re-enable tabstop fields. Hotkey is `Ctrl+Alt+Tab`.
 - **v2.4.1**, *2 February 2012*
   - Fixed bug [#36](https://github.com/spadgos/sublime-jsdocs/issues/36) whereby docblocks were not being properly extended inside of `<script>` tags in a HTML document.
