@@ -1,5 +1,5 @@
 """
-DocBlockr v2.4.1
+DocBlockr v2.5.0
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
@@ -519,8 +519,40 @@ class JsdocsDecorateCommand(sublime_plugin.TextCommand):
 
 
 class JsdocsDeindent(sublime_plugin.TextCommand):
+    """
+    When pressing enter at the end of a docblock, this takes the cursor back one space.
+    /**
+     *
+     */|   <-- from here
+    |      <-- to here
+    """
     def run(self, edit):
         v = self.view
         lineRegion = v.line(v.sel()[0])
         line = v.substr(lineRegion)
         v.insert(edit, lineRegion.end(), re.sub("^(\\s*) \\*/.*", "\n\\1", line))
+
+
+class JsdocsReparse(sublime_plugin.TextCommand):
+    """
+    Reparse a docblock to make the fields 'active' again, so that pressing tab will jump to the next one
+    """
+    def run(self, edit):
+        tabIndex = counter()
+
+        def tabStop(m):
+            return "${%d:%s}" % (tabIndex.next(), m.group(1))
+
+        v = self.view
+        v.run_command('clear_fields')
+        v.run_command('expand_selection', {'to': 'scope'})
+        sel = v.sel()[0]
+
+        # strip out leading spaces, since inserting a snippet keeps the indentation
+        text = re.sub("\\n\\s+\\*", "\n *", v.substr(sel))
+
+        # replace [bracketed] [text] with a tabstop
+        text = re.sub("(\\[.+?\\])", tabStop, text)
+
+        v.erase(edit, sel)
+        write(v, text)
