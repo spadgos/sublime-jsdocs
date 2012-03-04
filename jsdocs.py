@@ -49,6 +49,8 @@ def getParser(view):
 
     if re.search("source\\.php", scope):
         return JsdocsPHP(viewSettings)
+    elif re.search("source\\.coffee", scope):
+        return JsdocsCoffee(viewSettings)
 
     return JsdocsJavascript(viewSettings)
 
@@ -62,7 +64,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         point = v.sel()[0].end()
 
         indentSpaces = max(0, settings.get("jsdocs_indentation_spaces", 1))
-        prefix = "\n*" + (" " * indentSpaces)
+        prefix = "*" + (" " * indentSpaces)
 
         alignTags = settings.get("jsdocs_align_tags", 'deep')
         deepAlignTags = alignTags == 'deep'
@@ -134,8 +136,8 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             else:
                 write(v, " $0 */")
         else:
-            # write the first linebreak and star. this sets the indentation for the following snippets
-            write(v, "\n *" + (" " * indentSpaces))
+            snippet = "\n " + prefix
+            closer = parser.settings['commentCloser']
             if out:
                 if settings.get('jsdocs_spacer_between_sections'):
                     lastTag = None
@@ -144,9 +146,12 @@ class JsdocsCommand(sublime_plugin.TextCommand):
                         if res and (lastTag != res.group(1)):
                             lastTag = res.group(1)
                             out.insert(idx, "")
-                write(v, prefix.join(out) + "\n*/")
+                snippet += ("\n " + prefix).join(out)
             else:
-                write(v, "$0\n*/")
+                snippet += "$0"
+
+            snippet += "\n" + closer
+            write(v, snippet)
 
 
 class JsdocsParser:
@@ -295,6 +300,7 @@ class JsdocsJavascript(JsdocsParser):
             "varIdentifier": '[a-zA-Z_$][a-zA-Z_$0-9]*',
             "fnIdentifier": '[a-zA-Z_$][a-zA-Z_$0-9]*',
 
+            "commentCloser": " */",
             "bool": "Boolean",
             "function": "Function"
         }
@@ -361,11 +367,12 @@ class JsdocsPHP(JsdocsParser):
         self.settings = {
             # curly brackets around the type information
             'curlyTypes': False,
-            "typeTag": "var",
+            'typeTag': "var",
             'varIdentifier': '[$]' + nameToken + '(?:->' + nameToken + ')*',
             'fnIdentifier': nameToken,
-            "bool": "boolean",
-            "function": "function"
+            'commentCloser': ' */',
+            'bool': "boolean",
+            'function': "function"
         }
 
     def parseFunction(self, line):
@@ -450,6 +457,77 @@ class JsdocsPHP(JsdocsParser):
                 return 'boolean'
         return JsdocsParser.getFunctionReturnType(self, name)
 
+
+class JsdocsCoffee(JsdocsParser):
+    def setupSettings(self):
+        self.settings = {
+            # curly brackets around the type information
+            'curlyTypes': True,
+            'typeTag': "type",
+            # technically, they can contain all sorts of unicode, but w/e
+            'varIdentifier': '[a-zA-Z_$][a-zA-Z_$0-9]*',
+            'fnIdentifier': '[a-zA-Z_$][a-zA-Z_$0-9]*',
+            'commentCloser': '###',
+            'bool': 'Boolean',
+            'function': 'Function'
+        }
+
+    def parseFunction(self, line):
+        print line
+        print '(?:(?P<name>' + self.settings['varIdentifier'] + ')\s*[:=]\s*)?\\((?P<args>[^()]*?)\\)?\\s*([=-]>)'
+        res = re.search(
+            #   fnName = function,  fnName : function
+            '(?:(?P<name>' + self.settings['varIdentifier'] + ')\s*[:=]\s*)?'
+            + '(?:\\((?P<args>[^()]*?)\\))?\\s*([=-]>)',
+            line
+        )
+        print res
+        if not res:
+            return None
+
+        # grab the name out of "name1 = function name2(foo)" preferring name1
+        name = escape(res.group('name') or '')
+        args = res.group('args')
+
+        return (name, args)
+
+    def parseVar(self, line):
+        res = re.search(
+            #   var foo = blah,
+            #       foo = blah;
+            #   baz.foo = blah;
+            #   baz = {
+            #        foo : blah
+            #   }
+
+            '(?P<name>' + self.settings['varIdentifier'] + ')\s*[=:]\s*(?P<val>.*?)(?:[;,]|$)',
+            line
+        )
+        if not res:
+            return None
+
+        return (res.group('name'), res.group('val').strip())
+
+    def guessTypeFromValue(self, val):
+        if is_numeric(val):
+            return "Number"
+        if val[0] == '"' or val[0] == "'":
+            return "String"
+        if val[0] == '[':
+            return "Array"
+        if val[0] == '{':
+            return "Object"
+        if val == 'true' or val == 'false':
+            return 'Boolean'
+        if re.match('RegExp\\b|\\/[^\\/]', val):
+            return 'RegExp'
+        if val[:4] == 'new ':
+            res = re.search('new (' + self.settings['fnIdentifier'] + ')', val)
+            return res and res.group(1) or None
+        return None
+
+
+############################################################33
 
 class JsdocsIndentCommand(sublime_plugin.TextCommand):
 
