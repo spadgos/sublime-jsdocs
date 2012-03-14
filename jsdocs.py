@@ -237,11 +237,11 @@ class JsdocsParser:
             # no return, but should add a class
             return None
 
-        if re.match('(?:set|add)[A-Z_]', name):
+        if re.match('(?:set|add)($|[A-Z_])', name):
             # setter/mutator, no return
             return None
 
-        if re.match('(?:is|has)[A-Z_]', name):  # functions starting with 'is' or 'has'
+        if re.match('(?:is|has)($|[A-Z_])', name):  # functions starting with 'is' or 'has'
             return self.settings['bool']
 
         return False
