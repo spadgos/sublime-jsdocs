@@ -23,6 +23,9 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
+- **v2.6.1**, *16 March 2012*
+  - Fixes bug whereby the return values of functions which are named `set` or `add`, *etc* were not being guessed correctly.
+  - `@return` tags are now given a description field *(thanks to [Nick Dowdell](https://github.com/mikulad13))*.
 - **v2.6.0**, *4 March 2012*
   - Added CoffeeScript support
 - **v2.5.0**, *11 February 2012*
@@ -31,9 +34,6 @@ You can leave either of these things [here][issues].
   - Fixed bug [#36](https://github.com/spadgos/sublime-jsdocs/issues/36) whereby docblocks were not being properly extended inside of `<script>` tags in a HTML document.
 - **v2.4.0**, *29 January 2012*
   - `Enter` at the end of a comment block (ie: after the closing `*/`) will insert a newline and de-indent by one space.
-- **v2.3.0**, *15 January 2012*
-  - `Ctrl+Enter` on a double-slash comment will now decorate that comment.
-  - Added a setting (`jsdocs_spacer_between_sections`) to add spacer lines between sections of a docblock.
 
 Ancient history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
@@ -88,8 +88,8 @@ In PHP, if [type hinting][typehinting] or default values are used, then those ty
 
 DocBlockr will try to make an intelligent guess about the return value of the function.
 
-- If the function name begins with "set" or "add", then no `@return` is inserted.
-- If the function name beings with "is" or "has", then it is assumed to return a `Boolean`.
+- If the function name is or begins with "set" or "add", then no `@return` is inserted.
+- If the function name is or begins with "is" or "has", then it is assumed to return a `Boolean`.
 - In Javascript, if the function begins with an uppercase letter then it is assumed that the function is a class definition. No `@return` tag is added.
 - In PHP, some of the [magic methods][magicmethods] have their values prefilled:
   - `__construct`, `__set`, `__unset`, `__wakeup` have no `@return` tag.
