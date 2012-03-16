@@ -221,11 +221,12 @@ class JsdocsParser:
         retType = self.getFunctionReturnType(name)
         if retType is not None:
             # the extra space here is so that the description will align with the param description
-            out.append("%s %s${1:%s}%s  ${2:[description]}" % (
+            out.append("%s %s${1:%s}%s %s${2:[description]}" % (
                 self.viewSettings.get('jsdocs_return_tag') or '@return',
                 "{" if self.settings['curlyTypes'] else "",
                 retType or "[type]",
-                "}" if self.settings['curlyTypes'] else ""
+                "}" if self.settings['curlyTypes'] else "",
+                " " if args else ""
             ))
 
         return out
