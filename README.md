@@ -23,6 +23,8 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
+- **v2.6.2**, *22 March 2012*
+  - PHP `__destruct` functions don't get a return value *(thanks to [Alex Whitman](https://github.com/whitman))*.
 - **v2.6.1**, *16 March 2012*
   - Fixes bug whereby the return values of functions which are named `set` or `add`, *etc* were not being guessed correctly.
   - `@return` tags are now given a description field *(thanks to [Nick Dowdell](https://github.com/mikulad13))*.
@@ -32,10 +34,8 @@ You can leave either of these things [here][issues].
   - Implemented DocBlock reparsing to re-enable tabstop fields. Hotkey is `Ctrl+Alt+Tab`.
 - **v2.4.1**, *2 February 2012*
   - Fixed bug [#36](https://github.com/spadgos/sublime-jsdocs/issues/36) whereby docblocks were not being properly extended inside of `<script>` tags in a HTML document.
-- **v2.4.0**, *29 January 2012*
-  - `Enter` at the end of a comment block (ie: after the closing `*/`) will insert a newline and de-indent by one space.
 
-Ancient history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
+Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
 ## Usage ##
 
@@ -92,7 +92,7 @@ DocBlockr will try to make an intelligent guess about the return value of the fu
 - If the function name is or begins with "is" or "has", then it is assumed to return a `Boolean`.
 - In Javascript, if the function begins with an uppercase letter then it is assumed that the function is a class definition. No `@return` tag is added.
 - In PHP, some of the [magic methods][magicmethods] have their values prefilled:
-  - `__construct`, `__set`, `__unset`, `__wakeup` have no `@return` tag.
+  - `__construct`, `__destruct`, `__set`, `__unset`, `__wakeup` have no `@return` tag.
   - `__sleep` returns an `Array`.
   - `__toString` returns a `string`.
   - `__isset` returns a `bool`.
