@@ -1,5 +1,5 @@
 """
-DocBlockr v2.6.1
+DocBlockr v2.6.2
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
@@ -449,7 +449,7 @@ class JsdocsPHP(JsdocsParser):
 
     def getFunctionReturnType(self, name):
         if (name[:2] == '__'):
-            if name in ('__construct', '__set', '__unset', '__wakeup'):
+            if name in ('__construct', '__destruct', '__set', '__unset', '__wakeup'):
                 return None
             if name == '__sleep':
                 return 'array'
