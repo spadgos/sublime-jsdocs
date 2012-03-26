@@ -103,12 +103,17 @@
   },
   { "keys": ["ctrl+enter"], "command": "jsdocs_decorate", "context":
     [
-      { "key": "selector", "operator": "equal", "operand": "comment.line.double-slash"}
+      { "key": "selector", "operator": "equal", "operand": "comment.line"}
     ]
   },
   { "keys": ["ctrl+j"], "command": "jsdocs_join", "context":
     [
       { "key": "selector", "operator": "equal", "operand": "comment.block" }
+    ]
+  },
+  { "keys": ["ctrl+j"], "command": "jsdocs_join", "context":
+    [
+      { "key": "selector", "operator": "equal", "operand": "comment.line" }
     ]
   },
   { "keys": ["ctrl+alt+tab"], "command": "jsdocs_reparse", "context":
