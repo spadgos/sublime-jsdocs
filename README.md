@@ -23,6 +23,8 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
+- **v2.6.3**, *30 April 2012*
+  - Fixes the join-lines command <kbd>Ctrl+J</kbd> for CoffeeScript.
 - **v2.6.2**, *22 March 2012*
   - PHP `__destruct` functions don't get a return value *(thanks to [Alex Whitman](https://github.com/whitman))*.
 - **v2.6.1**, *16 March 2012*
@@ -32,8 +34,6 @@ You can leave either of these things [here][issues].
   - Added CoffeeScript support
 - **v2.5.0**, *11 February 2012*
   - Implemented DocBlock reparsing to re-enable tabstop fields. Hotkey is `Ctrl+Alt+Tab`.
-- **v2.4.1**, *2 February 2012*
-  - Fixed bug [#36](https://github.com/spadgos/sublime-jsdocs/issues/36) whereby docblocks were not being properly extended inside of `<script>` tags in a HTML document.
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
@@ -43,7 +43,7 @@ Older history can be found in [the history file](https://github.com/spadgos/subl
 
 ### Docblock completion ###
 
-Pressing **enter** or **tab** after `/**` will yield a new line and will close the comment.
+Pressing **enter** or **tab** after `/**` (or `#***` for Coffee-Script) will yield a new line and will close the comment.
 
     /**<<enter>>
 

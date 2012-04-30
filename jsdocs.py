@@ -1,5 +1,5 @@
 """
-DocBlockr v2.6.2
+DocBlockr v2.6.3
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
@@ -570,7 +570,7 @@ class JsdocsJoinCommand(sublime_plugin.TextCommand):
         v = self.view
         for sel in v.sel():
             for lineRegion in reversed(v.lines(sel)):
-                v.replace(edit, v.find("[ \\t]*\\n[ \\t]*(\\*[ \\t]*)?", lineRegion.begin()), ' ')
+                v.replace(edit, v.find("[ \\t]*\\n[ \\t]*((?:\\*|//|#)[ \\t]*)?", lineRegion.begin()), ' ')
 
 
 class JsdocsDecorateCommand(sublime_plugin.TextCommand):
