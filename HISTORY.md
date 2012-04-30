@@ -1,5 +1,7 @@
 # DocBlockr Extended Changelog
 
+- **v2.6.3**, *30 April 2012*
+  - Fixes the join-lines command <kbd>Ctrl+J</kbd> for CoffeeScript.
 - **v2.6.2**, *22 March 2012*
   - PHP `__destruct` functions don't get a return value *(thanks to [Alex Whitman](https://github.com/whitman))*.
 - **v2.6.1**, *16 March 2012*
