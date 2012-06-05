@@ -636,3 +636,15 @@ class JsdocsReparse(sublime_plugin.TextCommand):
 
         v.erase(edit, sel)
         write(v, text)
+
+
+class JsdocsTrimAutoWhitespace(sublime_plugin.TextCommand):
+    """
+    Trim the automatic whitespace added when creating a new line in a docblock.
+    """
+    def run(self, edit):
+        v = self.view
+        lineRegion = v.line(v.sel()[0])
+        line = v.substr(lineRegion)
+        spaces = max(0, v.settings().get("jsdocs_indentation_spaces", 1))
+        v.replace(edit, lineRegion, re.sub("^(\\s*\\*)\\s*$", "\\1\n\\1" + (" " * spaces), line))
