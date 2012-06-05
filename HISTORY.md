@@ -1,5 +1,10 @@
 # DocBlockr Extended Changelog
 
+- **v2.6.4**, *4 June 2012*
+  - Better support for indentation using tabs
+  - YUI tags are supported by the autocomplete
+  - When only whitespace exists on a docblock line, and `trim_automatic_white_space` is set to true, the whitespace is removed.
+  - Better support for comment blocks opened with `/*`
 - **v2.6.3**, *30 April 2012*
   - Fixes the join-lines command <kbd>Ctrl+J</kbd> for CoffeeScript.
 - **v2.6.2**, *22 March 2012*

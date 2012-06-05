@@ -23,6 +23,11 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
+- **v2.6.4**, *4 June 2012*
+  - Better support for indentation using tabs
+  - YUI tags are supported by the autocomplete
+  - When only whitespace exists on a docblock line, and `trim_automatic_white_space` is set to true, the whitespace is removed.
+  - Better support for comment blocks opened with `/*`
 - **v2.6.3**, *30 April 2012*
   - Fixes the join-lines command <kbd>Ctrl+J</kbd> for CoffeeScript.
 - **v2.6.2**, *22 March 2012*
@@ -32,8 +37,6 @@ You can leave either of these things [here][issues].
   - `@return` tags are now given a description field *(thanks to [Nick Dowdell](https://github.com/mikulad13))*.
 - **v2.6.0**, *4 March 2012*
   - Added CoffeeScript support
-- **v2.5.0**, *11 February 2012*
-  - Implemented DocBlock reparsing to re-enable tabstop fields. Hotkey is `Ctrl+Alt+Tab`.
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
@@ -52,6 +55,28 @@ Pressing **enter** or **tab** after `/**` (or `#***` for Coffee-Script) will yie
     /**
      * |
      */
+
+Single-asterisk comment blocks behave similarly:
+
+    /*<<enter>
+
+    -- becomes --
+
+    /*
+    |
+     */
+
+If you press asterisk on the first line, it becomes indented with the line above:
+
+    /*
+    |<<*>>
+     */
+    
+    /*
+     *|
+     */
+
+### Function documentation ###
 
 However, if the line directly afterwards contains a function definition, then its name and parameters are parsed and some documentation is automatically added.
 
@@ -213,30 +238,7 @@ With DocBlockr, you can reparse a comment and reactivate the fields by pressing 
     
 ### Adding extra tags ###
 
-Finally, typing `@` inside a docblock will show a completion list for all tags supported by [JSDoc][jsdoc], the [Google Closure Compiler][closure] or [PHPDoc][phpdoc]. Extra help is provided for each of these tags by prefilling the arguments each expects. Pressing `tab` will move the cursor to the next argument.
-
-Exhaustively, these tags are:
-
-    @param @return @returns @author
-    @abstract @access @augments
-    @borrows
-    @category @class @const @constant @constructor @constructs @copyright
-    @default @define @deprecated @description
-    @enum @event @example @extends
-    @field @fileOverview @filesource @final @function
-    @global
-    @ignore @implements @inheritDoc @inner @interface @internal
-    @lends @license @link
-    @memberOf @method
-    @name @namespace @nosideeffects
-    @override
-    @package @preserve @private @property @protected @public
-    @requires
-    @see @since @static @staticvar @subpackage
-    @this @throws @todo @tutorial @type @typedef
-    @uses
-    @var @version
-
+Finally, typing `@` inside a docblock will show a completion list for all tags supported by [JSDoc][jsdoc], the [Google Closure Compiler][closure], [YUIDoc][yui] or [PHPDoc][phpdoc]. Extra help is provided for each of these tags by prefilling the arguments each expects. Pressing `tab` will move the cursor to the next argument.
 
 ## Configuration ##
 
@@ -315,3 +317,4 @@ This is my first package for Sublime Text, and the first time I've written any P
 [svenax]: https://github.com/svenax
 [tags]: https://github.com/spadgos/sublime-jsdocs/tags
 [typehinting]: http://php.net/manual/en/language.oop5.typehinting.php
+[yui]: http://yui.github.com/yuidoc/syntax/index.html
