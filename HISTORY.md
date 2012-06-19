@@ -1,5 +1,7 @@
 # DocBlockr Extended Changelog
 
+- **v2.6.5**, *19 June 2012*
+  - Bugfix for adding linebreaks when not at the start or end of a line
 - **v2.6.4**, *4 June 2012*
   - Better support for indentation using tabs
   - YUI tags are supported by the autocomplete
