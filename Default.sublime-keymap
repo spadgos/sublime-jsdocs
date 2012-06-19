@@ -43,7 +43,6 @@
       { "key": "setting.auto_indent", "operator": "equal", "operand": true, "match_all": true },
       { "key": "selector", "operator": "equal", "operand" : "comment.block", "match_all": true},
       { "key": "auto_complete_visible", "operator": "equal", "operand": false, "match_all": true },
-      { "key": "setting.trim_automatic_white_space", "operator": "equal", "operand": false },
       { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*\\*", "match_all": true }
     ]
   },
@@ -53,7 +52,8 @@
       { "key": "selector", "operator": "equal", "operand" : "comment.block", "match_all": true},
       { "key": "auto_complete_visible", "operator": "equal", "operand": false, "match_all": true },
       { "key": "setting.trim_automatic_white_space", "operator": "equal", "operand": true, "match_all": true },
-      { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*\\*\\s*$", "match_all": true }
+      { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*\\*\\s*$", "match_all": true },
+      { "key": "following_text", "operator": "regex_contains", "operand": "^\\s*$", "match_all": true }
     ]
   },
   { "keys": ["enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^\\s*(\\/\\/\\s*).*$/$1/}"}, "context":
