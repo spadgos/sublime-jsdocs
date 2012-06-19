@@ -23,6 +23,8 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
+- **v2.6.5**, *19 June 2012*
+  - Bugfix for adding linebreaks when not at the start or end of a line
 - **v2.6.4**, *4 June 2012*
   - Better support for indentation using tabs
   - YUI tags are supported by the autocomplete
@@ -35,8 +37,6 @@ You can leave either of these things [here][issues].
 - **v2.6.1**, *16 March 2012*
   - Fixes bug whereby the return values of functions which are named `set` or `add`, *etc* were not being guessed correctly.
   - `@return` tags are now given a description field *(thanks to [Nick Dowdell](https://github.com/mikulad13))*.
-- **v2.6.0**, *4 March 2012*
-  - Added CoffeeScript support
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
