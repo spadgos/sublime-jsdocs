@@ -46,7 +46,7 @@ Older history can be found in [the history file](https://github.com/spadgos/subl
 
 ### Docblock completion ###
 
-Pressing **enter** or **tab** after `/**` (or `#***` for Coffee-Script) will yield a new line and will close the comment.
+Pressing **enter** or **tab** after `/**` (or `###*` for Coffee-Script) will yield a new line and will close the comment.
 
     /**<<enter>>
 
