@@ -1,0 +1,17 @@
+{
+  "scope": "source.actionscript comment.block",
+  "completions": [
+    { "trigger": "@copy",        "contents": "@copy ${1:[reference]}" },
+    { "trigger": "@default",     "contents": "@default ${1:[value]}" },
+    { "trigger": "@eventType",   "contents": "@eventType ${1:[package.class.CONSTANT]}" },
+    { "trigger": "@example",     "contents": "@example ${1:[exampleText]}" },
+    { "trigger": "@exampleText", "contents": "@exampleText ${1:[string]}" },
+    { "trigger": "@inheritDoc",  "contents": "@inheritDoc" },
+    { "trigger": "@internal",    "contents": "@internal ${1:[text]}" },
+    { "trigger": "@param",       "contents": "@param ${1:[paramName]} ${2:[description]}" },
+    { "trigger": "@private",     "contents": "@private" },
+    { "trigger": "@return",      "contents": "@return ${1:[description]}" },
+    { "trigger": "@see",         "contents": "@see ${1:[reference]} ${2:[displayText]}" },
+    { "trigger": "@throws",      "contents": "@throws ${1:[package.class.className]} ${2:[description]}" }
+  ]
+}
