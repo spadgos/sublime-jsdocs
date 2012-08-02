@@ -96,8 +96,15 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             maxCols = 0
             # this is a 2d list of the widths per column per line
             widths = []
+
+            # Skip the return tag if we're faking "per-section" indenting.
+            lastItem = len(out)
+            if (settings.get('jsdocs_per_section_indent')):
+                if (settings.get('jsdocs_return_tag') in out[-1]):
+                    lastItem -= 1
+
             #  skip the first one, since that's always the "description" line
-            for line in out[1:]:
+            for line in out[1:lastItem]:
                 widths.append(map(outputWidth, line.split(" ")))
                 maxCols = max(maxCols, len(widths[-1]))
 
@@ -220,14 +227,22 @@ class JsdocsParser:
 
         retType = self.getFunctionReturnType(name)
         if retType is not None:
-            # the extra space here is so that the description will align with the param description
-            out.append("%s %s${1:%s}%s %s${2:[description]}" % (
+            format_args = [
                 self.viewSettings.get('jsdocs_return_tag') or '@return',
                 "{" if self.settings['curlyTypes'] else "",
                 retType or "[type]",
-                "}" if self.settings['curlyTypes'] else "",
-                " " if args else ""
-            ))
+                "}" if self.settings['curlyTypes'] else ""
+            ]
+
+            if (self.viewSettings.get('jsdocs_return_description')):
+                format_str = "%s %s${1:%s}%s %s${2:[description]}"
+
+                # the extra space here is so that the description will align with the param description
+                format_args.append(" " if (args and not self.viewSettings.get('jsdocs_per_section_indent')) else "")
+            else:
+                format_str = "%s %s${1:%s}%s"
+
+            out.append(format_str % tuple(format_args))
 
         return out
 
