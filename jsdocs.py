@@ -119,12 +119,15 @@ class JsdocsCommand(sublime_plugin.TextCommand):
                     if (i < len(width)):
                         maxWidths[i] = max(maxWidths[i], width[i])
 
+            # Convert to a dict so we can use .get()
+            maxWidths = dict(enumerate(maxWidths))
+
             for index, line in enumerate(out):
                 if (index > 0):
                     newOut = []
                     for partIndex, part in enumerate(line.split(" ")):
                         newOut.append(part)
-                        newOut.append(" " + (" " * (maxWidths[partIndex] - outputWidth(part))))
+                        newOut.append(" " + (" " * (maxWidths.get(partIndex, 0) - outputWidth(part))))
                     out[index] = "".join(newOut).strip()
 
         # fix all the tab stops so they're consecutive
