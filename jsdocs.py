@@ -51,6 +51,8 @@ def getParser(view):
         return JsdocsPHP(viewSettings)
     elif re.search("source\\.coffee", scope):
         return JsdocsCoffee(viewSettings)
+    elif re.search("source\\.actionscript", scope):
+        return JsdocsActionscript(viewSettings)
 
     return JsdocsJavascript(viewSettings)
 
@@ -211,21 +213,31 @@ class JsdocsParser:
             # remove comments inside the argument list.
             args = re.sub("/\*.*?\*/", '', args)
             for arg in self.parseArgs(args):
-                out.append("@param %s${1:%s}%s %s ${1:[description]}" % (
-                    "{" if self.settings['curlyTypes'] else "",
-                    escape(arg[0] or self.guessTypeFromName(arg[1]) or "[type]"),
-                    "}" if self.settings['curlyTypes'] else "",
+                typeInfo = ''
+                if self.settings['typeInfo']:
+                    typeInfo = '%s${1:%s}%s ' % (
+                        "{" if self.settings['curlyTypes'] else "",
+                        escape(arg[0] or self.guessTypeFromName(arg[1]) or "[type]"),
+                        "}" if self.settings['curlyTypes'] else "",
+                    )
+                out.append("@param %s%s ${1:[description]}" % (
+                    typeInfo,
                     escape(arg[1])
                 ))
 
         retType = self.getFunctionReturnType(name)
         if retType is not None:
+            typeInfo = ''
+            if self.settings['typeInfo']:
+                typeInfo = '%s${1:%s}%s ' % (
+                    "{" if self.settings['curlyTypes'] else "",
+                    retType or "[type]",
+                    "}" if self.settings['curlyTypes'] else ""
+                )
             # the extra space here is so that the description will align with the param description
-            out.append("%s %s${1:%s}%s %s${2:[description]}" % (
+            out.append("%s %s%s${1:[description]}" % (
                 self.viewSettings.get('jsdocs_return_tag') or '@return',
-                "{" if self.settings['curlyTypes'] else "",
-                retType or "[type]",
-                "}" if self.settings['curlyTypes'] else "",
+                typeInfo,
                 " " if args else ""
             ))
 
@@ -297,6 +309,7 @@ class JsdocsJavascript(JsdocsParser):
         self.settings = {
             # curly brackets around the type information
             "curlyTypes": True,
+            'typeInfo': True,
             "typeTag": "type",
             # technically, they can contain all sorts of unicode, but w/e
             "varIdentifier": '[a-zA-Z_$][a-zA-Z_$0-9]*',
@@ -369,6 +382,7 @@ class JsdocsPHP(JsdocsParser):
         self.settings = {
             # curly brackets around the type information
             'curlyTypes': False,
+            'typeInfo': True,
             'typeTag': "var",
             'varIdentifier': '[$]' + nameToken + '(?:->' + nameToken + ')*',
             'fnIdentifier': nameToken,
@@ -466,6 +480,7 @@ class JsdocsCoffee(JsdocsParser):
             # curly brackets around the type information
             'curlyTypes': True,
             'typeTag': "type",
+            'typeInfo': True,
             # technically, they can contain all sorts of unicode, but w/e
             'varIdentifier': '[a-zA-Z_$][a-zA-Z_$0-9]*',
             'fnIdentifier': '[a-zA-Z_$][a-zA-Z_$0-9]*',
@@ -526,6 +541,53 @@ class JsdocsCoffee(JsdocsParser):
         if val[:4] == 'new ':
             res = re.search('new (' + self.settings['fnIdentifier'] + ')', val)
             return res and res.group(1) or None
+        return None
+
+
+class JsdocsActionscript(JsdocsParser):
+
+    def setupSettings(self):
+        nameToken = '[a-zA-Z_][a-zA-Z0-9_]*'
+        self.settings = {
+            'typeInfo': False,
+            'curlyTypes': False,
+            'typeTag': '',
+            'commentCloser': ' */',
+            'fnIdentifier': nameToken,
+            'varIdentifier': '(%s)(?::%s)?' % (nameToken, nameToken),
+            'bool': 'bool',
+            'function': 'function'
+        }
+
+    def parseFunction(self, line):
+        res = re.search(
+            #   fnName = function,  fnName : function
+            '(?:(?P<name1>' + self.settings['varIdentifier'] + ')\s*[:=]\s*)?'
+            + 'function'
+            # function fnName
+            + '(?:\s+(?P<name2>' + self.settings['fnIdentifier'] + '))?'
+            # (arg1, arg2)
+            + '\s*\((?P<args>.*)\)',
+            line
+        )
+        if not res:
+            return None
+
+        name = res.group('name1') and re.sub(self.settings['varIdentifier'], r'\1', res.group('name1')) \
+            or res.group('name2') \
+            or ''
+
+        args = res.group('args')
+        return (name, args)
+
+    def parseVar(self, line):
+        return None
+
+    def getArgName(self, arg):
+        return re.sub(self.settings['varIdentifier'] + r'(\s*=.*)?', r'\1', arg)
+
+    def getArgType(self, arg):
+        # could actually figure it out easily, but it's not important for the documentation
         return None
 
 
