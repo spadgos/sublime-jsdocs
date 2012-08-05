@@ -23,6 +23,9 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
+- **v2.7.0**, *5 August 2012*
+  - Adds support for ASDocs (Actionscript)
+  - Changes Linux shortcut for reparsing a comment block to <kbd>Alt+Shift+Tab</kbd>
 - **v2.6.5**, *19 June 2012*
   - Bugfix for adding linebreaks when not at the start or end of a line
 - **v2.6.4**, *4 June 2012*
@@ -34,9 +37,6 @@ You can leave either of these things [here][issues].
   - Fixes the join-lines command <kbd>Ctrl+J</kbd> for CoffeeScript.
 - **v2.6.2**, *22 March 2012*
   - PHP `__destruct` functions don't get a return value *(thanks to [Alex Whitman](https://github.com/whitman))*.
-- **v2.6.1**, *16 March 2012*
-  - Fixes bug whereby the return values of functions which are named `set` or `add`, *etc* were not being guessed correctly.
-  - `@return` tags are now given a description field *(thanks to [Nick Dowdell](https://github.com/mikulad13))*.
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
