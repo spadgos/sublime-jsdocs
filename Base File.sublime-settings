@@ -37,6 +37,9 @@
   // Since there seems to be no agreed standard for "@return" or "@returns", use this setting to rename it as you wish.
   "jsdocs_return_tag": "@return",
 
+  // Add a '[description]' placeholder for the return tag?
+  "jsdocs_return_description": true,
+
   // Whether there should be blank lines added between the description line, and between tags of different types.
   // If true, the output might look like this:
   //
@@ -48,5 +51,9 @@
   //  *
   //  * @return {[Type]}
   //  */
-  "jsdocs_spacer_between_sections": false
+  "jsdocs_spacer_between_sections": false,
+
+  // Whether each section should be indented to the same level, or indent each one individually.
+  // (When true, the @param section will lose the extra space immediately after each '@param').
+  "jsdocs_per_section_indent": false
 }
