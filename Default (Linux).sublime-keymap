@@ -1,0 +1,7 @@
+[
+  { "keys": ["alt+shift+tab"], "command": "jsdocs_reparse", "context":
+    [
+      { "key": "selector", "operator": "equal", "operand": "comment.block" }
+    ]
+  }
+]
