@@ -1,5 +1,8 @@
 # DocBlockr Extended Changelog
 
+- **v2.7.0**, *5 August 2012*
+  - Adds support for ASDocs (Actionscript)
+  - Changes Linux shortcut for reparsing a comment block to <kbd>Alt+Shift+Tab</kbd>
 - **v2.6.5**, *19 June 2012*
   - Bugfix for adding linebreaks when not at the start or end of a line
 - **v2.6.4**, *4 June 2012*
