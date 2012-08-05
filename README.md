@@ -23,6 +23,9 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
+- **v2.7.1**, *5 August 2012*
+  - Adds per-section alignment (can be set using `jsdocs_per_section_indent`)
+  - Description field for `@return` tag can be disabled using `jsdocs_return_description`. *(Both thanks to [Drarok](https://github.com/Drarok))*
 - **v2.7.0**, *5 August 2012*
   - Adds support for ASDocs (Actionscript)
   - Changes Linux shortcut for reparsing a comment block to <kbd>Alt+Shift+Tab</kbd>
@@ -35,8 +38,6 @@ You can leave either of these things [here][issues].
   - Better support for comment blocks opened with `/*`
 - **v2.6.3**, *30 April 2012*
   - Fixes the join-lines command <kbd>Ctrl+J</kbd> for CoffeeScript.
-- **v2.6.2**, *22 March 2012*
-  - PHP `__destruct` functions don't get a return value *(thanks to [Alex Whitman](https://github.com/whitman))*.
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
