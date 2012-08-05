@@ -166,7 +166,7 @@ class JsdocsParser:
         return re.search('^\\s*\\*', line)
 
     def parse(self, line):
-        out = self.parseFunction(line)  # (name, args)
+        out = self.parseFunction(line)  # (name, args, options)
         if (out):
             return self.formatFunction(*out)
 
@@ -201,8 +201,11 @@ class JsdocsParser:
 
         return out
 
-    def formatFunction(self, name, args):
+    def formatFunction(self, name, args, options={}):
         out = []
+        if 'as_setter' in options:
+            out.append('@private')
+            return out
 
         out.append("${1:[%s description]}" % (name))
 
@@ -284,7 +287,6 @@ class JsdocsParser:
         hungarian_map = self.viewSettings.get('jsdocs_notation_map', [])
         if len(hungarian_map):
             for rule in hungarian_map:
-                print rule
                 matched = False
                 if 'prefix' in rule:
                     matched = re.match(rule['prefix'] + "[A-Z_]", name)
@@ -490,15 +492,12 @@ class JsdocsCoffee(JsdocsParser):
         }
 
     def parseFunction(self, line):
-        print line
-        print '(?:(?P<name>' + self.settings['varIdentifier'] + ')\s*[:=]\s*)?\\((?P<args>[^()]*?)\\)?\\s*([=-]>)'
         res = re.search(
             #   fnName = function,  fnName : function
             '(?:(?P<name>' + self.settings['varIdentifier'] + ')\s*[:=]\s*)?'
             + '(?:\\((?P<args>[^()]*?)\\))?\\s*([=-]>)',
             line
         )
-        print res
         if not res:
             return None
 
@@ -563,7 +562,7 @@ class JsdocsActionscript(JsdocsParser):
         res = re.search(
             #   fnName = function,  fnName : function
             '(?:(?P<name1>' + self.settings['varIdentifier'] + ')\s*[:=]\s*)?'
-            + 'function'
+            + 'function(?:\s+(?P<getset>[gs]et))'
             # function fnName
             + '(?:\s+(?P<name2>' + self.settings['fnIdentifier'] + '))?'
             # (arg1, arg2)
@@ -578,7 +577,11 @@ class JsdocsActionscript(JsdocsParser):
             or ''
 
         args = res.group('args')
-        return (name, args)
+        options = {}
+        if res.group('getset') == 'set':
+            options['as_setter'] = True
+
+        return (name, args, options)
 
     def parseVar(self, line):
         return None
