@@ -442,7 +442,7 @@ class JsdocsPHP(JsdocsParser):
             return None
 
     def getArgName(self, arg):
-        return re.search("(\\S+)(?:\\s*=.*)?$", arg).group(1)
+        return re.search("(" + self.settings['varIdentifier'] + ")(?:\\s*=.*)?$", arg).group(1)
 
     def parseVar(self, line):
         res = re.search(
