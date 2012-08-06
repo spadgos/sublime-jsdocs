@@ -1,5 +1,9 @@
 # DocBlockr Extended Changelog
 
+- **v2.7.3**, *7 August 2012*
+  - No trailing whitespace added on the spacer lines added when `jsdocs_spacer_between_sections` is on (thanks to [Rafał Chłodnicki](https://github.com/rchl))
+  - Fixes a bug with detecting variable names when they have a default value in PHP
+  - Changes the notation map to not ignore the leading `$` or `_`, meaning that (for example), you could specify that variables starting with `$` are `HTMLElement`s.
 - **v2.7.2**, *6 August 2012*
   - Small bug fix, thanks to [djuliusl](https://github.com/djuliusl)
 - **v2.7.1**, *5 August 2012*

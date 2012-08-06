@@ -1,5 +1,5 @@
 """
-DocBlockr v2.7.2
+DocBlockr v2.7.3
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
@@ -65,8 +65,8 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         settings = v.settings()
         point = v.sel()[0].end()
 
-        indentSpaces = max(0, settings.get("jsdocs_indentation_spaces", 1))
-        prefix = "*" + (" " * indentSpaces)
+        indentSpaces = " " * max(0, settings.get("jsdocs_indentation_spaces", 1))
+        prefix = "*"
 
         alignTags = settings.get("jsdocs_align_tags", 'deep')
         deepAlignTags = alignTags == 'deep'
@@ -148,7 +148,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             else:
                 write(v, " $0 */")
         else:
-            snippet = "\n " + prefix
+            snippet = ""
             closer = parser.settings['commentCloser']
             if out:
                 if settings.get('jsdocs_spacer_between_sections'):
@@ -158,9 +158,10 @@ class JsdocsCommand(sublime_plugin.TextCommand):
                         if res and (lastTag != res.group(1)):
                             lastTag = res.group(1)
                             out.insert(idx, "")
-                snippet += ("\n " + prefix).join(out)
+                for line in out:
+                    snippet += "\n " + prefix + (indentSpaces + line if line else "")
             else:
-                snippet += "$0"
+                snippet += "\n " + prefix + indentSpaces + "$0"
 
             snippet += "\n" + closer
             write(v, snippet)
@@ -301,7 +302,6 @@ class JsdocsParser:
             out.extend(extraTags)
 
     def guessTypeFromName(self, name):
-        name = re.sub("^[$_]", "", name)
         hungarian_map = self.viewSettings.get('jsdocs_notation_map', [])
         if len(hungarian_map):
             for rule in hungarian_map:
@@ -441,7 +441,7 @@ class JsdocsPHP(JsdocsParser):
             return None
 
     def getArgName(self, arg):
-        return re.search("(\\S+)(?:\\s*=.*)?$", arg).group(1)
+        return re.search("(" + self.settings['varIdentifier'] + ")(?:\\s*=.*)?$", arg).group(1)
 
     def parseVar(self, line):
         res = re.search(
