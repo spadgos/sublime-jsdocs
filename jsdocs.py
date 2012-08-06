@@ -302,7 +302,6 @@ class JsdocsParser:
             out.extend(extraTags)
 
     def guessTypeFromName(self, name):
-        name = re.sub("^[$_]", "", name)
         hungarian_map = self.viewSettings.get('jsdocs_notation_map', [])
         if len(hungarian_map):
             for rule in hungarian_map:
