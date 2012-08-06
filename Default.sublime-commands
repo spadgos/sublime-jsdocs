@@ -4,7 +4,7 @@
     "command": "jsdocs_decorate"
   },
   {
-    "caption": "DocBlockr: Reparse comment block"
+    "caption": "DocBlockr: Reparse comment block",
     "command": "jsdocs_reparse"
   }
 ]
