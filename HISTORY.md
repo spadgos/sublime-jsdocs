@@ -1,5 +1,7 @@
 # DocBlockr Extended Changelog
 
+- **v2.7.2**, *6 August 2012*
+  - Small bug fix, thanks to [djuliusl](https://github.com/djuliusl)
 - **v2.7.1**, *5 August 2012*
   - Adds per-section alignment (can be set using `jsdocs_per_section_indent`)
   - Description field for `@return` tag can be disabled using `jsdocs_return_description`. *(Both thanks to [Drarok](https://github.com/Drarok))* 
