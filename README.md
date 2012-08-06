@@ -23,6 +23,8 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
+- **v2.7.2**, *6 August 2012*
+  - Small bug fix, thanks to [djuliusl](https://github.com/djuliusl)
 - **v2.7.1**, *5 August 2012*
   - Adds per-section alignment (can be set using `jsdocs_per_section_indent`)
   - Description field for `@return` tag can be disabled using `jsdocs_return_description`. *(Both thanks to [Drarok](https://github.com/Drarok))*
@@ -36,8 +38,6 @@ You can leave either of these things [here][issues].
   - YUI tags are supported by the autocomplete
   - When only whitespace exists on a docblock line, and `trim_automatic_white_space` is set to true, the whitespace is removed.
   - Better support for comment blocks opened with `/*`
-- **v2.6.3**, *30 April 2012*
-  - Fixes the join-lines command <kbd>Ctrl+J</kbd> for CoffeeScript.
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
