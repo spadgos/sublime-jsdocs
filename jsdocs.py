@@ -580,7 +580,7 @@ class JsdocsActionscript(JsdocsParser):
         res = re.search(
             #   fnName = function,  fnName : function
             '(?:(?P<name1>' + self.settings['varIdentifier'] + ')\s*[:=]\s*)?'
-            + 'function(?:\s+(?P<getset>[gs]et))'
+            + 'function(?:\s+(?P<getset>[gs]et))?'
             # function fnName
             + '(?:\s+(?P<name2>' + self.settings['fnIdentifier'] + '))?'
             # (arg1, arg2)
