@@ -1,5 +1,7 @@
 # DocBlockr Extended Changelog
 
+- **v2.7.4**, *8 August 2012*
+  - Fix for Actionscript docblocks not working
 - **v2.7.3**, *7 August 2012*
   - No trailing whitespace added on the spacer lines added when `jsdocs_spacer_between_sections` is on (thanks to [Rafał Chłodnicki](https://github.com/rchl))
   - Fixes a bug with detecting variable names when they have a default value in PHP
