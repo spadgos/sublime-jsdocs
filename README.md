@@ -23,6 +23,9 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues].
 
 ## Changelog ##
+
+- **v2.7.4**, *8 August 2012*
+  - Fix for Actionscript docblocks not working
 - **v2.7.3**, *7 August 2012*
   - No trailing whitespace added on the spacer lines added when `jsdocs_spacer_between_sections` is on (thanks to [Rafał Chłodnicki](https://github.com/rchl))
   - Fixes a bug with detecting variable names when they have a default value in PHP
@@ -35,8 +38,6 @@ You can leave either of these things [here][issues].
 - **v2.7.0**, *5 August 2012*
   - Adds support for ASDocs (Actionscript)
   - Changes Linux shortcut for reparsing a comment block to <kbd>Alt+Shift+Tab</kbd>
-- **v2.6.5**, *19 June 2012*
-  - Bugfix for adding linebreaks when not at the start or end of a line
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
