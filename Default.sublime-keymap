@@ -1,12 +1,6 @@
 [
+  // open a docblock with enter
   { "keys": ["enter"], "command": "jsdocs",
-    "context": [
-      { "key": "setting.auto_indent", "operator": "equal",          "operand": true,                    "match_all": true },
-      { "key": "selection_empty",     "operator": "equal",          "operand": true,                    "match_all": true },
-      { "key": "preceding_text",      "operator": "regex_contains", "operand": "^\\s*(\\/\\*|###)\\*$", "match_all": true }
-    ]
-  },
-  { "keys": ["tab"], "command": "jsdocs",
     "context": [
       { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,                    "match_all": true },
       { "key": "selection_empty",       "operator": "equal",          "operand": true,                    "match_all": true },
@@ -14,6 +8,7 @@
       { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*(\\/\\*|###)\\*$", "match_all": true }
     ]
   },
+  // open a docblock with keypad enter
   { "keys": ["keypad_enter"], "command": "jsdocs",
     "context": [
       { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,                    "match_all": true },
@@ -22,14 +17,16 @@
       { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*(\\/\\*|###)\\*$", "match_all": true }
     ]
   },
-  { "keys": ["shift+enter"], "command": "jsdocs", "args": {"inline": true},
+  // open a docblock with tab
+  { "keys": ["tab"], "command": "jsdocs",
     "context": [
-      { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,              "match_all": true },
-      { "key": "selection_empty",       "operator": "equal",          "operand": true,              "match_all": true },
-      { "key": "auto_complete_visible", "operator": "equal",          "operand": false,             "match_all": true },
-      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\/\\*{2}$", "match_all": true }
+      { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,                    "match_all": true },
+      { "key": "selection_empty",       "operator": "equal",          "operand": true,                    "match_all": true },
+      { "key": "auto_complete_visible", "operator": "equal",          "operand": false,                   "match_all": true },
+      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*(\\/\\*|###)\\*$", "match_all": true }
     ]
   },
+  // extend a docblock by adding an asterisk at the start
   { "keys": ["enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^\\s*(\\*\\s*).*$/$1/}"},
     "context": [
       { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,              "match_all": true },
@@ -38,6 +35,7 @@
       { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*\\s*\\S", "match_all": true }
     ]
   },
+  // extend a docblock by adding an asterisk at the start
   { "keys": ["enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^\\s*(\\*\\s*).*$/$1/}"},
     "context": [
       { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,            "match_all": true },
@@ -46,6 +44,16 @@
       { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*",      "match_all": true }
     ]
   },
+  // extend a docblock with keypad enter by adding an asterisk at the start
+  { "keys": ["keypad_enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^\\s*(\\*\\s*).*$/$1/}"},
+    "context": [
+      { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,            "match_all": true },
+      { "key": "selector",              "operator": "equal",          "operand": "comment.block", "match_all": true },
+      { "key": "auto_complete_visible", "operator": "equal",          "operand": false,           "match_all": true },
+      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*",      "match_all": true }
+    ]
+  },
+  // trim the automatically added whitespace
   { "keys": ["enter"], "command": "jsdocs_trim_auto_whitespace",
     "context": [
       { "key": "setting.auto_indent",                "operator": "equal",          "operand": true,            "match_all": true },
@@ -56,6 +64,18 @@
       { "key": "following_text",                     "operator": "regex_contains", "operand": "^\\s*$",        "match_all": true }
     ]
   },
+  // trim the automatically added whitespace
+  { "keys": ["keypad_enter"], "command": "jsdocs_trim_auto_whitespace",
+    "context": [
+      { "key": "setting.auto_indent",                "operator": "equal",          "operand": true,            "match_all": true },
+      { "key": "selector",                           "operator": "equal",          "operand": "comment.block", "match_all": true },
+      { "key": "auto_complete_visible",              "operator": "equal",          "operand": false,           "match_all": true },
+      { "key": "setting.trim_automatic_white_space", "operator": "equal",          "operand": true,            "match_all": true },
+      { "key": "preceding_text",                     "operator": "regex_contains", "operand": "^\\s*\\*\\s*$", "match_all": true },
+      { "key": "following_text",                     "operator": "regex_contains", "operand": "^\\s*$",        "match_all": true }
+    ]
+  },
+  // extend line comments (// and #)
   { "keys": ["enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^\\s*((?:#|\\/\\/)\\s*).*/$1/}"},
     "context": [
       { "key": "setting.auto_indent",                "operator": "equal",          "operand": true,              "match_all": true },
@@ -65,30 +85,61 @@
       { "key": "preceding_text",                     "operator": "regex_contains", "operand": "^\\s*(\\/\\/|#)", "match_all": true }
     ]
   },
+  // extend line comments (// #) with keypad enter
+  { "keys": ["keypad_enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^\\s*((?:#|\\/\\/)\\s*).*$/$1/}"},
+    "context": [
+      { "key": "setting.auto_indent",                "operator": "equal",          "operand": true,           "match_all": true },
+      { "key": "setting.jsdocs_extend_double_slash", "operator": "equal",          "operand": true,           "match_all": true },
+      { "key": "selector",                           "operator": "equal",          "operand": "comment.line", "match_all": true },
+      { "key": "auto_complete_visible",              "operator": "equal",          "operand": false,          "match_all": true },
+      { "key": "preceding_text",                     "operator": "regex_contains", "operand": "^\\s*\\/\\/",  "match_all": true }
+    ]
+  },
+  // close a block comment (/*  */)
   { "keys": ["enter"], "command": "insert_snippet", "args": {"contents": "\n$0\n */"},
     "context": [
       { "key": "selection_empty", "operator": "equal",          "operand": true,           "match_all": true },
       { "key": "preceding_text",  "operator": "regex_contains", "operand": "^\\s*\\/\\*$", "match_all": true }
     ]
   },
+  // close a block comment (/*  */)
+  { "keys": ["keypad_enter"], "command": "insert_snippet", "args": {"contents": "\n$0\n */"},
+    "context": [
+      { "key": "selection_empty", "operator": "equal",          "operand": true,           "match_all": true },
+      { "key": "preceding_text",  "operator": "regex_contains", "operand": "^\\s*\\/\\*$", "match_all": true }
+    ]
+  },
+  // indent an asterisk added in a comment block
   { "keys": ["*"], "command": "insert_snippet", "args": {"contents": " *"},
     "context": [
       { "key": "selector",       "operator": "equal",          "operand": "comment.block", "match_all": true },
       { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*$",        "match_all": true }
     ]
   },
+  // De-indent at the end of a comment block
   { "keys": ["enter"], "command": "jsdocs_deindent",
     "context": [
       { "key": "selection_empty", "operator": "equal",          "operand": true,        "match_all": true },
       { "key": "preceding_text",  "operator": "regex_contains", "operand": "^\\s+\\*/", "match_all": true }
     ]
   },
+  // de-indent at the end of a comment block with keypad-enter
   { "keys": ["keypad_enter"], "command": "jsdocs_deindent",
     "context": [
       { "key": "selection_empty", "operator": "equal",          "operand": true,        "match_all": true },
       { "key": "preceding_text",  "operator": "regex_contains", "operand": "^\\s+\\*/", "match_all": true }
     ]
   },
+  // Open an inline docblock (/** */)
+  { "keys": ["shift+enter"], "command": "jsdocs", "args": {"inline": true},
+    "context": [
+      { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,              "match_all": true },
+      { "key": "selection_empty",       "operator": "equal",          "operand": true,              "match_all": true },
+      { "key": "auto_complete_visible", "operator": "equal",          "operand": false,             "match_all": true },
+      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\/\\*{2}$", "match_all": true }
+    ]
+  },
+  // Open an inline docblock
   { "keys": ["shift+keypad_enter"], "command": "jsdocs", "args": {"inline": true},
     "context": [
       { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,              "match_all": true },
@@ -97,23 +148,7 @@
       { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\/\\*{2}$", "match_all": true }
     ]
   },
-  { "keys": ["keypad_enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^\\s*(\\*\\s*).*$/$1/}"},
-    "context": [
-      { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,            "match_all": true },
-      { "key": "selector",              "operator": "equal",          "operand": "comment.block", "match_all": true },
-      { "key": "auto_complete_visible", "operator": "equal",          "operand": false,           "match_all": true },
-      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*",      "match_all": true }
-    ]
-  },
-  { "keys": ["keypad_enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^\\s*(\\/\\/\\s*).*$/$1/}"},
-    "context": [
-      { "key": "setting.auto_indent",                "operator": "equal",          "operand": true,                        "match_all": true },
-      { "key": "setting.jsdocs_extend_double_slash", "operator": "equal",          "operand": true,                        "match_all": true },
-      { "key": "selector",                           "operator": "equal",          "operand": "comment.line.double-slash", "match_all": true },
-      { "key": "auto_complete_visible",              "operator": "equal",          "operand": false,                       "match_all": true },
-      { "key": "preceding_text",                     "operator": "regex_contains", "operand": "^\\s*\\/\\/",               "match_all": true }
-    ]
-  },
+  // show the autocomplete
   { "keys": ["@"], "command": "run_macro_file", "args": {"file": "Packages/DocBlockr/jsdocs-auto-complete.sublime-macro"},
     "context": [
       { "key": "selection_empty", "operator": "equal",          "operand": true,                          "match_all": true },
@@ -121,6 +156,7 @@
       { "key": "selector",        "operator": "equal",          "operand": "comment.block",               "match_all": true }
     ]
   },
+  // indent to align with the previous line
   { "keys": ["tab"], "command": "jsdocs_indent",
     "context": [
       { "key": "setting.jsdocs_deep_indent", "operator": "equal",          "operand": true,            "match_all": true },
@@ -131,21 +167,31 @@
       { "key": "selector",                   "operator": "equal",          "operand": "comment.block", "match_all": true }
     ]
   },
+  // decorate a double-slash comment
   { "keys": ["ctrl+enter"], "command": "jsdocs_decorate",
     "context": [
-      { "key": "selector", "operator": "equal", "operand": "comment.line"}
+      { "key": "selector", "operator": "equal", "operand": "comment.line.double-slash"}
     ]
   },
+  // decorate a double-slash comment
+  { "keys": ["ctrl+keypad_enter"], "command": "jsdocs_decorate",
+    "context": [
+      { "key": "selector", "operator": "equal", "operand": "comment.line.double-slash"}
+    ]
+  },
+  // join lines inside a comment block, stripping the leading asterisk
   { "keys": ["ctrl+j"], "command": "jsdocs_join",
     "context": [
       { "key": "selector", "operator": "equal", "operand": "comment.block" }
     ]
   },
+  // join lines in a line comment, stripping the leading // or #
   { "keys": ["ctrl+j"], "command": "jsdocs_join",
     "context": [
       { "key": "selector", "operator": "equal", "operand": "comment.line" }
     ]
   },
+  // reparse a comment block's placeholders
   { "keys": ["ctrl+alt+tab"], "command": "jsdocs_reparse",
     "context": [
       { "key": "selector", "operator": "equal", "operand": "comment.block" }
