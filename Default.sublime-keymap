@@ -56,13 +56,13 @@
       { "key": "following_text", "operator": "regex_contains", "operand": "^\\s*$", "match_all": true }
     ]
   },
-  { "keys": ["enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^\\s*(\\/\\/\\s*).*$/$1/}"}, "context":
+  { "keys": ["enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^\\s*((?:#|\\/\\/)\\s*).*/$1/}"}, "context":
     [
-      { "key": "setting.auto_indent", "operator": "equal", "operand": true, "match_all": true },
-      { "key": "setting.jsdocs_extend_double_slash", "operator": "equal", "operand": true, "match_all": true},
-      { "key": "selector", "operator": "equal", "operand" : "comment.line.double-slash", "match_all": true},
-      { "key": "auto_complete_visible", "operator": "equal", "operand": false, "match_all": true },
-      { "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*\\/\\/", "match_all": true}
+      { "key": "setting.auto_indent",                "operator": "equal",          "operand": true,              "match_all": true},
+      { "key": "setting.jsdocs_extend_double_slash", "operator": "equal",          "operand": true,              "match_all": true},
+      { "key": "selector",                           "operator": "equal",          "operand": "comment.line",    "match_all": true},
+      { "key": "auto_complete_visible",              "operator": "equal",          "operand": false,             "match_all": true},
+      { "key": "preceding_text",                     "operator": "regex_contains", "operand": "^\\s*(\\/\\/|#)", "match_all": true}
     ]
   },
   { "keys": ["enter"], "command": "insert_snippet", "args": {"contents": "\n$0\n */"}, "context":
