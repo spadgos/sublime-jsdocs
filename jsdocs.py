@@ -45,15 +45,17 @@ def is_numeric(val):
 
 
 def getParser(view):
-    scope = view.scope_name(view.sel()[0].end())
+    scopes = view.scope_name(view.sel()[0].end()).split(" ")
     viewSettings = view.settings()
 
-    if re.search("source\\.php", scope):
+    if "source.php" in scopes:
         return JsdocsPHP(viewSettings)
-    elif re.search("source\\.coffee", scope):
+    elif "source.coffee" in scopes:
         return JsdocsCoffee(viewSettings)
-    elif re.search("source\\.actionscript", scope):
+    elif "source.actionscript" in scopes:
         return JsdocsActionscript(viewSettings)
+    elif "source.c++" in scopes:
+        return JsdocsCPP(viewSettings)
 
     return JsdocsJavascript(viewSettings)
 
@@ -181,7 +183,7 @@ class JsdocsParser:
         return re.search('^\\s*\\*', line)
 
     def parse(self, line):
-        out = self.parseFunction(line)  # (name, args, options)
+        out = self.parseFunction(line)  # (name, args, retval, options)
         if (out):
             return self.formatFunction(*out)
 
@@ -216,7 +218,7 @@ class JsdocsParser:
 
         return out
 
-    def formatFunction(self, name, args, options={}):
+    def formatFunction(self, name, args, retval, options={}):
         out = []
         if 'as_setter' in options:
             out.append('@private')
@@ -243,7 +245,9 @@ class JsdocsParser:
                     escape(arg[1])
                 ))
 
-        retType = self.getFunctionReturnType(name)
+        # return value type might be already available in some languages but
+        # even then ask language specific parser if it wants it listed
+        retType = self.getFunctionReturnType(name, retval)
         if retType is not None:
             typeInfo = ''
             if self.settings['typeInfo']:
@@ -269,7 +273,7 @@ class JsdocsParser:
 
         return out
 
-    def getFunctionReturnType(self, name):
+    def getFunctionReturnType(self, name, retval):
         """ returns None for no return type. False meaning unknown, or a string """
         name = re.sub("^[$_]", "", name)
 
@@ -362,7 +366,7 @@ class JsdocsJavascript(JsdocsParser):
         name = escape(res.group('name1') or res.group('name2') or '')
         args = res.group('args')
 
-        return (name, args)
+        return (name, args, None)
 
     def parseVar(self, line):
         res = re.search(
@@ -427,7 +431,7 @@ class JsdocsPHP(JsdocsParser):
         if not res:
             return None
 
-        return (res.group('name'), res.group('args'))
+        return (res.group('name'), res.group('args'), None)
 
     def getArgType(self, arg):
         #  function add($x, $y = 1)
@@ -485,7 +489,7 @@ class JsdocsPHP(JsdocsParser):
             return res and res.group(1) or None
         return None
 
-    def getFunctionReturnType(self, name):
+    def getFunctionReturnType(self, name, retval):
         if (name[:2] == '__'):
             if name in ('__construct', '__destruct', '__set', '__unset', '__wakeup'):
                 return None
@@ -495,7 +499,52 @@ class JsdocsPHP(JsdocsParser):
                 return 'string'
             if name == '__isset':
                 return 'boolean'
-        return JsdocsParser.getFunctionReturnType(self, name)
+        return JsdocsParser.getFunctionReturnType(self, name, retval)
+
+
+class JsdocsCPP(JsdocsParser):
+    def setupSettings(self):
+        nameToken = '[a-zA-Z_][a-zA-Z0-9_]*'
+        identifier = '(%s)(::%s)?' % (nameToken, nameToken)
+        self.settings = {
+            'typeInfo': False,
+            'curlyTypes': False,
+            'typeTag': 'param',
+            'commentCloser': ' */',
+            'fnIdentifier': identifier,
+            'varIdentifier': identifier,
+            'bool': 'bool',
+            'function': 'function'
+        }
+
+    def parseFunction(self, line):
+        res = re.search(
+            '(?P<retval>' + self.settings['varIdentifier'] + ')\\s+'
+            + '(?P<name>' + self.settings['varIdentifier'] + ')'
+            # void fnName
+            # (arg1, arg2)
+            + '\\s*\\((?P<args>.*)\)',
+            line
+        )
+        if not res:
+            return None
+
+        return (res.group('name'), res.group('args'), res.group('retval'))
+
+    def getArgType(self, arg):
+        return None
+
+    def getArgName(self, arg):
+        return re.search("(" + self.settings['varIdentifier'] + ")(?:\\s*=.*)?$", arg).group(1)
+
+    def parseVar(self, line):
+        return None
+
+    def guessTypeFromValue(self, val):
+        return None
+
+    def getFunctionReturnType(self, name, retval):
+        return retval if retval != 'void' else None;
 
 
 class JsdocsCoffee(JsdocsParser):
@@ -527,7 +576,7 @@ class JsdocsCoffee(JsdocsParser):
         name = escape(res.group('name') or '')
         args = res.group('args')
 
-        return (name, args)
+        return (name, args, None)
 
     def parseVar(self, line):
         res = re.search(
@@ -603,7 +652,7 @@ class JsdocsActionscript(JsdocsParser):
         if res.group('getset') == 'set':
             options['as_setter'] = True
 
-        return (name, args, options)
+        return (name, args, None, options)
 
     def parseVar(self, line):
         return None
