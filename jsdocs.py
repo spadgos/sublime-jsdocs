@@ -3,6 +3,7 @@ DocBlockr v2.7.4
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
+import sublime
 import sublime_plugin
 import re
 import string
@@ -64,6 +65,9 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
         settings = v.settings()
         point = v.sel()[0].end()
+
+        # remove trailing characters, if any
+        v.erase(edit, sublime.Region(point, v.line(point).end()))
 
         indentSpaces = " " * max(0, settings.get("jsdocs_indentation_spaces", 1))
         prefix = "*"
