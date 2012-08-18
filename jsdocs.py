@@ -263,9 +263,14 @@ class JsdocsParser:
 
             if (self.viewSettings.get('jsdocs_return_description')):
                 format_str = "%s%s %s${1:[description]}"
+                third_arg = ""
 
                 # the extra space here is so that the description will align with the param description
-                format_args.append(" " if (args and not self.viewSettings.get('jsdocs_per_section_indent')) else "")
+                if args and self.viewSettings.get('jsdocs_align_tags') == 'deep':
+                    if not self.viewSettings.get('jsdocs_per_section_indent'):
+                        third_arg = " "
+
+                format_args.append(third_arg)
             else:
                 format_str = "%s%s"
 
