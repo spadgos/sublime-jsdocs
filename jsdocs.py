@@ -64,12 +64,13 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, inline=False):
         v = self.view
-
         settings = v.settings()
         point = v.sel()[0].end()
 
-        # remove trailing characters, if any
-        v.erase(edit, sublime.Region(point, v.line(point).end()))
+        # remove trailing '*/'
+        rgn = sublime.Region(point, v.line(point).end())
+        if re.search('^\\s*\\*\\/$', v.substr(rgn)):
+            v.erase(edit, rgn)
 
         indentSpaces = " " * max(0, settings.get("jsdocs_indentation_spaces", 1))
         prefix = "*"
