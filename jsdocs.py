@@ -33,7 +33,7 @@ def counter():
 
 
 def escape(str):
-    return string.replace(str, '$', '\$')
+    return str.replace('$', '\$').replace('{', '\{').replace('}', '\}')
 
 
 def is_numeric(val):
@@ -71,7 +71,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         trailingRgn = sublime.Region(point, v.line(point).end())
         trailingString = v.substr(trailingRgn)
         # drop trailing '*/'
-        trailingString = re.sub('\\s*\\*\\/$', '', trailingString)
+        trailingString = escape(re.sub('\\s*\\*\\/$', '', trailingString))
         # erase characters in the view (will be added to the output later)
         v.erase(edit, trailingRgn)
 
