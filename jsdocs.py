@@ -67,10 +67,13 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         settings = v.settings()
         point = v.sel()[0].end()
 
-        # remove trailing '*/'
-        rgn = sublime.Region(point, v.line(point).end())
-        if re.search('^\\s*\\*\\/$', v.substr(rgn)):
-            v.erase(edit, rgn)
+        # trailing characters are put inside the body of the comment
+        trailingRgn = sublime.Region(point, v.line(point).end())
+        trailingString = v.substr(trailingRgn)
+        # drop trailing '*/'
+        trailingString = re.sub('\\s*\\*\\/$', '', trailingString)
+        # erase characters in the view (will be added to the output later)
+        v.erase(edit, trailingRgn)
 
         indentSpaces = " " * max(0, settings.get("jsdocs_indentation_spaces", 1))
         prefix = "*"
@@ -81,6 +84,10 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
         parser = getParser(v)
         parser.inline = inline
+
+        # use trailing string as a description of the function
+        if trailingString:
+            parser.setNameOverride(trailingString)
 
         # read the next line
         line = read_line(v, point + 1)
@@ -168,7 +175,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
                 for line in out:
                     snippet += "\n " + prefix + (indentSpaces + line if line else "")
             else:
-                snippet += "\n " + prefix + indentSpaces + "$0"
+                snippet += "\n " + prefix + indentSpaces + "${0:" + trailingString + '}'
 
             snippet += "\n" + closer
             write(v, snippet)
@@ -179,9 +186,17 @@ class JsdocsParser:
     def __init__(self, viewSettings):
         self.viewSettings = viewSettings
         self.setupSettings()
+        self.nameOverride = None
 
     def isExistingComment(self, line):
         return re.search('^\\s*\\*', line)
+
+    def setNameOverride(self, name):
+        """ overrides the description of the function - used instead of parsed description """
+        self.nameOverride = name
+
+    def getNameOverride(self):
+        return self.nameOverride
 
     def parse(self, line):
         out = self.parseFunction(line)  # (name, args, retval, options)
@@ -225,7 +240,10 @@ class JsdocsParser:
             out.append('@private')
             return out
 
-        out.append("${1:[%s description]}" % (name))
+        if self.getNameOverride():
+            out.append("${1:%s}" % (self.getNameOverride()))
+        else:
+            out.append("${1:[%s description]}" % (name))
 
         self.addExtraTags(out)
 
