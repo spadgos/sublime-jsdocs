@@ -71,7 +71,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         trailingRgn = sublime.Region(point, v.line(point).end())
         trailingString = v.substr(trailingRgn)
         # drop trailing '*/'
-        trailingString = escape(re.sub('\\s*\\*\\/$', '', trailingString))
+        trailingString = escape(re.sub('\\s*\\*\\/\\s*$', '', trailingString))
         # erase characters in the view (will be added to the output later)
         v.erase(edit, trailingRgn)
 
