@@ -542,7 +542,7 @@ class JsdocsCPP(JsdocsParser):
 
     def parseFunction(self, line):
         res = re.search(
-            '(?P<retval>' + self.settings['varIdentifier'] + ')\\s+'
+            '(?P<retval>' + self.settings['varIdentifier'] + ')[&*\\s]+'
             + '(?P<name>' + self.settings['varIdentifier'] + ')'
             # void fnName
             # (arg1, arg2)
