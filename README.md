@@ -20,7 +20,7 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 
 ## Feature requests & bug reports ##
 
-You can leave either of these things [here][issues].
+You can leave either of these things [here][issues]. Pull requests are welcomed heartily! In this repo, the main development branch is `develop` and the stable 'production' branch is `master`. Please remember to base your branch from `develop` and issue the pull request back to that branch.
 
 ## Changelog ##
 
