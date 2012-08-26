@@ -715,8 +715,10 @@ class JsdocsIndentCommand(sublime_plugin.TextCommand):
             v.insert(edit, currPos, "\t")
 
     def getIndentSpaces(self, line):
-        res = re.search("^\\s*\\*(?P<fromStar>\\s*@(?:param|property)\\s+\\S+\\s+\\S+\\s+)\\S", line) \
-           or re.search("^\\s*\\*(?P<fromStar>\\s*@(?:returns?|define)\\s+\\S+\\s+)\\S", line) \
+        hasTypes = getParser(self.view).settings['typeInfo']
+        extraIndent = '\\s+\\S+' if hasTypes else ''
+        res = re.search("^\\s*\\*(?P<fromStar>\\s*@(?:param|property)%s\\s+\\S+\\s+)\\S" % extraIndent, line) \
+           or re.search("^\\s*\\*(?P<fromStar>\\s*@(?:returns?|define)%s\\s+\\S+\\s+)\\S" % extraIndent, line) \
            or re.search("^\\s*\\*(?P<fromStar>\\s*@[a-z]+\\s+)\\S", line) \
            or re.search("^\\s*\\*(?P<fromStar>\\s*)", line)
         if res:
