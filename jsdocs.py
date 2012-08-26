@@ -809,3 +809,50 @@ class JsdocsTrimAutoWhitespace(sublime_plugin.TextCommand):
         line = v.substr(lineRegion)
         spaces = max(0, v.settings().get("jsdocs_indentation_spaces", 1))
         v.replace(edit, lineRegion, re.sub("^(\\s*\\*)\\s*$", "\\1\n\\1" + (" " * spaces), line))
+
+
+class JsdocsWrapLines(sublime_plugin.TextCommand):
+    """
+    Reformat description text inside a comment block to wrap at the correct length.
+    Only works on description text: long tag descriptions are ignored.
+    Wrap column is set by the first ruler (set in Default.sublime-settings), or 80 by default.
+    Shortcut Key: alt+q
+    """
+
+    def run(self, edit):
+        v = self.view
+        rulers = v.settings().get('rulers')
+        wrapLength = rulers[0] or 80
+        v.run_command('expand_selection', {'to': 'scope'})
+
+        # find the first word
+        startPoint = v.find("\n\\s*\\* ", v.sel()[0].begin()).begin()
+        # find the first tag, or the end of the comment
+        endPoint = v.find("\\s*\n\\s*\\*(\\s*@|/)", v.sel()[0].begin()).begin()
+
+        # replace the selection with this ^ new selection
+        v.sel().clear()
+        v.sel().add(sublime.Region(startPoint, endPoint))
+
+        # get the description text
+        text = v.substr(v.sel()[0])
+
+        # find the indentation level
+        indentation = len(re.search("\n(\\s*\\*\\s*)", text).group(1))
+        wrapLength -= indentation
+
+        # join all the lines, collapsing "empty" lines
+        text = re.sub("\n(\\s*\\*\\s*\n)+", "\n\n", text)
+
+        def joinParas(para):
+            para = re.sub("(\n|^)\\s*\\*\\s*", " ", para)
+            return '\n *' + reduce(lambda line, word, width=wrapLength: '%s%s%s' %
+                      (line,
+                       [' ', '\n * '][(len(line) - line.rfind('\n') - 1 + len(word.split('\n', 1)[0]) >= width)],
+                       word),
+                      para.split(' ')
+                     )
+
+        text = '\n *'.join(map(joinParas, re.split('\n{2,}', text)))
+        # print output
+        write(v, text)
