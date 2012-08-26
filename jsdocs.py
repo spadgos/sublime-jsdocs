@@ -841,13 +841,18 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
         indentation = len(re.search("\n(\\s*\\*\\s*)", text).group(1))
         wrapLength -= indentation
 
-        # join all the lines
-        text = re.sub("\n\\s*\\*\\s*", " ", text)
+        # join all the lines, collapsing "empty" lines
+        text = re.sub("\n(\\s*\\*\\s*\n)+", "\n\n", text)
 
-        text = '\n *' + reduce(lambda line, word, width=wrapLength: '%s%s%s' %
-                  (line,
-                   [' ', '\n * '][(len(line) - line.rfind('\n') - 1 + len(word.split('\n', 1)[0]) >= width)],
-                   word),
-                  text.split(' ')
-                 )
+        def joinParas(para):
+            para = re.sub("(\n|^)\\s*\\*\\s*", " ", para)
+            return '\n *' + reduce(lambda line, word, width=wrapLength: '%s%s%s' %
+                      (line,
+                       [' ', '\n * '][(len(line) - line.rfind('\n') - 1 + len(word.split('\n', 1)[0]) >= width)],
+                       word),
+                      para.split(' ')
+                     )
+
+        text = '\n *'.join(map(joinParas, re.split('\n{2,}', text)))
+        # print output
         write(v, text)
