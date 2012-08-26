@@ -263,6 +263,9 @@ class JsdocsParser:
 
             out.append(format_str % tuple(format_args))
 
+        if 'private' in options and options['private']:
+            out.append('@private')
+
         return out
 
     def getFunctionReturnType(self, name):
@@ -343,7 +346,7 @@ class JsdocsJavascript(JsdocsParser):
     def parseFunction(self, line):
         res = re.search(
             #   fnName = function,  fnName : function
-            '(?:(?P<name1>' + self.settings['varIdentifier'] + ')\s*[:=]\s*)?'
+            '(?:(?P<name1>(?P<private>_)?' + self.settings['varIdentifier'] + ')\s*[:=]\s*)?'
             + 'function'
             # function fnName
             + '(?:\s+(?P<name2>' + self.settings['fnIdentifier'] + '))?'
@@ -357,8 +360,11 @@ class JsdocsJavascript(JsdocsParser):
         # grab the name out of "name1 = function name2(foo)" preferring name1
         name = escape(res.group('name1') or res.group('name2') or '')
         args = res.group('args')
+        options = {
+            "private": res.group('private')
+        }
 
-        return (name, args)
+        return (name, args, options)
 
     def parseVar(self, line):
         res = re.search(
