@@ -69,7 +69,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
         # trailing characters are put inside the body of the comment
         trailingRgn = sublime.Region(point, v.line(point).end())
-        trailingString = v.substr(trailingRgn)
+        trailingString = v.substr(trailingRgn).strip()
         # drop trailing '*/'
         trailingString = escape(re.sub('\\s*\\*\\/\\s*$', '', trailingString))
         # erase characters in the view (will be added to the output later)
@@ -240,10 +240,8 @@ class JsdocsParser:
             out.append('@private')
             return out
 
-        if self.getNameOverride():
-            out.append("${1:%s}" % (self.getNameOverride()))
-        else:
-            out.append("${1:[%s description]}" % (name))
+        description = self.getNameOverride() or ('[%s description]' % name)
+        out.append("${1:%s}" % description)
 
         self.addExtraTags(out)
 
