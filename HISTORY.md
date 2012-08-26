@@ -1,5 +1,9 @@
 # DocBlockr Extended Changelog
 
+- **v2.8.0**, *26 August 2012*
+  - New feature: <kbd>Alt+Q</kbd> to reformat the description field of a docblock to make it fit nicely within your ruler.
+  - Adds support for C++ (thanks to [Rafał Chłodnicki](https://github.com/rchl))
+  - Indenting to the description field works in languages which don't require type information in the docblock.
 - **v2.7.4**, *8 August 2012*
   - Fix for Actionscript docblocks not working
 - **v2.7.3**, *7 August 2012*
