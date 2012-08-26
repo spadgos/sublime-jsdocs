@@ -20,10 +20,14 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 
 ## Feature requests & bug reports ##
 
-You can leave either of these things [here][issues].
+You can leave either of these things [here][issues]. Pull requests are welcomed heartily! In this repo, the main development branch is `develop` and the stable 'production' branch is `master`. Please remember to base your branch from `develop` and issue the pull request back to that branch.
 
 ## Changelog ##
 
+- **v2.8.0**, *26 August 2012*
+  - New feature: <kbd>Alt+Q</kbd> to reformat the description field of a docblock to make it fit nicely within your ruler.
+  - Adds support for C++ (thanks to [Rafał Chłodnicki](https://github.com/rchl))
+  - Indenting to the description field works in languages which don't require type information in the docblock.
 - **v2.7.4**, *8 August 2012*
   - Fix for Actionscript docblocks not working
 - **v2.7.3**, *7 August 2012*
@@ -35,9 +39,6 @@ You can leave either of these things [here][issues].
 - **v2.7.1**, *5 August 2012*
   - Adds per-section alignment (can be set using `jsdocs_per_section_indent`)
   - Description field for `@return` tag can be disabled using `jsdocs_return_description`. *(Both thanks to [Drarok](https://github.com/Drarok))*
-- **v2.7.0**, *5 August 2012*
-  - Adds support for ASDocs (Actionscript)
-  - Changes Linux shortcut for reparsing a comment block to <kbd>Alt+Shift+Tab</kbd>
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
@@ -236,7 +237,11 @@ If you write a double-slash comment and then press `Ctrl+Enter`, DocBlockr will 
 Sometimes, you'll perform some action which clears the fields (sections of text which you can navigate through using `tab`). This leaves you with a number of placeholders in the DocBlock with no easy way to jump to them.
 
 With DocBlockr, you can reparse a comment and reactivate the fields by pressing the hotkey `Ctrl+Alt+Tab`.
-    
+
+### Reformatting paragraphs ###
+
+Inside a comment block, hit `Alt+Q` to wrap the lines to make them fit within your rulers.
+
 ### Adding extra tags ###
 
 Finally, typing `@` inside a docblock will show a completion list for all tags supported by [JSDoc][jsdoc], the [Google Closure Compiler][closure], [YUIDoc][yui] or [PHPDoc][phpdoc]. Extra help is provided for each of these tags by prefilling the arguments each expects. Pressing `tab` will move the cursor to the next argument.
