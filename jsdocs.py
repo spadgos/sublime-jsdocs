@@ -45,18 +45,19 @@ def is_numeric(val):
 
 
 def getParser(view):
-    scopes = view.scope_name(view.sel()[0].end()).split(" ")
+    scope = view.scope_name(view.sel()[0].end())
+    res = re.search('\\bsource\\.([a-z+]+)', scope)
+    sourceLang = res.group(1) if res else 'js'
     viewSettings = view.settings()
 
-    if "source.php" in scopes:
+    if sourceLang == "php":
         return JsdocsPHP(viewSettings)
-    elif "source.coffee" in scopes:
+    elif sourceLang == "coffee":
         return JsdocsCoffee(viewSettings)
-    elif "source.actionscript" in scopes:
+    elif sourceLang == "actionscript":
         return JsdocsActionscript(viewSettings)
-    elif "source.c++" in scopes:
+    elif sourceLang == "c++":
         return JsdocsCPP(viewSettings)
-
     return JsdocsJavascript(viewSettings)
 
 
