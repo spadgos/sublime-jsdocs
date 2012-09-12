@@ -238,7 +238,7 @@ If you write a double-slash comment and then press `Ctrl+Enter`, DocBlockr will 
 
 Sometimes, you'll perform some action which clears the fields (sections of text which you can navigate through using `tab`). This leaves you with a number of placeholders in the DocBlock with no easy way to jump to them.
 
-With DocBlockr, you can reparse a comment and reactivate the fields by pressing the hotkey `Ctrl+Alt+Tab`.
+With DocBlockr, you can reparse a comment and reactivate the fields by pressing the hotkey `Ctrl+Alt+Tab` (`Alt+Shift+Tab` on Linux).
 
 ### Reformatting paragraphs ###
 
