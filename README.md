@@ -24,6 +24,9 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
 
 ## Changelog ##
 
+- **v2.8.1**, *13 September 2012*
+  - Pressing <kbd>tab</kbd> on an empty line will perform a deep indentation instead of moving to the next field
+  - Functions starting with `_` will get a `@private` tag in Javascript (thanks to [Andrew Hanna](https://github.com/percyhanna))
 - **v2.8.0**, *26 August 2012*
   - New feature: <kbd>Alt+Q</kbd> to reformat the description field of a docblock to make it fit nicely within your ruler.
   - Adds support for C++ (thanks to [Rafał Chłodnicki](https://github.com/rchl))
@@ -36,9 +39,6 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
   - Changes the notation map to not ignore the leading `$` or `_`, meaning that (for example), you could specify that variables starting with `$` are `HTMLElement`s.
 - **v2.7.2**, *6 August 2012*
   - Small bug fix, thanks to [djuliusl](https://github.com/djuliusl)
-- **v2.7.1**, *5 August 2012*
-  - Adds per-section alignment (can be set using `jsdocs_per_section_indent`)
-  - Description field for `@return` tag can be disabled using `jsdocs_return_description`. *(Both thanks to [Drarok](https://github.com/Drarok))*
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
@@ -123,6 +123,8 @@ DocBlockr will try to make an intelligent guess about the return value of the fu
   - `__sleep` returns an `Array`.
   - `__toString` returns a `string`.
   - `__isset` returns a `bool`.
+
+In Javascript, functions beginning with an underscore are given a `@private` tag by default.
 
 ### Variable documentation ###
 
