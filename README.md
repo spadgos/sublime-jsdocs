@@ -322,7 +322,6 @@ This is my first package for Sublime Text, and the first time I've written any P
 [package_control]: http://wbond.net/sublime_packages/package_control
 [phpdoc]: http://phpdoc.org/
 [sublime]: http://www.sublimetext.com/
-[svenax]: https://github.com/svenax
 [tags]: https://github.com/spadgos/sublime-jsdocs/tags
 [typehinting]: http://php.net/manual/en/language.oop5.typehinting.php
 [yui]: http://yui.github.com/yuidoc/syntax/index.html
