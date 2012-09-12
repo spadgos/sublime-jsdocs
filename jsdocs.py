@@ -1,5 +1,5 @@
 """
-DocBlockr v2.7.4
+DocBlockr v2.8.1
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
@@ -56,7 +56,7 @@ def getParser(view):
         return JsdocsCoffee(viewSettings)
     elif sourceLang == "actionscript":
         return JsdocsActionscript(viewSettings)
-    elif sourceLang == "c++":
+    elif sourceLang == "c++" or sourceLang == 'c':
         return JsdocsCPP(viewSettings)
     return JsdocsJavascript(viewSettings)
 
@@ -293,6 +293,8 @@ class JsdocsParser:
                 format_str = "%s%s"
 
             out.append(format_str % tuple(format_args))
+        if 'private' in options and options['private']:
+            out.append('@private')
 
         return out
 
@@ -374,10 +376,10 @@ class JsdocsJavascript(JsdocsParser):
     def parseFunction(self, line):
         res = re.search(
             #   fnName = function,  fnName : function
-            '(?:(?P<name1>' + self.settings['varIdentifier'] + ')\s*[:=]\s*)?'
+            '(?:(?P<name1>(?P<private1>_)?' + self.settings['varIdentifier'] + ')\s*[:=]\s*)?'
             + 'function'
             # function fnName
-            + '(?:\s+(?P<name2>' + self.settings['fnIdentifier'] + '))?'
+            + '(?:\s+(?P<name2>(?P<private2>_)?' + self.settings['fnIdentifier'] + '))?'
             # (arg1, arg2)
             + '\s*\((?P<args>.*)\)',
             line
@@ -388,8 +390,11 @@ class JsdocsJavascript(JsdocsParser):
         # grab the name out of "name1 = function name2(foo)" preferring name1
         name = escape(res.group('name1') or res.group('name2') or '')
         args = res.group('args')
+        options = {
+            "private": bool(res.group('private1') or res.group('private2'))
+        }
 
-        return (name, args, None)
+        return (name, args, None, options)
 
     def parseVar(self, line):
         res = re.search(
@@ -542,7 +547,7 @@ class JsdocsCPP(JsdocsParser):
 
     def parseFunction(self, line):
         res = re.search(
-            '(?P<retval>' + self.settings['varIdentifier'] + ')\\s+'
+            '(?P<retval>' + self.settings['varIdentifier'] + ')[&*\\s]+'
             + '(?P<name>' + self.settings['varIdentifier'] + ')'
             # void fnName
             # (arg1, arg2)
@@ -854,5 +859,4 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                      )
 
         text = '\n *'.join(map(joinParas, re.split('\n{2,}', text)))
-        # print output
         write(v, text)
