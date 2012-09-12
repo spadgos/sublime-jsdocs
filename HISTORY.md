@@ -1,5 +1,8 @@
 # DocBlockr Extended Changelog
 
+- **v2.8.1**, *13 September 2012*
+  - Pressing <kbd>tab</kbd> on an empty line will perform a deep indentation instead of moving to the next field
+  - Functions starting with `_` will get a `@private` tag in Javascript (thanks to [Andrew Hanna](https://github.com/percyhanna))
 - **v2.8.0**, *26 August 2012*
   - New feature: <kbd>Alt+Q</kbd> to reformat the description field of a docblock to make it fit nicely within your ruler.
   - Adds support for C++ (thanks to [Rafał Chłodnicki](https://github.com/rchl))
