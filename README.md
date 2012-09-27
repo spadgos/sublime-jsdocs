@@ -23,7 +23,8 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues]. Pull requests are welcomed heartily! In this repo, the main development branch is `develop` and the stable 'production' branch is `master`. Please remember to base your branch from `develop` and issue the pull request back to that branch.
 
 ## Changelog ##
-
+- **Edge**
+  - When a function is defined across many lines, the parser will find the arguments on extra lines.
 - **v2.8.1**, *13 September 2012*
   - Pressing <kbd>tab</kbd> on an empty line will perform a deep indentation instead of moving to the next field
   - Functions starting with `_` will get a `@private` tag in Javascript (thanks to [Andrew Hanna](https://github.com/percyhanna))
@@ -97,6 +98,30 @@ However, if the line directly afterwards contains a function definition, then it
 
 You can then press `tab` to move between the different fields.
 
+If you have many arguments, or long variable names, it might be useful to spread your arguments across multiple lines. DocBlockr will handle this situation too:
+
+    /**<<enter>>
+    function someLongFunctionName(
+            withArguments, across,
+            many, lines
+        ) {
+
+    -- becomes --
+
+    /**
+     * [someLongFunctionName description]
+     * @param  {[type]} withArguments [description]
+     * @param  {[type]} across        [description]
+     * @param  {[type]} many          [description]
+     * @param  {[type]} lines         [description]
+     * @return {[type]}               [description]
+     */
+    function someLongFunctionName(
+            withArguments, across,
+            many, lines
+        ) {
+
+
 In PHP, if [type hinting][typehinting] or default values are used, then those types are prefilled as the datatypes.
 
     /**|<<enter>>
@@ -118,6 +143,7 @@ DocBlockr will try to make an intelligent guess about the return value of the fu
 - If the function name is or begins with "set" or "add", then no `@return` is inserted.
 - If the function name is or begins with "is" or "has", then it is assumed to return a `Boolean`.
 - In Javascript, if the function begins with an uppercase letter then it is assumed that the function is a class definition. No `@return` tag is added.
+- In Javascript, functions beginning with an underscore are assumed to be private: `@private` is added to these.
 - In PHP, some of the [magic methods][magicmethods] have their values prefilled:
   - `__construct`, `__destruct`, `__set`, `__unset`, `__wakeup` have no `@return` tag.
   - `__sleep` returns an `Array`.
