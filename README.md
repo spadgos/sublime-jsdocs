@@ -1,4 +1,4 @@
-DocBlockr is a [Sublime Text 2][sublime] package which makes writing [JSDoc comments][jsdoc] and [PHPDoc comments][phpdoc] a breeze.
+DocBlockr is a [Sublime Text 2][sublime] package which makes writing documentation a breeze. DocBlockr supports **Javascript**, **ActionScript**, **CoffeeScript**, **Java**, **C** and **C++**,
 
 ## Installation ##
 
