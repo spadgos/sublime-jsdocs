@@ -23,7 +23,7 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues]. Pull requests are welcomed heartily! In this repo, the main development branch is `develop` and the stable 'production' branch is `master`. Please remember to base your branch from `develop` and issue the pull request back to that branch.
 
 ## Changelog ##
-- **Edge**
+- **v2.8.2**, *28 September 2012*
   - When a function is defined across many lines, the parser will find the arguments on extra lines.
 - **v2.8.1**, *13 September 2012*
   - Pressing <kbd>tab</kbd> on an empty line will perform a deep indentation instead of moving to the next field
@@ -38,8 +38,6 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
   - No trailing whitespace added on the spacer lines added when `jsdocs_spacer_between_sections` is on (thanks to [Rafał Chłodnicki](https://github.com/rchl))
   - Fixes a bug with detecting variable names when they have a default value in PHP
   - Changes the notation map to not ignore the leading `$` or `_`, meaning that (for example), you could specify that variables starting with `$` are `HTMLElement`s.
-- **v2.7.2**, *6 August 2012*
-  - Small bug fix, thanks to [djuliusl](https://github.com/djuliusl)
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
