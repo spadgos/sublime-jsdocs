@@ -1,4 +1,4 @@
-DocBlockr is a [Sublime Text 2][sublime] package which makes writing [JSDoc comments][jsdoc] and [PHPDoc comments][phpdoc] a breeze.
+DocBlockr is a [Sublime Text 2][sublime] package which makes writing documentation a breeze. DocBlockr supports **Javascript**, **ActionScript**, **CoffeeScript**, **Java**, **C** and **C++**,
 
 ## Installation ##
 
@@ -23,7 +23,8 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues]. Pull requests are welcomed heartily! In this repo, the main development branch is `develop` and the stable 'production' branch is `master`. Please remember to base your branch from `develop` and issue the pull request back to that branch.
 
 ## Changelog ##
-
+- **v2.8.2**, *28 September 2012*
+  - When a function is defined across many lines, the parser will find the arguments on extra lines.
 - **v2.8.1**, *13 September 2012*
   - Pressing <kbd>tab</kbd> on an empty line will perform a deep indentation instead of moving to the next field
   - Functions starting with `_` will get a `@private` tag in Javascript (thanks to [Andrew Hanna](https://github.com/percyhanna))
@@ -37,8 +38,6 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
   - No trailing whitespace added on the spacer lines added when `jsdocs_spacer_between_sections` is on (thanks to [Rafał Chłodnicki](https://github.com/rchl))
   - Fixes a bug with detecting variable names when they have a default value in PHP
   - Changes the notation map to not ignore the leading `$` or `_`, meaning that (for example), you could specify that variables starting with `$` are `HTMLElement`s.
-- **v2.7.2**, *6 August 2012*
-  - Small bug fix, thanks to [djuliusl](https://github.com/djuliusl)
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
@@ -97,6 +96,30 @@ However, if the line directly afterwards contains a function definition, then it
 
 You can then press `tab` to move between the different fields.
 
+If you have many arguments, or long variable names, it might be useful to spread your arguments across multiple lines. DocBlockr will handle this situation too:
+
+    /**<<enter>>
+    function someLongFunctionName(
+            withArguments, across,
+            many, lines
+        ) {
+
+    -- becomes --
+
+    /**
+     * [someLongFunctionName description]
+     * @param  {[type]} withArguments [description]
+     * @param  {[type]} across        [description]
+     * @param  {[type]} many          [description]
+     * @param  {[type]} lines         [description]
+     * @return {[type]}               [description]
+     */
+    function someLongFunctionName(
+            withArguments, across,
+            many, lines
+        ) {
+
+
 In PHP, if [type hinting][typehinting] or default values are used, then those types are prefilled as the datatypes.
 
     /**|<<enter>>
@@ -118,6 +141,7 @@ DocBlockr will try to make an intelligent guess about the return value of the fu
 - If the function name is or begins with "set" or "add", then no `@return` is inserted.
 - If the function name is or begins with "is" or "has", then it is assumed to return a `Boolean`.
 - In Javascript, if the function begins with an uppercase letter then it is assumed that the function is a class definition. No `@return` tag is added.
+- In Javascript, functions beginning with an underscore are assumed to be private: `@private` is added to these.
 - In PHP, some of the [magic methods][magicmethods] have their values prefilled:
   - `__construct`, `__destruct`, `__set`, `__unset`, `__wakeup` have no `@return` tag.
   - `__sleep` returns an `Array`.
@@ -238,7 +262,7 @@ If you write a double-slash comment and then press `Ctrl+Enter`, DocBlockr will 
 
 Sometimes, you'll perform some action which clears the fields (sections of text which you can navigate through using `tab`). This leaves you with a number of placeholders in the DocBlock with no easy way to jump to them.
 
-With DocBlockr, you can reparse a comment and reactivate the fields by pressing the hotkey `Ctrl+Alt+Tab`.
+With DocBlockr, you can reparse a comment and reactivate the fields by pressing the hotkey `Ctrl+Alt+Tab` (`Alt+Shift+Tab` on Linux).
 
 ### Reformatting paragraphs ###
 
@@ -322,7 +346,6 @@ This is my first package for Sublime Text, and the first time I've written any P
 [package_control]: http://wbond.net/sublime_packages/package_control
 [phpdoc]: http://phpdoc.org/
 [sublime]: http://www.sublimetext.com/
-[svenax]: https://github.com/svenax
 [tags]: https://github.com/spadgos/sublime-jsdocs/tags
 [typehinting]: http://php.net/manual/en/language.oop5.typehinting.php
 [yui]: http://yui.github.com/yuidoc/syntax/index.html

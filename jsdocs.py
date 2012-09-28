@@ -1,5 +1,5 @@
 """
-DocBlockr v2.8.1
+DocBlockr v2.8.2
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
@@ -91,7 +91,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             parser.setNameOverride(trailingString)
 
         # read the next line
-        line = read_line(v, point + 1)
+        line = parser.getDefinition(v, point + 1)
         out = None
 
         # if there is a line following this
@@ -356,18 +356,38 @@ class JsdocsParser:
 
         return False
 
+    def getDefinition(self, view, pos):
+        """
+        get a relevant definition starting at the given point
+        returns string
+        """
+        maxLines = 25  # don't go further than this
+        line = next_line = read_line(view, pos)
+        # if we have the start of a function definition
+        if line and self.settings['fnOpener'] and re.search(self.settings['fnOpener'], line):
+            # keep searching until we find the closing part.
+            while next_line.find(')') is -1 and maxLines:
+                pos += len(next_line) + 1
+                next_line = read_line(view, pos)
+                if next_line is None:
+                    break
+                maxLines -= 1
+                line += next_line
+        return line
+
 
 class JsdocsJavascript(JsdocsParser):
     def setupSettings(self):
+        identifier = '[a-zA-Z_$][a-zA-Z_$0-9]*'
         self.settings = {
             # curly brackets around the type information
             "curlyTypes": True,
             'typeInfo': True,
             "typeTag": "type",
             # technically, they can contain all sorts of unicode, but w/e
-            "varIdentifier": '[a-zA-Z_$][a-zA-Z_$0-9]*',
-            "fnIdentifier": '[a-zA-Z_$][a-zA-Z_$0-9]*',
-
+            "varIdentifier": identifier,
+            "fnIdentifier":  identifier,
+            "fnOpener": 'function(?:\\s+' + identifier + ')?\\s*\\(',
             "commentCloser": " */",
             "bool": "Boolean",
             "function": "Function"
@@ -442,6 +462,7 @@ class JsdocsPHP(JsdocsParser):
             'typeTag': "var",
             'varIdentifier': '[$]' + nameToken + '(?:->' + nameToken + ')*',
             'fnIdentifier': nameToken,
+            'fnOpener': 'function(?:\\s+' + nameToken + ')?\\s*\\(',
             'commentCloser': ' */',
             'bool': "boolean",
             'function': "function"
@@ -541,6 +562,7 @@ class JsdocsCPP(JsdocsParser):
             'commentCloser': ' */',
             'fnIdentifier': identifier,
             'varIdentifier': identifier,
+            'fnOpener': identifier + '\\s+' + identifier + '\\s*\\(',
             'bool': 'bool',
             'function': 'function'
         }
@@ -572,19 +594,21 @@ class JsdocsCPP(JsdocsParser):
         return None
 
     def getFunctionReturnType(self, name, retval):
-        return retval if retval != 'void' else None;
+        return retval if retval != 'void' else None
 
 
 class JsdocsCoffee(JsdocsParser):
     def setupSettings(self):
+        identifier = '[a-zA-Z_$][a-zA-Z_$0-9]*'
         self.settings = {
             # curly brackets around the type information
             'curlyTypes': True,
             'typeTag': "type",
             'typeInfo': True,
             # technically, they can contain all sorts of unicode, but w/e
-            'varIdentifier': '[a-zA-Z_$][a-zA-Z_$0-9]*',
-            'fnIdentifier': '[a-zA-Z_$][a-zA-Z_$0-9]*',
+            'varIdentifier': identifier,
+            'fnIdentifier': identifier,
+            'fnOpener': None,  # no multi-line function definitions for you, hipsters!
             'commentCloser': '###',
             'bool': 'Boolean',
             'function': 'Function'
@@ -653,6 +677,7 @@ class JsdocsActionscript(JsdocsParser):
             'commentCloser': ' */',
             'fnIdentifier': nameToken,
             'varIdentifier': '(%s)(?::%s)?' % (nameToken, nameToken),
+            'fnOpener': 'function(?:\\s+[gs]et)?(?:\\s+' + nameToken + ')?\\s*\\(',
             'bool': 'bool',
             'function': 'function'
         }
