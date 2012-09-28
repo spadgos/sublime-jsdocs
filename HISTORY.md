@@ -1,5 +1,7 @@
 # DocBlockr Extended Changelog
 
+- **v2.8.2**, *28 September 2012*
+  - When a function is defined across many lines, the parser will find the arguments on extra lines.
 - **v2.8.1**, *13 September 2012*
   - Pressing <kbd>tab</kbd> on an empty line will perform a deep indentation instead of moving to the next field
   - Functions starting with `_` will get a `@private` tag in Javascript (thanks to [Andrew Hanna](https://github.com/percyhanna))
