@@ -362,18 +362,24 @@ class JsdocsParser:
         returns string
         """
         maxLines = 25  # don't go further than this
-        line = next_line = read_line(view, pos)
-        # if we have the start of a function definition
-        if line and self.settings['fnOpener'] and re.search(self.settings['fnOpener'], line):
-            # keep searching until we find the closing part.
-            while next_line.find(')') is -1 and maxLines:
-                pos += len(next_line) + 1
-                next_line = read_line(view, pos)
-                if next_line is None:
+
+        definition = ''
+        for i in xrange(0, maxLines):
+            line = read_line(view, pos)
+            if line is None:
+                break
+
+            pos += len(line) + 1
+            # strip comments
+            line = re.sub("//.*", "", line)
+            if definition == '':
+                if not self.settings['fnOpener'] or not re.search(self.settings['fnOpener'], line):
+                    definition = line
                     break
-                maxLines -= 1
-                line += next_line
-        return line
+            definition += line
+            if line.find(')') > -1:
+                break
+        return definition
 
 
 class JsdocsJavascript(JsdocsParser):
