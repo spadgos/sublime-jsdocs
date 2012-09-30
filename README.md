@@ -23,6 +23,11 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues]. Pull requests are welcomed heartily! In this repo, the main development branch is `develop` and the stable 'production' branch is `master`. Please remember to base your branch from `develop` and issue the pull request back to that branch.
 
 ## Changelog ##
+- **Edge**
+  - Single-line comments inside function definitions are handled
+  - Notation rules are applied to functions, which means they can define a return type by their name, eg: `strFoo`
+  - Notation rules can define arbitrary tags, for example: functions with a prefix of "_" should get the `@private` tag.
+  - Given the above addition, JS functions starting with an underscore are no longer marked as `@private` by default.
 - **v2.8.2**, *28 September 2012*
   - When a function is defined across many lines, the parser will find the arguments on extra lines.
 - **v2.8.1**, *13 September 2012*
@@ -34,10 +39,6 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
   - Indenting to the description field works in languages which don't require type information in the docblock.
 - **v2.7.4**, *8 August 2012*
   - Fix for Actionscript docblocks not working
-- **v2.7.3**, *7 August 2012*
-  - No trailing whitespace added on the spacer lines added when `jsdocs_spacer_between_sections` is on (thanks to [Rafał Chłodnicki](https://github.com/rchl))
-  - Fixes a bug with detecting variable names when they have a default value in PHP
-  - Changes the notation map to not ignore the leading `$` or `_`, meaning that (for example), you could specify that variables starting with `$` are `HTMLElement`s.
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
@@ -188,6 +189,15 @@ DocBlockr will also try to determine the type of the variable from its name. Var
             "type": "TableRow"      // you can add your own types
         }
     ]
+}
+```
+
+The notation map can also be used to add arbitrary tags, according to your own code conventions. For example, if your conventions state that functions beginning with an underscore are private, you could add this to the `jsdocs_notation_map`:
+
+```javascript
+{
+    "prefix": "_",
+    "tags": ["@private"]
 }
 ```
 
