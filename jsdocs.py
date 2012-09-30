@@ -340,12 +340,14 @@ class JsdocsParser:
             for rule in hungarian_map:
                 matched = False
                 if 'prefix' in rule:
-                    matched = re.match(rule['prefix'] + "[A-Z_]", name)
+                    regex = re.escape(rule['prefix'])
+                    if re.match('.*[a-z]', rule['prefix']):
+                        regex += '(?:[A-Z_]|$)'
+                    matched = re.match(regex, name)
                 elif 'regex' in rule:
                     matched = re.search(rule['regex'], name)
 
                 if matched:
-
                     return self.settings[rule['type']] if rule['type'] in self.settings else rule['type']
 
         if (re.match("(?:is|has)[A-Z_]", name)):
