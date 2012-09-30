@@ -293,8 +293,10 @@ class JsdocsParser:
                 format_str = "%s%s"
 
             out.append(format_str % tuple(format_args))
-        if 'private' in options and options['private']:
-            out.append('@private')
+
+        for notation in self.getMatchingNotations(name):
+            if 'tags' in notation:
+                out.extend(notation['tags'])
 
         return out
 
@@ -334,20 +336,11 @@ class JsdocsParser:
             out.extend(extraTags)
 
     def guessTypeFromName(self, name):
-        hungarian_map = self.viewSettings.get('jsdocs_notation_map', [])
-        if len(hungarian_map):
-            for rule in hungarian_map:
-                matched = False
-                if 'prefix' in rule:
-                    regex = re.escape(rule['prefix'])
-                    if re.match('.*[a-z]', rule['prefix']):
-                        regex += '(?:[A-Z_]|$)'
-                    matched = re.match(regex, name)
-                elif 'regex' in rule:
-                    matched = re.search(rule['regex'], name)
-
-                if matched:
-                    return self.settings[rule['type']] if rule['type'] in self.settings else rule['type']
+        matches = self.getMatchingNotations(name)
+        if len(matches):
+            rule = matches[0]
+            if ('type' in rule):
+                return self.settings[rule['type']] if rule['type'] in self.settings else rule['type']
 
         if (re.match("(?:is|has)[A-Z_]", name)):
             return self.settings['bool']
@@ -356,6 +349,18 @@ class JsdocsParser:
             return self.settings['function']
 
         return False
+
+    def getMatchingNotations(self, name):
+        def checkMatch(rule):
+            if 'prefix' in rule:
+                regex = re.escape(rule['prefix'])
+                if re.match('.*[a-z]', rule['prefix']):
+                    regex += '(?:[A-Z_]|$)'
+                return re.match(regex, name)
+            elif 'regex' in rule:
+                return re.search(rule['regex'], name)
+
+        return filter(checkMatch, self.viewSettings.get('jsdocs_notation_map', []))
 
     def getDefinition(self, view, pos):
         """
@@ -403,10 +408,10 @@ class JsdocsJavascript(JsdocsParser):
     def parseFunction(self, line):
         res = re.search(
             #   fnName = function,  fnName : function
-            '(?:(?P<name1>(?P<private1>_)?' + self.settings['varIdentifier'] + ')\s*[:=]\s*)?'
+            '(?:(?P<name1>' + self.settings['varIdentifier'] + ')\s*[:=]\s*)?'
             + 'function'
             # function fnName
-            + '(?:\s+(?P<name2>(?P<private2>_)?' + self.settings['fnIdentifier'] + '))?'
+            + '(?:\s+(?P<name2>' + self.settings['fnIdentifier'] + '))?'
             # (arg1, arg2)
             + '\s*\((?P<args>.*)\)',
             line
@@ -417,11 +422,8 @@ class JsdocsJavascript(JsdocsParser):
         # grab the name out of "name1 = function name2(foo)" preferring name1
         name = res.group('name1') or res.group('name2') or ''
         args = res.group('args')
-        options = {
-            "private": bool(res.group('private1') or res.group('private2'))
-        }
 
-        return (name, args, None, options)
+        return (name, args, None)
 
     def parseVar(self, line):
         res = re.search(
