@@ -241,7 +241,7 @@ class JsdocsParser:
             out.append('@private')
             return out
 
-        description = self.getNameOverride() or ('[%s description]' % name)
+        description = self.getNameOverride() or ('[%s description]' % escape(name))
         out.append("${1:%s}" % description)
 
         self.addExtraTags(out)
@@ -250,17 +250,17 @@ class JsdocsParser:
         if (args):
             # remove comments inside the argument list.
             args = re.sub("/\*.*?\*/", '', args)
-            for arg in self.parseArgs(args):
+            for argType, argName in self.parseArgs(args):
                 typeInfo = ''
                 if self.settings['typeInfo']:
                     typeInfo = '%s${1:%s}%s ' % (
                         "{" if self.settings['curlyTypes'] else "",
-                        escape(arg[0] or self.guessTypeFromName(arg[1]) or "[type]"),
+                        escape(argType or self.guessTypeFromName(argName) or "[type]"),
                         "}" if self.settings['curlyTypes'] else "",
                     )
                 out.append("@param %s%s ${1:[description]}" % (
                     typeInfo,
-                    escape(arg[1])
+                    escape(argName)
                 ))
 
         # return value type might be already available in some languages but
@@ -300,20 +300,19 @@ class JsdocsParser:
 
     def getFunctionReturnType(self, name, retval):
         """ returns None for no return type. False meaning unknown, or a string """
-        name = re.sub("^[$_]", "", name)
 
         if re.match("[A-Z]", name):
             # no return, but should add a class
             return None
 
-        if re.match('(?:set|add)($|[A-Z_])', name):
+        if re.match('[$_]?(?:set|add)($|[A-Z_])', name):
             # setter/mutator, no return
             return None
 
-        if re.match('(?:is|has)($|[A-Z_])', name):  # functions starting with 'is' or 'has'
+        if re.match('[$_]?(?:is|has)($|[A-Z_])', name):  # functions starting with 'is' or 'has'
             return self.settings['bool']
 
-        return False
+        return self.guessTypeFromName(name) or False
 
     def parseArgs(self, args):
         """ an array of tuples, the first being the best guess at the type, the second being the name """
@@ -416,7 +415,7 @@ class JsdocsJavascript(JsdocsParser):
             return None
 
         # grab the name out of "name1 = function name2(foo)" preferring name1
-        name = escape(res.group('name1') or res.group('name2') or '')
+        name = res.group('name1') or res.group('name2') or ''
         args = res.group('args')
         options = {
             "private": bool(res.group('private1') or res.group('private2'))
@@ -633,7 +632,7 @@ class JsdocsCoffee(JsdocsParser):
             return None
 
         # grab the name out of "name1 = function name2(foo)" preferring name1
-        name = escape(res.group('name') or '')
+        name = res.group('name') or ''
         args = res.group('args')
 
         return (name, args, None)
