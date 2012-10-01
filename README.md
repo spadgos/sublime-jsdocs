@@ -23,7 +23,9 @@ Download the latest version from the [tags page][tags]. Unzip to your Sublime Te
 You can leave either of these things [here][issues]. Pull requests are welcomed heartily! In this repo, the main development branch is `develop` and the stable 'production' branch is `master`. Please remember to base your branch from `develop` and issue the pull request back to that branch.
 
 ## Changelog ##
-- **Edge**
+- **v2.9.0**, *1 October 2012*
+  - Adds ObjectiveC and ObjectiveC++ support, thanks to some help from [Robb Böhnke](https://github.com/robb)
+    - Very buggy code, support isn't great but it's better than nothing (hopefully).
   - Single-line comments inside function definitions are handled
   - Notation rules are applied to functions, which means they can define a return type by their name, eg: `strFoo`
   - Notation rules can define arbitrary tags, for example: functions with a prefix of "_" should get the `@private` tag.
@@ -37,8 +39,6 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
   - New feature: <kbd>Alt+Q</kbd> to reformat the description field of a docblock to make it fit nicely within your ruler.
   - Adds support for C++ (thanks to [Rafał Chłodnicki](https://github.com/rchl))
   - Indenting to the description field works in languages which don't require type information in the docblock.
-- **v2.7.4**, *8 August 2012*
-  - Fix for Actionscript docblocks not working
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 

@@ -1,5 +1,12 @@
 # DocBlockr Extended Changelog
 
+- **v2.9.0**, *1 October 2012*
+  - Adds ObjectiveC and ObjectiveC++ support, thanks to some help from [Robb Böhnke](https://github.com/robb)
+    - Very buggy code, support isn't great but it's better than nothing (hopefully).
+  - Single-line comments inside function definitions are handled
+  - Notation rules are applied to functions, which means they can define a return type by their name, eg: `strFoo`
+  - Notation rules can define arbitrary tags, for example: functions with a prefix of "_" should get the `@private` tag.
+  - Given the above addition, JS functions starting with an underscore are no longer marked as `@private` by default.
 - **v2.8.2**, *28 September 2012*
   - When a function is defined across many lines, the parser will find the arguments on extra lines.
 - **v2.8.1**, *13 September 2012*
