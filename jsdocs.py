@@ -58,6 +58,8 @@ def getParser(view):
         return JsdocsActionscript(viewSettings)
     elif sourceLang == "c++" or sourceLang == 'c':
         return JsdocsCPP(viewSettings)
+    elif sourceLang == 'objc' or sourceLang == 'objc++':
+        return JsdocsObjC(viewSettings)
     return JsdocsJavascript(viewSettings)
 
 
@@ -724,6 +726,93 @@ class JsdocsActionscript(JsdocsParser):
 
     def getArgType(self, arg):
         # could actually figure it out easily, but it's not important for the documentation
+        return None
+
+
+class JsdocsObjC(JsdocsParser):
+
+    def setupSettings(self):
+        identifier = '[a-zA-Z_$][a-zA-Z_$0-9]*'
+        self.settings = {
+            # curly brackets around the type information
+            "curlyTypes": True,
+            'typeInfo': True,
+            "typeTag": "type",
+            # technically, they can contain all sorts of unicode, but w/e
+            "varIdentifier": identifier,
+            "fnIdentifier":  identifier,
+            "fnOpener": '^\s*[-+]',
+            "commentCloser": " */",
+            "bool": "Boolean",
+            "function": "Function"
+        }
+
+    def getDefinition(self, view, pos):
+        maxLines = 25  # don't go further than this
+
+        definition = ''
+        for i in xrange(0, maxLines):
+            line = read_line(view, pos)
+            if line is None:
+                break
+
+            pos += len(line) + 1
+            # strip comments
+            line = re.sub("//.*", "", line)
+            if definition == '':
+                if not self.settings['fnOpener'] or not re.search(self.settings['fnOpener'], line):
+                    definition = line
+                    break
+            definition += line
+            if line.find(';') > -1 or line.find('{') > -1:
+                definition = re.sub(r'\s*[;{]\s*$', '', definition)
+                break
+        return definition
+
+    def parseFunction(self, line):
+        # this is terrible, don't judge me
+
+        typeRE = r'[a-zA-Z_$][a-zA-Z0-9_$]*\s*\**'
+        res = re.search(
+            '[-+]\s+\\(\\s*(?P<retval>' + typeRE + ')\\s*\\)\\s*'
+            + '(?P<name>[a-zA-Z_$][a-zA-Z0-9_$]*)'
+            # void fnName
+            # (arg1, arg2)
+            + '\\s*(?::(?P<args>.*))?',
+            line
+        )
+        if not res:
+            return
+        name = res.group('name')
+        argStr = res.group('args')
+        args = []
+        if argStr:
+            groups = re.split('\\s*:\\s*', argStr)
+            numGroups = len(groups)
+            for i in xrange(0, numGroups):
+                group = groups[i]
+                if i < numGroups - 1:
+                    result = re.search(r'\s+(\S*)$', group)
+                    name += ':' + result.group(1)
+                    group = group[:result.start()]
+
+                args.append(group)
+
+            if (numGroups):
+                name += ':'
+        return (name, '|||'.join(args), res.group('retval'))
+
+    def parseArgs(self, args):
+        out = []
+        for arg in args.split('|||'):  # lol
+            lastParen = arg.rfind(')')
+            out.append((arg[1:lastParen], arg[lastParen + 1:]))
+        return out
+
+    def getFunctionReturnType(self, name, retval):
+        return retval if retval != 'void' and retval != 'IBAction' else None
+
+    def parseVar(self, line):
         return None
 
 
