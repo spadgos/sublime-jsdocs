@@ -99,7 +99,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         # if there is a line following this
         if line:
             if parser.isExistingComment(line):
-                write(v, "\n *" + (" " * indentSpaces))
+                write(v, "\n *" + indentSpaces)
                 return
             # match against a function declaration.
             out = parser.parse(line)
