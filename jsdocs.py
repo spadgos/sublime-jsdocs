@@ -99,7 +99,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         # if there is a line following this
         if line:
             if parser.isExistingComment(line):
-                write(v, "\n *" + (" " * indentSpaces))
+                write(v, "\n *" + indentSpaces)
                 return
             # match against a function declaration.
             out = parser.parse(line)
@@ -987,9 +987,9 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             words = para.strip().split(' ')
             text = '\n'
             line = ' *' + indentSpaces
-            lineTagged = 0 # indicates if the line contains a doc tag
-            paraTagged = 0 # indicates if this paragraph contains a doc tag
-            lineIsNew = 1
+            lineTagged = False # indicates if the line contains a doc tag
+            paraTagged = False # indicates if this paragraph contains a doc tag
+            lineIsNew = True
             tag = ''
 
             # join all words to create lines, no longer than wrapLength
@@ -998,8 +998,8 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                     continue
 
                 if lineIsNew and word[0] == '@':
-                    lineTagged = 1
-                    paraTagged = 1
+                    lineTagged = True
+                    paraTagged = True
                     tag = word
 
                 if len(line) + len(word) >= wrapLength - 1:
@@ -1007,12 +1007,12 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                     # length requirements
                     text += line.rstrip() + '\n'
                     line = ' *' + indentSpacesSamePara + word + ' '
-                    lineTagged = 0
-                    lineIsNew = 1
+                    lineTagged = False
+                    lineIsNew = True
                 else:
                     line += word + ' '
 
-                lineIsNew = 0
+                lineIsNew = False
 
             text += line.rstrip()
             return {'text':text,
