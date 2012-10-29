@@ -415,7 +415,7 @@ class JsdocsJavascript(JsdocsParser):
             # function fnName
             + '(?:\s+(?P<name2>' + self.settings['fnIdentifier'] + '))?'
             # (arg1, arg2)
-            + '\s*\((?P<args>.*)\)',
+            + '\s*\(\s*(?P<args>.*)\)',
             line
         )
         if not res:
@@ -485,7 +485,7 @@ class JsdocsPHP(JsdocsParser):
             + '(?P<name>' + self.settings['fnIdentifier'] + ')'
             # function fnName
             # (arg1, arg2)
-            + '\\s*\\((?P<args>.*)\)',
+            + '\\s*\\(\\s*(?P<args>.*)\)',
             line
         )
         if not res:
@@ -584,7 +584,7 @@ class JsdocsCPP(JsdocsParser):
             + '(?P<name>' + self.settings['varIdentifier'] + ')'
             # void fnName
             # (arg1, arg2)
-            + '\\s*\\((?P<args>.*)\)',
+            + '\\s*\\(\\s*(?P<args>.*)\)',
             line
         )
         if not res:
@@ -701,7 +701,7 @@ class JsdocsActionscript(JsdocsParser):
             # function fnName
             + '(?:\s+(?P<name2>' + self.settings['fnIdentifier'] + '))?'
             # (arg1, arg2)
-            + '\s*\((?P<args>.*)\)',
+            + '\s*\(\s*(?P<args>.*)\)',
             line
         )
         if not res:
