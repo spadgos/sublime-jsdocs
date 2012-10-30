@@ -1,5 +1,12 @@
 # DocBlockr Extended Changelog
 
+- **v2.9.1**, *31 October 2012*
+  - Thanks to [wronex](https://github.com/wronex), <kbd>Alt+Q</kbd> will reformat the entire DocBlock, with customisable indentation.
+  - Thanks to [Pavel Voronin](https://github.com/pavel-voronin), spaces around arguments are handled properly.
+  - **C/C++**: Array arguments are accepted
+  - **C/C++**: An argument list containing only `void` doesn't output any `@param` tags
+  - **PHP**: Arguments with an array as a default value inside multi-line arguments are handled properly
+  - <kbd>Ctrl/Cmd + Enter</kbd> and <kbd>Ctrl/Cmd + Shift + Enter</kbd> work inside DocBlocks.
 - **v2.9.0**, *1 October 2012*
   - Adds ObjectiveC and ObjectiveC++ support, thanks to some help from [Robb Böhnke](https://github.com/robb)
     - Very buggy code, support isn't great but it's better than nothing (hopefully).
