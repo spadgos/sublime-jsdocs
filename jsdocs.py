@@ -184,7 +184,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             write(v, snippet)
 
 
-class JsdocsParser:
+class JsdocsParser(object):
 
     def __init__(self, viewSettings):
         self.viewSettings = viewSettings
@@ -591,6 +591,11 @@ class JsdocsCPP(JsdocsParser):
             return None
 
         return (res.group('name'), res.group('args'), res.group('retval'))
+
+    def parseArgs(self, args):
+        if args.strip() == 'void':
+            return []
+        return super(JsdocsCPP, self).parseArgs(args)
 
     def getArgType(self, arg):
         return None
