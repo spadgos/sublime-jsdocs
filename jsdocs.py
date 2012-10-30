@@ -370,8 +370,13 @@ class JsdocsParser(object):
         returns string
         """
         maxLines = 25  # don't go further than this
+        openBrackets = 0
 
         definition = ''
+
+        def countBrackets(total, bracket):
+            return total + (1 if bracket == '(' else -1)
+
         for i in xrange(0, maxLines):
             line = read_line(view, pos)
             if line is None:
@@ -380,12 +385,14 @@ class JsdocsParser(object):
             pos += len(line) + 1
             # strip comments
             line = re.sub("//.*", "", line)
+            line = re.sub(r"/\*.*\*/", "", line)
             if definition == '':
                 if not self.settings['fnOpener'] or not re.search(self.settings['fnOpener'], line):
                     definition = line
                     break
             definition += line
-            if line.find(')') > -1:
+            openBrackets = reduce(countBrackets, re.findall('[()]', line), openBrackets)
+            if openBrackets == 0:
                 break
         return definition
 
