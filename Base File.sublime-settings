@@ -11,6 +11,21 @@
   // the number of spaces to add after the leading *
   "jsdocs_indentation_spaces": 1,
 
+  // The number of spaces to add after the leading * in lines under the first line of each
+  // paragraph. This is only used together with automatic line wrapping. For example, a value 
+  // of 3 might look like this:
+  //
+  // /**
+  //  * Duis sed arcu non tellus eleifend ullamcorper quis non erat. Curabitur
+  //  *   metus elit, ultrices et tristique a, blandit at justo.
+  //  * @param  {String} foo Lorem ipsum dolor sit amet.
+  //  * @param  {Number} bar Nullam fringilla feugiat pretium. Quisque
+  //  *   consectetur, risus eu pellentesque tincidunt, nulla ipsum imperdiet
+  //  *   massa, sit amet adipiscing dolor.
+  //  * @return {[Type]}
+  //  */
+  "jsdocs_indentation_spaces_same_para": 1,
+
   // whether the words following the @tags should align.
   // Possible values are 'no', 'shallow', 'deep'
   // For backwards compatibility, false is equivalent to 'no', true is equivalent to 'shallow'
