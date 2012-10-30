@@ -1,0 +1,6 @@
+[
+    {"command": "move_to", "args": {"to": "hardeol"}},
+    {"command": "insert_snippet", "args": {
+      "contents": "\n${TM_CURRENT_LINE/^\\s*(\\*\\s*).*$/$1/}"
+    }}
+]
