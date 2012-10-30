@@ -1,5 +1,5 @@
 """
-DocBlockr v2.9.0
+DocBlockr v2.9.1
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
@@ -99,7 +99,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         # if there is a line following this
         if line:
             if parser.isExistingComment(line):
-                write(v, "\n *" + (" " * indentSpaces))
+                write(v, "\n *" + indentSpaces)
                 return
             # match against a function declaration.
             out = parser.parse(line)
@@ -184,7 +184,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             write(v, snippet)
 
 
-class JsdocsParser:
+class JsdocsParser(object):
 
     def __init__(self, viewSettings):
         self.viewSettings = viewSettings
@@ -370,8 +370,13 @@ class JsdocsParser:
         returns string
         """
         maxLines = 25  # don't go further than this
+        openBrackets = 0
 
         definition = ''
+
+        def countBrackets(total, bracket):
+            return total + (1 if bracket == '(' else -1)
+
         for i in xrange(0, maxLines):
             line = read_line(view, pos)
             if line is None:
@@ -380,12 +385,14 @@ class JsdocsParser:
             pos += len(line) + 1
             # strip comments
             line = re.sub("//.*", "", line)
+            line = re.sub(r"/\*.*\*/", "", line)
             if definition == '':
                 if not self.settings['fnOpener'] or not re.search(self.settings['fnOpener'], line):
                     definition = line
                     break
             definition += line
-            if line.find(')') > -1:
+            openBrackets = reduce(countBrackets, re.findall('[()]', line), openBrackets)
+            if openBrackets == 0:
                 break
         return definition
 
@@ -415,7 +422,7 @@ class JsdocsJavascript(JsdocsParser):
             # function fnName
             + '(?:\s+(?P<name2>' + self.settings['fnIdentifier'] + '))?'
             # (arg1, arg2)
-            + '\s*\((?P<args>.*)\)',
+            + '\s*\(\s*(?P<args>.*)\)',
             line
         )
         if not res:
@@ -485,7 +492,7 @@ class JsdocsPHP(JsdocsParser):
             + '(?P<name>' + self.settings['fnIdentifier'] + ')'
             # function fnName
             # (arg1, arg2)
-            + '\\s*\\((?P<args>.*)\)',
+            + '\\s*\\(\\s*(?P<args>.*)\)',
             line
         )
         if not res:
@@ -584,7 +591,7 @@ class JsdocsCPP(JsdocsParser):
             + '(?P<name>' + self.settings['varIdentifier'] + ')'
             # void fnName
             # (arg1, arg2)
-            + '\\s*\\((?P<args>.*)\)',
+            + '\\s*\\(\\s*(?P<args>.*)\)',
             line
         )
         if not res:
@@ -592,11 +599,16 @@ class JsdocsCPP(JsdocsParser):
 
         return (res.group('name'), res.group('args'), res.group('retval'))
 
+    def parseArgs(self, args):
+        if args.strip() == 'void':
+            return []
+        return super(JsdocsCPP, self).parseArgs(args)
+
     def getArgType(self, arg):
         return None
 
     def getArgName(self, arg):
-        return re.search("(" + self.settings['varIdentifier'] + ")(?:\\s*=.*)?$", arg).group(1)
+        return re.search("(" + self.settings['varIdentifier'] + r")(?:\s*\[\s*\])?(?:\s*=.*)?$", arg).group(1)
 
     def parseVar(self, line):
         return None
@@ -701,7 +713,7 @@ class JsdocsActionscript(JsdocsParser):
             # function fnName
             + '(?:\s+(?P<name2>' + self.settings['fnIdentifier'] + '))?'
             # (arg1, arg2)
-            + '\s*\((?P<args>.*)\)',
+            + '\s*\(\s*(?P<args>.*)\)',
             line
         )
         if not res:
@@ -942,21 +954,29 @@ class JsdocsTrimAutoWhitespace(sublime_plugin.TextCommand):
 class JsdocsWrapLines(sublime_plugin.TextCommand):
     """
     Reformat description text inside a comment block to wrap at the correct length.
-    Only works on description text: long tag descriptions are ignored.
     Wrap column is set by the first ruler (set in Default.sublime-settings), or 80 by default.
     Shortcut Key: alt+q
     """
 
     def run(self, edit):
         v = self.view
-        rulers = v.settings().get('rulers')
+        settings = v.settings()
+        rulers = settings.get('rulers')
+        tabSize = settings.get('tab_size')
+
         wrapLength = rulers[0] or 80
+        numIndentSpaces = max(0, settings.get("jsdocs_indentation_spaces", 1))
+        indentSpaces = " " * numIndentSpaces
+        indentSpacesSamePara = " " * max(0, settings.get("jsdocs_indentation_spaces_same_para", numIndentSpaces))
+        spacerBetweenSections = settings.get("jsdocs_spacer_between_sections")
+
         v.run_command('expand_selection', {'to': 'scope'})
+
 
         # find the first word
         startPoint = v.find("\n\\s*\\* ", v.sel()[0].begin()).begin()
         # find the first tag, or the end of the comment
-        endPoint = v.find("\\s*\n\\s*\\*(\\s*@|/)", v.sel()[0].begin()).begin()
+        endPoint = v.find("\\s*\n\\s*\\*(/)", v.sel()[0].begin()).begin()
 
         # replace the selection with this ^ new selection
         v.sel().clear()
@@ -966,20 +986,73 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
         text = v.substr(v.sel()[0])
 
         # find the indentation level
-        indentation = len(re.search("\n(\\s*\\*\\s*)", text).group(1))
-        wrapLength -= indentation
+        indentation = len(re.sub('\t', ' ' * tabSize, re.search("\n(\\s*\\*)", text).group(1)))
+        wrapLength -= indentation - tabSize
 
         # join all the lines, collapsing "empty" lines
         text = re.sub("\n(\\s*\\*\\s*\n)+", "\n\n", text)
 
-        def joinParas(para):
+        def wrapPara(para):
             para = re.sub("(\n|^)\\s*\\*\\s*", " ", para)
-            return '\n *' + reduce(lambda line, word, width=wrapLength: '%s%s%s' %
-                      (line,
-                       [' ', '\n * '][(len(line) - line.rfind('\n') - 1 + len(word.split('\n', 1)[0]) >= width)],
-                       word),
-                      para.split(' ')
-                     )
 
-        text = '\n *'.join(map(joinParas, re.split('\n{2,}', text)))
+            # split the paragraph into words
+            words = para.strip().split(' ')
+            text = '\n'
+            line = ' *' + indentSpaces
+            lineTagged = False # indicates if the line contains a doc tag
+            paraTagged = False # indicates if this paragraph contains a doc tag
+            lineIsNew = True
+            tag = ''
+
+            # join all words to create lines, no longer than wrapLength
+            for i, word in enumerate(words):
+                if not word and not lineTagged:
+                    continue
+
+                if lineIsNew and word[0] == '@':
+                    lineTagged = True
+                    paraTagged = True
+                    tag = word
+
+                if len(line) + len(word) >= wrapLength - 1:
+                    # appending the word to the current line whould exceed its
+                    # length requirements
+                    text += line.rstrip() + '\n'
+                    line = ' *' + indentSpacesSamePara + word + ' '
+                    lineTagged = False
+                    lineIsNew = True
+                else:
+                    line += word + ' '
+
+                lineIsNew = False
+
+            text += line.rstrip()
+            return {'text':text,
+                    'lineTagged':lineTagged,
+                    'tagged':paraTagged,
+                    'tag':tag}
+
+        # split the text into paragraphs, where each paragraph is eighter
+        # defined by an empty line or the start of a doc parameter
+        paragraphs = re.split('\n{2,}|\n\\s*\\*\\s*(?=@)', text)
+        wrappedParas = []
+        text = ''
+        for p, para in enumerate(paragraphs):
+            # wrap the lines in the current paragraph
+            wrappedParas.append(wrapPara(para))
+
+        # combine all the paragraphs into a single piece of text
+        for i in range(0, len(wrappedParas)):
+            para = wrappedParas[i]
+            last = i == len(wrappedParas) - 1
+
+            nextIsTagged = not last and wrappedParas[i+1]['tagged']
+            nextIsSameTag = nextIsTagged and para['tag'] == wrappedParas[i+1]['tag']
+
+            if last or (para['lineTagged'] or nextIsTagged) and \
+                    not (spacerBetweenSections and not nextIsSameTag):
+                text += para['text']
+            else:
+                text += para['text'] + '\n *'
+
         write(v, text)

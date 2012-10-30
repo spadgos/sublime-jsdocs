@@ -1,0 +1,7 @@
+[
+    {"command": "move_to", "args": {"to": "bol"}},
+    {"command": "insert_snippet", "args": {
+      "contents": "${TM_CURRENT_LINE/^\\s*(\\*\\s*).*$/$1/}\n"
+    }},
+    {"command": "move", "args": {"by": "lines", "forward": false}}
+]
