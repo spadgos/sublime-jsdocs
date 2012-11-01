@@ -237,6 +237,17 @@ class JsdocsParser(object):
 
         return out
 
+    def getTypeInfo(self, argType, argName):
+        typeInfo = ''
+        if self.settings['typeInfo']:
+            typeInfo = '%s${1:%s}%s ' % (
+                "{" if self.settings['curlyTypes'] else "",
+                escape(argType or self.guessTypeFromName(argName) or "[type]"),
+                "}" if self.settings['curlyTypes'] else "",
+            )
+
+        return typeInfo
+
     def formatFunction(self, name, args, retval, options={}):
         out = []
         if 'as_setter' in options:
@@ -253,13 +264,8 @@ class JsdocsParser(object):
             # remove comments inside the argument list.
             args = re.sub("/\*.*?\*/", '', args)
             for argType, argName in self.parseArgs(args):
-                typeInfo = ''
-                if self.settings['typeInfo']:
-                    typeInfo = '%s${1:%s}%s ' % (
-                        "{" if self.settings['curlyTypes'] else "",
-                        escape(argType or self.guessTypeFromName(argName) or "[type]"),
-                        "}" if self.settings['curlyTypes'] else "",
-                    )
+                typeInfo = self.getTypeInfo(argType, argName)
+
                 out.append("@param %s%s ${1:[description]}" % (
                     typeInfo,
                     escape(argName)
