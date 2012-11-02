@@ -158,6 +158,7 @@
   // show the autocomplete
   { "keys": ["@"], "command": "run_macro_file", "args": {"file": "Packages/DocBlockr/jsdocs-auto-complete.sublime-macro"},
     "context": [
+      { "key": "setting.auto_complete", "operator": "equal",    "operand": true,                           "match_all": true },
       { "key": "selection_empty", "operator": "equal",          "operand": true,                           "match_all": true },
       { "key": "preceding_text",  "operator": "regex_contains", "operand": "^\\s*(?:\\/\\*|###)?\\*\\s*$", "match_all": true },
       { "key": "selector",        "operator": "equal",          "operand": "comment.block",                "match_all": true }
