@@ -56,7 +56,7 @@ def getParser(view):
         return JsdocsCoffee(viewSettings)
     elif sourceLang == "actionscript":
         return JsdocsActionscript(viewSettings)
-    elif sourceLang == "c++" or sourceLang == 'c':
+    elif sourceLang == "c++" or sourceLang == 'c' or sourceLang == 'cuda-c++':
         return JsdocsCPP(viewSettings)
     elif sourceLang == 'objc' or sourceLang == 'objc++':
         return JsdocsObjC(viewSettings)
