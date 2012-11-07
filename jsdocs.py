@@ -46,7 +46,7 @@ def is_numeric(val):
 
 def getParser(view):
     scope = view.scope_name(view.sel()[0].end())
-    res = re.search('\\bsource\\.([a-z+]+)', scope)
+    res = re.search('\\bsource\\.([a-z+\-]+)', scope)
     sourceLang = res.group(1) if res else 'js'
     viewSettings = view.settings()
 
