@@ -66,17 +66,39 @@ def getParser(view):
 class JsdocsCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, inline=False):
-        v = self.view
-        self.settings = v.settings()
+
+        self.initialize(self.view, inline)
+
+        # erase characters in the view (will be added to the output later)
+        self.view.erase(edit, self.trailingRgn)
+
+        out = None
+
+        # if there is no line following this, end here
+        if not self.line:
+            return
+
+        if self.parser.isExistingComment(self.line):
+            write(self.view, "\n *" + self.indentSpaces)
+            return
+
+        # match against a function declaration.
+        out = self.parser.parse(self.line)
+
+        snippet = self.generateSnippet(out, inline)
+
+        write(self.view, snippet)
+
+    def initialize(self, v, inline=False):
         point = v.sel()[0].end()
+
+        self.settings = v.settings()
 
         # trailing characters are put inside the body of the comment
         self.trailingRgn = sublime.Region(point, v.line(point).end())
         self.trailingString = v.substr(self.trailingRgn).strip()
         # drop trailing '*/'
         self.trailingString = escape(re.sub('\\s*\\*\\/\\s*$', '', self.trailingString))
-        # erase characters in the view (will be added to the output later)
-        v.erase(edit, self.trailingRgn)
 
         self.indentSpaces = " " * max(0, self.settings.get("jsdocs_indentation_spaces", 1))
         self.prefix = "*"
@@ -93,23 +115,8 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             parser.setNameOverride(self.trailingString)
 
         # read the next line
-        line = parser.getDefinition(v, point + 1)
-        out = None
+        self.line = parser.getDefinition(v, point + 1)
 
-        # if there is no line following this, end here
-        if not line:
-            return
-
-        if parser.isExistingComment(line):
-            write(v, "\n *" + self.indentSpaces)
-            return
-
-        # match against a function declaration.
-        out = parser.parse(line)
-
-        snippet = self.generateSnippet(out, inline)
-
-        write(v, snippet)
 
     def generateSnippet(self, out, inline=False):
         # align the tags
