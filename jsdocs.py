@@ -327,6 +327,9 @@ class JsdocsParser(object):
     def parseArgs(self, args):
         """ an array of tuples, the first being the best guess at the type, the second being the name """
         out = []
+
+        if not args: return out
+
         for arg in re.split('\s*,\s*', args):
             arg = arg.strip()
             out.append((self.getArgType(arg), self.getArgName(arg)))
