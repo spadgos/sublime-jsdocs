@@ -66,123 +66,149 @@ def getParser(view):
 class JsdocsCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, inline=False):
-        v = self.view
-        settings = v.settings()
+
+        self.initialize(self.view, inline)
+
+        # erase characters in the view (will be added to the output later)
+        self.view.erase(edit, self.trailingRgn)
+
+        out = None
+
+        # if there is no line following this, end here
+        if not self.line:
+            return
+
+        if self.parser.isExistingComment(self.line):
+            write(self.view, "\n *" + self.indentSpaces)
+            return
+
+        # match against a function declaration.
+        out = self.parser.parse(self.line)
+
+        snippet = self.generateSnippet(out, inline)
+
+        write(self.view, snippet)
+
+    def initialize(self, v, inline=False):
         point = v.sel()[0].end()
 
+        self.settings = v.settings()
+
         # trailing characters are put inside the body of the comment
-        trailingRgn = sublime.Region(point, v.line(point).end())
-        trailingString = v.substr(trailingRgn).strip()
+        self.trailingRgn = sublime.Region(point, v.line(point).end())
+        self.trailingString = v.substr(self.trailingRgn).strip()
         # drop trailing '*/'
-        trailingString = escape(re.sub('\\s*\\*\\/\\s*$', '', trailingString))
-        # erase characters in the view (will be added to the output later)
-        v.erase(edit, trailingRgn)
+        self.trailingString = escape(re.sub('\\s*\\*\\/\\s*$', '', self.trailingString))
 
-        indentSpaces = " " * max(0, settings.get("jsdocs_indentation_spaces", 1))
-        prefix = "*"
+        self.indentSpaces = " " * max(0, self.settings.get("jsdocs_indentation_spaces", 1))
+        self.prefix = "*"
 
-        alignTags = settings.get("jsdocs_align_tags", 'deep')
-        deepAlignTags = alignTags == 'deep'
-        shallowAlignTags = alignTags in ('shallow', True)
+        settingsAlignTags = self.settings.get("jsdocs_align_tags", 'deep')
+        self.deepAlignTags = settingsAlignTags == 'deep'
+        self.shallowAlignTags = settingsAlignTags in ('shallow', True)
 
-        parser = getParser(v)
+        self.parser = parser = getParser(v)
         parser.inline = inline
 
         # use trailing string as a description of the function
-        if trailingString:
-            parser.setNameOverride(trailingString)
+        if self.trailingString:
+            parser.setNameOverride(self.trailingString)
 
         # read the next line
-        line = parser.getDefinition(v, point + 1)
-        out = None
+        self.line = parser.getDefinition(v, point + 1)
 
-        # if there is a line following this
-        if line:
-            if parser.isExistingComment(line):
-                write(v, "\n *" + indentSpaces)
-                return
-            # match against a function declaration.
-            out = parser.parse(line)
 
+    def generateSnippet(self, out, inline=False):
         # align the tags
-        if out and (shallowAlignTags or deepAlignTags) and not inline:
-            def outputWidth(str):
-                # get the length of a string, after it is output as a snippet,
-                # "${1:foo}" --> 3
-                return len(string.replace(re.sub("[$][{]\\d+:([^}]+)[}]", "\\1", str), '\$', '$'))
-
-            # count how many columns we have
-            maxCols = 0
-            # this is a 2d list of the widths per column per line
-            widths = []
-
-            # Skip the return tag if we're faking "per-section" indenting.
-            lastItem = len(out)
-            if (settings.get('jsdocs_per_section_indent')):
-                if (settings.get('jsdocs_return_tag') in out[-1]):
-                    lastItem -= 1
-
-            #  skip the first one, since that's always the "description" line
-            for line in out[1:lastItem]:
-                widths.append(map(outputWidth, line.split(" ")))
-                maxCols = max(maxCols, len(widths[-1]))
-
-            #  initialise a list to 0
-            maxWidths = [0] * maxCols
-
-            if (shallowAlignTags):
-                maxCols = 1
-
-            for i in range(0, maxCols):
-                for width in widths:
-                    if (i < len(width)):
-                        maxWidths[i] = max(maxWidths[i], width[i])
-
-            # Convert to a dict so we can use .get()
-            maxWidths = dict(enumerate(maxWidths))
-
-            for index, line in enumerate(out):
-                if (index > 0):
-                    newOut = []
-                    for partIndex, part in enumerate(line.split(" ")):
-                        newOut.append(part)
-                        newOut.append(" " + (" " * (maxWidths.get(partIndex, 0) - outputWidth(part))))
-                    out[index] = "".join(newOut).strip()
+        if out and (self.shallowAlignTags or self.deepAlignTags) and not inline:
+            out = self.alignTags(out)
 
         # fix all the tab stops so they're consecutive
         if out:
-            tabIndex = counter()
-
-            def swapTabs(m):
-                return "%s%d%s" % (m.group(1), tabIndex.next(), m.group(2))
-
-            for index, outputLine in enumerate(out):
-                out[index] = re.sub("(\\$\\{)\\d+(:[^}]+\\})", swapTabs, outputLine)
+            out = self.fixTabStops(out)
 
         if inline:
             if out:
-                write(v, " " + out[0] + " */")
+                return " " + out[0] + " */"
             else:
-                write(v, " $0 */")
+                return " $0 */"
         else:
-            snippet = ""
-            closer = parser.settings['commentCloser']
-            if out:
-                if settings.get('jsdocs_spacer_between_sections'):
-                    lastTag = None
-                    for idx, line in enumerate(out):
-                        res = re.match("^\\s*@([a-zA-Z]+)", line)
-                        if res and (lastTag != res.group(1)):
-                            lastTag = res.group(1)
-                            out.insert(idx, "")
-                for line in out:
-                    snippet += "\n " + prefix + (indentSpaces + line if line else "")
-            else:
-                snippet += "\n " + prefix + indentSpaces + "${0:" + trailingString + '}'
+            return self.createSnippet(out)
 
-            snippet += "\n" + closer
-            write(v, snippet)
+    def alignTags(self, out):
+        def outputWidth(str):
+            # get the length of a string, after it is output as a snippet,
+            # "${1:foo}" --> 3
+            return len(string.replace(re.sub("[$][{]\\d+:([^}]+)[}]", "\\1", str), '\$', '$'))
 
+        # count how many columns we have
+        maxCols = 0
+        # this is a 2d list of the widths per column per line
+        widths = []
+
+        # Skip the return tag if we're faking "per-section" indenting.
+        lastItem = len(out)
+        if (self.settings.get('jsdocs_per_section_indent')):
+            if (self.settings.get('jsdocs_return_tag') in out[-1]):
+                lastItem -= 1
+
+        #  skip the first one, since that's always the "description" line
+        for line in out[1:lastItem]:
+            widths.append(map(outputWidth, line.split(" ")))
+            maxCols = max(maxCols, len(widths[-1]))
+
+        #  initialise a list to 0
+        maxWidths = [0] * maxCols
+
+        if (self.shallowAlignTags):
+            maxCols = 1
+
+        for i in range(0, maxCols):
+            for width in widths:
+                if (i < len(width)):
+                    maxWidths[i] = max(maxWidths[i], width[i])
+
+        # Convert to a dict so we can use .get()
+        maxWidths = dict(enumerate(maxWidths))
+
+        for index, line in enumerate(out):
+            if (index > 0):
+                newOut = []
+                for partIndex, part in enumerate(line.split(" ")):
+                    newOut.append(part)
+                    newOut.append(" " + (" " * (maxWidths.get(partIndex, 0) - outputWidth(part))))
+                out[index] = "".join(newOut).strip()
+        return out
+
+    def fixTabStops(self, out):
+        tabIndex = counter()
+
+        def swapTabs(m):
+            return "%s%d%s" % (m.group(1), tabIndex.next(), m.group(2))
+
+        for index, outputLine in enumerate(out):
+            out[index] = re.sub("(\\$\\{)\\d+(:[^}]+\\})", swapTabs, outputLine)
+
+        return out
+
+    def createSnippet(self, out):
+        snippet = ""
+        closer = self.parser.settings['commentCloser']
+        if out:
+            if self.settings.get('jsdocs_spacer_between_sections'):
+                lastTag = None
+                for idx, line in enumerate(out):
+                    res = re.match("^\\s*@([a-zA-Z]+)", line)
+                    if res and (lastTag != res.group(1)):
+                        lastTag = res.group(1)
+                        out.insert(idx, "")
+            for line in out:
+                snippet += "\n " + self.prefix + (self.indentSpaces + line if line else "")
+        else:
+            snippet += "\n " + self.prefix + self.indentSpaces + "${0:" + self.trailingString + '}'
+
+        snippet += "\n" + closer
+        return snippet
 
 class JsdocsParser(object):
 
