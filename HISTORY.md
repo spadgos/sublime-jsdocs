@@ -1,5 +1,10 @@
 # DocBlockr Extended Changelog
 
+- **v2.9.2**, *11 December 2012*
+  - This one goes out to [Thanasis Polychronakis](https://github.com/thanpolas).
+    - Structure of the modules greatly improved
+    - Fixes bug with matching languages with hyphens in the name
+  - Adds support for CUDA-C++
 - **v2.9.1**, *31 October 2012*
   - Thanks to [wronex](https://github.com/wronex), <kbd>Alt+Q</kbd> will reformat the entire DocBlock, with customisable indentation.
   - Thanks to [Pavel Voronin](https://github.com/pavel-voronin), spaces around arguments are handled properly.
