@@ -117,7 +117,6 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         # read the next line
         self.line = parser.getDefinition(v, point + 1)
 
-
     def generateSnippet(self, out, inline=False):
         # align the tags
         if out and (self.shallowAlignTags or self.deepAlignTags) and not inline:
@@ -209,6 +208,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
         snippet += "\n" + closer
         return snippet
+
 
 class JsdocsParser(object):
 
@@ -354,7 +354,8 @@ class JsdocsParser(object):
         """ an array of tuples, the first being the best guess at the type, the second being the name """
         out = []
 
-        if not args: return out
+        if not args:
+            return out
 
         for arg in re.split('\s*,\s*', args):
             arg = arg.strip()
@@ -1007,7 +1008,6 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
 
         v.run_command('expand_selection', {'to': 'scope'})
 
-
         # find the first word
         startPoint = v.find("\n\\s*\\* ", v.sel()[0].begin()).begin()
         # find the first tag, or the end of the comment
@@ -1034,8 +1034,8 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             words = para.strip().split(' ')
             text = '\n'
             line = ' *' + indentSpaces
-            lineTagged = False # indicates if the line contains a doc tag
-            paraTagged = False # indicates if this paragraph contains a doc tag
+            lineTagged = False  # indicates if the line contains a doc tag
+            paraTagged = False  # indicates if this paragraph contains a doc tag
             lineIsNew = True
             tag = ''
 
@@ -1062,10 +1062,10 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 lineIsNew = False
 
             text += line.rstrip()
-            return {'text':text,
-                    'lineTagged':lineTagged,
-                    'tagged':paraTagged,
-                    'tag':tag}
+            return {'text':       text,
+                    'lineTagged': lineTagged,
+                    'tagged':     paraTagged,
+                    'tag':        tag}
 
         # split the text into paragraphs, where each paragraph is eighter
         # defined by an empty line or the start of a doc parameter
@@ -1081,8 +1081,8 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             para = wrappedParas[i]
             last = i == len(wrappedParas) - 1
 
-            nextIsTagged = not last and wrappedParas[i+1]['tagged']
-            nextIsSameTag = nextIsTagged and para['tag'] == wrappedParas[i+1]['tag']
+            nextIsTagged = not last and wrappedParas[i + 1]['tagged']
+            nextIsSameTag = nextIsTagged and para['tag'] == wrappedParas[i + 1]['tag']
 
             if last or (para['lineTagged'] or nextIsTagged) and \
                     not (spacerBetweenSections and not nextIsSameTag):
