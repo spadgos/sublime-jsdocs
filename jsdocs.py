@@ -1,5 +1,5 @@
 """
-DocBlockr v2.9.1
+DocBlockr v2.9.2
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
