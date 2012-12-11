@@ -6,23 +6,17 @@ DocBlockr is a [Sublime Text 2][sublime] package which makes writing documentati
 
 **Recommended install**. If you have the [Package Control][package_control] package installed, you can install DocBlockr from inside Sublime Text itself. Open the Command Palette and select "Package Control: Install Package", then search for DocBlockr and you're done!
 
-### Without Package Control ###
-
-Go to your Sublime Text 2 Packages directory and clone the repository using the command below:
-
-    git clone https://github.com/spadgos/sublime-jsdocs.git DocBlockr
-
-Don't forget to keep updating it, though!
-
-### Without Git ###
-
-Download the latest version from the [tags page][tags]. Unzip to your Sublime Text Packages folder (you can find this by opening ST2 and selecting `Preferences -> Browse Packages...`). You will need to rename the folder from the default (which will be something like `spadgos-sublime-jsdocs-a4bc2a`) to `DocBlockr`. That's it -- you shouldn't even need to restart ST2.
-
 ## Feature requests & bug reports ##
 
 You can leave either of these things [here][issues]. Pull requests are welcomed heartily! In this repo, the main development branch is `develop` and the stable 'production' branch is `master`. Please remember to base your branch from `develop` and issue the pull request back to that branch.
 
 ## Changelog ##
+
+- **v2.9.2**, *11 December 2012*
+  - This one goes out to [Thanasis Polychronakis](https://github.com/thanpolas).
+    - Structure of the modules greatly improved
+    - Fixes bug with matching languages with hyphens in the name
+  - Adds support for CUDA-C++
 - **v2.9.1**, *31 October 2012*
   - Thanks to [wronex](https://github.com/wronex), <kbd>Alt+Q</kbd> will reformat the entire DocBlock, with customisable indentation.
   - Thanks to [Pavel Voronin](https://github.com/pavel-voronin), spaces around arguments are handled properly.
@@ -39,9 +33,6 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
   - Given the above addition, JS functions starting with an underscore are no longer marked as `@private` by default.
 - **v2.8.2**, *28 September 2012*
   - When a function is defined across many lines, the parser will find the arguments on extra lines.
-- **v2.8.1**, *13 September 2012*
-  - Pressing <kbd>tab</kbd> on an empty line will perform a deep indentation instead of moving to the next field
-  - Functions starting with `_` will get a `@private` tag in Javascript (thanks to [Andrew Hanna](https://github.com/percyhanna))
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
