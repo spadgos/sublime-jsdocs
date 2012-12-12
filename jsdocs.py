@@ -74,10 +74,6 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
         out = None
 
-        # if there is no line following this, end here
-        if not self.line:
-            return
-
         if self.parser.isExistingComment(self.line):
             write(self.view, "\n *" + self.indentSpaces)
             return
