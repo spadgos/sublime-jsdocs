@@ -1,5 +1,7 @@
 # DocBlockr Extended Changelog
 
+- **v2.9.3**, *12 December 2012*
+  - Fixed bug which stopped regular comments from closing automatically
 - **v2.9.2**, *11 December 2012*
   - This one goes out to [Thanasis Polychronakis](https://github.com/thanpolas).
     - Structure of the modules greatly improved

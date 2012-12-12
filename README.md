@@ -12,6 +12,8 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
 
 ## Changelog ##
 
+- **v2.9.3**, *12 December 2012*
+  - Fixed bug which stopped regular comments from closing automatically
 - **v2.9.2**, *11 December 2012*
   - This one goes out to [Thanasis Polychronakis](https://github.com/thanpolas).
     - Structure of the modules greatly improved
@@ -31,8 +33,6 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
   - Notation rules are applied to functions, which means they can define a return type by their name, eg: `strFoo`
   - Notation rules can define arbitrary tags, for example: functions with a prefix of "_" should get the `@private` tag.
   - Given the above addition, JS functions starting with an underscore are no longer marked as `@private` by default.
-- **v2.8.2**, *28 September 2012*
-  - When a function is defined across many lines, the parser will find the arguments on extra lines.
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
