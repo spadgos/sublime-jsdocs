@@ -1,5 +1,5 @@
 """
-DocBlockr v2.9.2
+DocBlockr v2.9.3
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
@@ -73,10 +73,6 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         self.view.erase(edit, self.trailingRgn)
 
         out = None
-
-        # if there is no line following this, end here
-        if not self.line:
-            return
 
         if self.parser.isExistingComment(self.line):
             write(self.view, "\n *" + self.indentSpaces)
