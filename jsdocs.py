@@ -60,6 +60,8 @@ def getParser(view):
         return JsdocsCPP(viewSettings)
     elif sourceLang == 'objc' or sourceLang == 'objc++':
         return JsdocsObjC(viewSettings)
+    elif sourceLang == 'java':
+        return JsdocsJava(viewSettings)
     return JsdocsJavascript(viewSettings)
 
 
@@ -860,7 +862,129 @@ class JsdocsObjC(JsdocsParser):
         return None
 
 
+class JsdocsJava(JsdocsParser):
+    def setupSettings(self):
+        identifier = '[a-zA-Z_$][a-zA-Z_$0-9]*'
+        self.settings = {
+            "curlyTypes": False,
+            'typeInfo': False,
+            "typeTag": "type",
+            "varIdentifier": identifier,
+            "fnIdentifier":  identifier,
+            "fnOpener": identifier + '(?:\\s+' + identifier + ')?\\s*\\(',
+            "commentCloser": " */",
+            "bool": "Boolean",
+            "function": "Function"
+        }
+
+    def parseFunction(self, line):
+        line = line.strip()
+        res = re.search(
+            # Modifiers
+            '(?:public|protected|private|static|abstract|final|transient|synchronized|native|strictfp){0,1}\s*'
+            # Return value
+            + '(?P<retval>[a-zA-Z_$][\<\>\., a-zA-Z_$0-9]+)\s+'
+            # Method name
+            + '(?P<name>' + self.settings['fnIdentifier'] + ')\s*'
+            # Params
+            + '\((?P<args>.*)\)\s*'
+            # # Throws ,
+            + '(?:throws){0,1}\s*(?P<throws>[a-zA-Z_$0-9\.,\s]*)',
+            line
+        )
+
+        if not res:
+            return None
+        group_dict = res.groupdict()
+        name = group_dict["name"]
+        retval = group_dict["retval"]
+        full_args = group_dict["args"]
+        throws = group_dict["throws"] or ""
+
+        arg_list = []
+        for arg in full_args.split(","):
+            arg_list.append(arg.strip().split(" ")[-1])
+        args = ",".join(arg_list)
+        throws_list = []
+        for arg in throws.split(","):
+            throws_list.append(arg.strip().split(" ")[-1])
+        throws = ",".join(throws_list)
+        return (name, args, retval, throws)
+
+    def parseVar(self, line):
+        return None
+
+    def guessTypeFromValue(self, val):
+        return None
+
+    def formatFunction(self, name, args, retval, throws_args, options={}):
+        out = JsdocsParser.formatFunction(self, name, args, retval, options)
+
+        if throws_args != "":
+            for unused, exceptionName in self.parseArgs(throws_args):
+                typeInfo = self.getTypeInfo(unused, exceptionName)
+                out.append("@throws %s%s ${1:[description]}" % (
+                    typeInfo,
+                    escape(exceptionName)
+                ))
+
+        return out
+
+    def getFunctionReturnType(self, name, retval):
+        if retval == "void":
+            return None
+        return retval
+
+    def getDefinition(self, view, pos):
+        maxLines = 25  # don't go further than this
+
+        definition = ''
+        open_curly_annotation = False
+        open_paren_annotation = False
+        for i in xrange(0, maxLines):
+            line = read_line(view, pos)
+            if line is None:
+                break
+
+            pos += len(line) + 1
+            # Move past empty lines
+            if re.search("^\s*$", line):
+                continue
+            # strip comments
+            line = re.sub("//.*", "", line)
+            line = re.sub(r"/\*.*\*/", "", line)
+            if definition == '':
+                # Must check here for function opener on same line as annotation
+                if self.settings['fnOpener'] and re.search(self.settings['fnOpener'], line):
+                    pass
+                # Handle Annotations
+                elif re.search("^\s*@", line):
+                    if re.search("{", line) and not re.search("}", line):
+                        open_curly_annotation = True
+                    if re.search("\(", line) and not re.search("\)", line):
+                        open_paren_annotation = True
+                    continue
+                elif open_curly_annotation:
+                    if re.search("}", line):
+                        open_curly_annotation = False
+                    continue
+                elif open_paren_annotation:
+                    if re.search("\)", line):
+                        open_paren_annotation = False
+                elif re.search("^\s*$", line):
+                    continue
+                # Check for function
+                elif not self.settings['fnOpener'] or not re.search(self.settings['fnOpener'], line):
+                    definition = line
+                    break
+            definition += line
+            if line.find(';') > -1 or line.find('{') > -1:
+                definition = re.sub(r'\s*[;{]\s*$', '', definition)
+                break
+        return definition
+
 ############################################################33
+
 
 class JsdocsIndentCommand(sublime_plugin.TextCommand):
 
