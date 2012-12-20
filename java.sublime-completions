@@ -1,0 +1,25 @@
+{
+  "scope": "source.java comment.block.documentation",
+  "completions":
+  [
+    { "trigger" : "@author",            "contents": "@author ${1:[author]}"},
+    { "trigger" : "@deprecated",        "contents": "@deprecated ${1:[deprecated-text]}"},
+    { "trigger" : "@exception",         "contents": "@exception ${1:[class-name]} ${2:[description]}"},
+    { "trigger" : "@param",             "contents": "@param ${1:[parameter-name]} ${2:[description]}"},
+    { "trigger" : "@return",            "contents": "@return ${1:[description]}"},
+    { "trigger" : "@see",               "contents": "@see ${1:[reference]}"},
+    { "trigger" : "@serial",            "contents": "@serial ${1:[description | include | exclude]}"},
+    { "trigger" : "@serialField",       "contents": "@serialField ${1:[field-name]} ${2:[field-type]} ${3:[field-description]}"},
+    { "trigger" : "@serialDate",        "contents": "@serialDate ${1:[data-description]}"},
+    { "trigger" : "@since",             "contents": "@since ${1:[since-text]}"},
+    { "trigger" : "@throws",            "contents": "@throws ${1:[class-name]} ${2:[description]}"},
+    { "trigger" : "@version",           "contents": "@version ${1:[version-text]}"},
+    { "trigger" : "{@code}",            "contents": "{@code ${1:[text]}}"},
+    { "trigger" : "{@docRoot}",         "contents": "{@docRoot}"},
+    { "trigger" : "{@inheritDoc}",      "contents": "{@inheritDoc}"},
+    { "trigger" : "{@link}",            "contents": "{@link ${1:[package.class#member]} ${2:[label]}}"},
+    { "trigger" : "{@linkplain}",       "contents": "{@linkplain ${1:[package.class#member]} ${2:[label]}}"},
+    { "trigger" : "{@literal}",         "contents": "{@literal ${1:[text]}}"},
+    { "trigger" : "{@value}",           "contents": "{@value ${1:[package.class#field]}}"}
+  ]
+}
