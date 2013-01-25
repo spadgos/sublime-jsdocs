@@ -109,6 +109,12 @@
       { "key": "preceding_text",  "operator": "regex_contains", "operand": "^\\s*\\/\\*$", "match_all": true }
     ]
   },
+  { "keys": ["tab"], "command": "insert_snippet", "args": {"contents": "\n$0\n */"},
+    "context": [
+      { "key": "selection_empty", "operator": "equal",          "operand": true,           "match_all": true },
+      { "key": "preceding_text",  "operator": "regex_contains", "operand": "^\\s*\\/\\*$", "match_all": true }
+    ]
+  },
   { "keys": ["enter"], "command": "insert_snippet", "args": {"contents": "\n$0\n "}, "context":
     [
       { "key": "selection_empty", "operator": "equal",          "operand": true,           "match_all": true},
