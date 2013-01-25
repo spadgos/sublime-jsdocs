@@ -12,7 +12,7 @@
   "jsdocs_indentation_spaces": 1,
 
   // The number of spaces to add after the leading * in lines under the first line of each
-  // paragraph. This is only used together with automatic line wrapping. For example, a value 
+  // paragraph. This is only used together with automatic line wrapping. For example, a value
   // of 3 might look like this:
   //
   // /**
@@ -70,5 +70,18 @@
 
   // Whether each section should be indented to the same level, or indent each one individually.
   // (When true, the @param section will lose the extra space immediately after each '@param').
-  "jsdocs_per_section_indent": false
+  "jsdocs_per_section_indent": false,
+
+  // Minimum spaces between cols (default is 1). For example, a value
+  // of 2 might look like this:
+  //
+  // /**
+  //  * Duis sed arcu non tellus eleifend ullamcorper quis non erat. Curabitur
+  //  *
+  //  * @param   {String}  foo  Lorem ipsum dolor sit amet.
+  //  * @param   {Number}  bar  Nullam fringilla feugiat pretium. Quisque
+  //  *
+  //  * @return  {[Type]}       description
+  //  */
+  "jsdocs_min_spaces_between_columns": 1
 }

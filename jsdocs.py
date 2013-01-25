@@ -166,12 +166,15 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         # Convert to a dict so we can use .get()
         maxWidths = dict(enumerate(maxWidths))
 
+        # Minimum spaces between line columns
+        minColSpaces = self.settings.get('jsdocs_min_spaces_between_columns')
+
         for index, line in enumerate(out):
             if (index > 0):
                 newOut = []
                 for partIndex, part in enumerate(line.split(" ")):
                     newOut.append(part)
-                    newOut.append(" " + (" " * (maxWidths.get(partIndex, 0) - outputWidth(part))))
+                    newOut.append(" " * minColSpaces + (" " * (maxWidths.get(partIndex, 0) - outputWidth(part))))
                 out[index] = "".join(newOut).strip()
         return out
 
