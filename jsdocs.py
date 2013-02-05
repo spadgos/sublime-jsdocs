@@ -7,6 +7,7 @@ import sublime
 import sublime_plugin
 import re
 import string
+from functools import reduce
 
 
 def read_line(view, point):
@@ -134,7 +135,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         def outputWidth(str):
             # get the length of a string, after it is output as a snippet,
             # "${1:foo}" --> 3
-            return len(string.replace(re.sub("[$][{]\\d+:([^}]+)[}]", "\\1", str), '\$', '$'))
+            return len(re.sub("[$][{]\\d+:([^}]+)[}]", "\\1", str).replace('\$', '$'))
 
         # count how many columns we have
         maxCols = 0
@@ -149,7 +150,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
         #  skip the first one, since that's always the "description" line
         for line in out[1:lastItem]:
-            widths.append(map(outputWidth, line.split(" ")))
+            widths.append(list(map(outputWidth, line.split(" "))))
             maxCols = max(maxCols, len(widths[-1]))
 
         #  initialise a list to 0
@@ -167,7 +168,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         maxWidths = dict(enumerate(maxWidths))
 
         # Minimum spaces between line columns
-        minColSpaces = self.settings.get('jsdocs_min_spaces_between_columns')
+        minColSpaces = self.settings.get('jsdocs_min_spaces_between_columns') or 2
 
         for index, line in enumerate(out):
             if (index > 0):
@@ -182,7 +183,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         tabIndex = counter()
 
         def swapTabs(m):
-            return "%s%d%s" % (m.group(1), tabIndex.next(), m.group(2))
+            return "%s%d%s" % (m.group(1), next(tabIndex), m.group(2))
 
         for index, outputLine in enumerate(out):
             out[index] = re.sub("(\\$\\{)\\d+(:[^}]+\\})", swapTabs, outputLine)
@@ -397,7 +398,7 @@ class JsdocsParser(object):
             elif 'regex' in rule:
                 return re.search(rule['regex'], name)
 
-        return filter(checkMatch, self.viewSettings.get('jsdocs_notation_map', []))
+        return list(filter(checkMatch, self.viewSettings.get('jsdocs_notation_map', [])))
 
     def getDefinition(self, view, pos):
         """
@@ -412,7 +413,7 @@ class JsdocsParser(object):
         def countBrackets(total, bracket):
             return total + (1 if bracket == '(' else -1)
 
-        for i in xrange(0, maxLines):
+        for i in range(0, maxLines):
             line = read_line(view, pos)
             if line is None:
                 break
@@ -798,7 +799,7 @@ class JsdocsObjC(JsdocsParser):
         maxLines = 25  # don't go further than this
 
         definition = ''
-        for i in xrange(0, maxLines):
+        for i in range(0, maxLines):
             line = read_line(view, pos)
             if line is None:
                 break
@@ -836,7 +837,7 @@ class JsdocsObjC(JsdocsParser):
         if argStr:
             groups = re.split('\\s*:\\s*', argStr)
             numGroups = len(groups)
-            for i in xrange(0, numGroups):
+            for i in range(0, numGroups):
                 group = groups[i]
                 if i < numGroups - 1:
                     result = re.search(r'\s+(\S*)$', group)
@@ -957,7 +958,7 @@ class JsdocsReparse(sublime_plugin.TextCommand):
         tabIndex = counter()
 
         def tabStop(m):
-            return "${%d:%s}" % (tabIndex.next(), m.group(1))
+            return "${%d:%s}" % (next(tabIndex), m.group(1))
 
         v = self.view
         v.run_command('clear_fields')
