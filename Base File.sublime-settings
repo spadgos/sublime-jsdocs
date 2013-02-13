@@ -55,6 +55,9 @@
   // Add a '[description]' placeholder for the return tag?
   "jsdocs_return_description": true,
 
+  // Add a '[description]' placeholder for the param tag?
+  "jsdocs_param_description": true,
+
   // Whether there should be blank lines added between the description line, and between tags of different types.
   // If true, the output might look like this:
   //
