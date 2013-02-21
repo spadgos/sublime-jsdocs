@@ -1097,9 +1097,12 @@ class JsdocsReparse(sublime_plugin.TextCommand):
         v.run_command('clear_fields')
         v.run_command('expand_selection', {'to': 'scope'})
         sel = v.sel()[0]
+        
+        #escape string, so php vars wont removed
+        text = escape(v.substr(sel))
 
         # strip out leading spaces, since inserting a snippet keeps the indentation
-        text = re.sub("\\n\\s+\\*", "\n *", v.substr(sel))
+        text = re.sub("\\n\\s+\\*", "\n *", text)
 
         # replace [bracketed] [text] with a tabstop
         text = re.sub("(\\[.+?\\])", tabStop, text)
