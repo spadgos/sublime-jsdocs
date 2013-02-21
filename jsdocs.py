@@ -6,7 +6,6 @@ https://github.com/spadgos/sublime-jsdocs
 import sublime
 import sublime_plugin
 import re
-import string
 from functools import reduce
 
 
@@ -55,7 +54,7 @@ def getParser(view):
         return JsdocsPHP(viewSettings)
     elif sourceLang == "coffee":
         return JsdocsCoffee(viewSettings)
-    elif sourceLang == "actionscript":
+    elif sourceLang == "actionscript" or sourceLang == 'haxe':
         return JsdocsActionscript(viewSettings)
     elif sourceLang == "c++" or sourceLang == 'c' or sourceLang == 'cuda-c++':
         return JsdocsCPP(viewSettings)
