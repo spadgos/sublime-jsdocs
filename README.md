@@ -12,6 +12,10 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
 
 ## Changelog ##
 
+- **v2.10.0**, *21 February 2013*
+  - Adds Sublime Text 3 support (thanks to @lxe and @rmarscher)
+  - YUI-style `@method` tags can be automatically added with the `jsdocs_autoadd_method_tag` setting (thanks to @maheshjag)
+  - Variables starting with `$` are not wiped out when reparsing a docblock (thanks @ryrun)
 - **v2.9.3**, *12 December 2012*
   - Fixed bug which stopped regular comments from closing automatically
 - **v2.9.2**, *11 December 2012*
@@ -26,13 +30,6 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
   - **C/C++**: An argument list containing only `void` doesn't output any `@param` tags
   - **PHP**: Arguments with an array as a default value inside multi-line arguments are handled properly
   - <kbd>Ctrl/Cmd + Enter</kbd> and <kbd>Ctrl/Cmd + Shift + Enter</kbd> work inside DocBlocks.
-- **v2.9.0**, *1 October 2012*
-  - Adds ObjectiveC and ObjectiveC++ support, thanks to some help from [Robb Böhnke](https://github.com/robb)
-    - Very buggy code, support isn't great but it's better than nothing (hopefully).
-  - Single-line comments inside function definitions are handled
-  - Notation rules are applied to functions, which means they can define a return type by their name, eg: `strFoo`
-  - Notation rules can define arbitrary tags, for example: functions with a prefix of "_" should get the `@private` tag.
-  - Given the above addition, JS functions starting with an underscore are no longer marked as `@private` by default.
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
@@ -348,6 +345,8 @@ You can access the configuration settings by selecting `Preferences -> Package S
 - `jsdocs_spacer_between_sections` *(Boolean)* If true, then extra blank lines are inserted between the sections of the docblock. Default: `false`.
 
 - `jsdocs_indentation_spaces_same_para` *(Number)* Described above in the *Reformatting paragraphs* section. Default: `1`
+
+- `jsdocs_autoadd_method_tag` *(Boolean)* Add a `@method` tag to docblocks of functions. Default: `false`
 
 This is my first package for Sublime Text, and the first time I've written any Python, so I heartily welcome feedback and [feature requests or bug reports][issues].
 
