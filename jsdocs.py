@@ -170,7 +170,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         maxWidths = dict(enumerate(maxWidths))
 
         # Minimum spaces between line columns
-        minColSpaces = self.settings.get('jsdocs_min_spaces_between_columns') or 2
+        minColSpaces = self.settings.get('jsdocs_min_spaces_between_columns', 1)
 
         for index, line in enumerate(out):
             if (index > 0):
