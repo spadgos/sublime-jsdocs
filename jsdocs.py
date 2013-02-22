@@ -1226,4 +1226,5 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             else:
                 text += para['text'] + '\n *'
 
+        text = escape(text)
         write(v, text)
