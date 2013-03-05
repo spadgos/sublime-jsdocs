@@ -1052,11 +1052,14 @@ class JsdocsDecorateCommand(sublime_plugin.TextCommand):
             maxLength = 0
             lines = v.lines(sel)
             for lineRegion in lines:
-                leadingWS = len(re_whitespace.match(v.substr(lineRegion)).group(1))
+                lineText = v.substr(lineRegion)
+                tabCount = lineText.count("\t")
+                leadingWS = len(re_whitespace.match(lineText).group(1))
+                leadingWS = leadingWS - tabCount
                 maxLength = max(maxLength, lineRegion.size())
 
             lineLength = maxLength - leadingWS
-            leadingWS = " " * leadingWS
+            leadingWS = tabCount * "\t" + " " * leadingWS
             v.insert(edit, sel.end(), leadingWS + "/" * (lineLength + 3) + "\n")
 
             for lineRegion in reversed(lines):
