@@ -150,9 +150,10 @@ class JsdocsCommand(sublime_plugin.TextCommand):
                 lastItem -= 1
 
         #  skip the first one, since that's always the "description" line
-        for line in out[1:lastItem]:
-            widths.append(list(map(outputWidth, line.split(" "))))
-            maxCols = max(maxCols, len(widths[-1]))
+        for line in out:
+            if line.startswith('@'):
+                widths.append(list(map(outputWidth, line.split(" "))))
+                maxCols = max(maxCols, len(widths[-1]))
 
         #  initialise a list to 0
         maxWidths = [0] * maxCols
@@ -172,12 +173,13 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         minColSpaces = self.settings.get('jsdocs_min_spaces_between_columns', 1)
 
         for index, line in enumerate(out):
-            if (index > 0):
+            if line.startswith('@'):
                 newOut = []
                 for partIndex, part in enumerate(line.split(" ")):
                     newOut.append(part)
                     newOut.append(" " * minColSpaces + (" " * (maxWidths.get(partIndex, 0) - outputWidth(part))))
                 out[index] = "".join(newOut).strip()
+
         return out
 
     def fixTabStops(self, out):
@@ -284,7 +286,7 @@ class JsdocsParser(object):
         description = self.getNameOverride() or ('[%s description]' % escape(name))
         out.append("${1:%s}" % description)
 
-        if (self.viewSettings.get("jsdocs_autoadd_method_tag") == True):
+        if (self.viewSettings.get("jsdocs_autoadd_method_tag") is True):
             out.append("@%s %s" % (
                 "method",
                 escape(name)

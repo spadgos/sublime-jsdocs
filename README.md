@@ -320,7 +320,7 @@ You can access the configuration settings by selecting `Preferences -> Package S
 
 - `jsdocs_extra_tags` *(Array.String)* An array of strings, each representing extra boilerplate comments to add to *functions*. These can also include arbitrary text (not just tags).
 
-        // jsdocs_extra_tags = ['This is a cool function', '@author nickf', '@version ${1:version}']
+        // jsdocs_extra_tags = ['This is a cool function', '@author nickf', '@version ${1:[version]}']
         /**<<enter>>
         function foo (x) {}
 
