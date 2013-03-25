@@ -6,6 +6,8 @@ https://github.com/spadgos/sublime-jsdocs
 import sublime
 import sublime_plugin
 import re
+import datetime
+import time
 from functools import reduce
 
 
@@ -116,6 +118,11 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         self.line = parser.getDefinition(v, point + 1)
 
     def generateSnippet(self, out, inline=False):
+        # substitute any variables in the tags
+
+        if out:
+            out = self.substituteVariables(out)
+
         # align the tags
         if out and (self.shallowAlignTags or self.deepAlignTags) and not inline:
             out = self.alignTags(out)
@@ -181,6 +188,28 @@ class JsdocsCommand(sublime_plugin.TextCommand):
                 out[index] = "".join(newOut).strip()
 
         return out
+
+    def substituteVariables(self, out):
+        def getVar(match):
+            varName = match.group(1)
+            if varName == 'datetime':
+                date = datetime.datetime.now().replace(microsecond=0)
+                offset = time.timezone / -3600.0
+                return "%s%s%02d%02d" % (
+                    date.isoformat(),
+                    '+' if offset >= 0 else "-",
+                    abs(offset),
+                    (offset % 1) * 60
+                )
+            elif varName == 'date':
+                return datetime.date.today().isoformat()
+            else:
+                return match.group(0)
+
+        def subLine(line):
+            return re.sub(r'\{\{([^}]+)\}\}', getVar, line)
+
+        return map(subLine, out)
 
     def fixTabStops(self, out):
         tabIndex = counter()

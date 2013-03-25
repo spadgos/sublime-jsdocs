@@ -334,6 +334,19 @@ You can access the configuration settings by selecting `Preferences -> Package S
          */
         function foo (x) {}
 
+    Basic variable substitution is supported here for the variables `date` and `datetime`, wrapped in double curly brackets.
+
+        // jsdocs_extra_tags = ['@date {{date}}', '@anotherdate {{datetime}}']
+        /**<<enter>>
+        function foo() {}
+
+        /**
+         * [foo description]
+         * @date     2013-03-25
+         * @datetime 2013-03-25T21:16:25+0100
+         * @return   {[type]}
+         */
+
 - `jsdocs_extend_double_slash` *(Boolean)* Whether double-slash comments should be extended. An example of this feature is described above.
 
 - `jsdocs_deep_indent` *(Boolean)* Whether pressing tab at the start of a line in docblock should indent to match the previous line's description field. An example of this feature is described above.
