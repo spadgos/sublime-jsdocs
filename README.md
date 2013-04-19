@@ -365,7 +365,7 @@ This is my first package for Sublime Text, and the first time I've written any P
 
 ## Show your love ##
 
-[![Click here to lend your support to: DocBlockr and make a donation at www.pledgie.com !](https://www.pledgie.com/campaigns/16316.png?skin_name=chrome)](http://www.pledgie.com/campaigns/16316)
+[![Click here to lend your support to: DocBlockr and make a donation at pledgie.com!](https://pledgie.com/campaigns/16316.png?skin_name=chrome)](http://pledgie.com/campaigns/16316)
 
 [closure]: http://code.google.com/closure/compiler/docs/js-for-compiler.html
 [issues]: https://github.com/spadgos/sublime-jsdocs/issues
