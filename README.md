@@ -12,6 +12,11 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
 
 ## Changelog ##
 
+- **v2.10.1**, *19 April 2013*
+  - Adds variable substitution in `jsdocs_extra_tags`
+  - Fixes indentation bug in `jsdocs_extra_tags`
+  - Fixes bug when adding a new line after a docblock which contains text afterwards
+  - Fixes link to Pledgie (thanks @Krinkle)
 - **v2.10.0**, *21 February 2013*
   - Adds Sublime Text 3 support (thanks to @lxe and @rmarscher)
   - YUI-style `@method` tags can be automatically added with the `jsdocs_autoadd_method_tag` setting (thanks to @maheshjag)
@@ -23,13 +28,6 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
     - Structure of the modules greatly improved
     - Fixes bug with matching languages with hyphens in the name
   - Adds support for CUDA-C++
-- **v2.9.1**, *31 October 2012*
-  - Thanks to [wronex](https://github.com/wronex), <kbd>Alt+Q</kbd> will reformat the entire DocBlock, with customisable indentation.
-  - Thanks to [Pavel Voronin](https://github.com/pavel-voronin), spaces around arguments are handled properly.
-  - **C/C++**: Array arguments are accepted
-  - **C/C++**: An argument list containing only `void` doesn't output any `@param` tags
-  - **PHP**: Arguments with an array as a default value inside multi-line arguments are handled properly
-  - <kbd>Ctrl/Cmd + Enter</kbd> and <kbd>Ctrl/Cmd + Shift + Enter</kbd> work inside DocBlocks.
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 

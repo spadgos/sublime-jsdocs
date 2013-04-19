@@ -1,5 +1,10 @@
 # DocBlockr Extended Changelog
 
+- **v2.10.1**, *19 April 2013*
+  - Adds variable substitution in `jsdocs_extra_tags`
+  - Fixes indentation bug in `jsdocs_extra_tags`
+  - Fixes bug when adding a new line after a docblock which contains text afterwards
+  - Fixes link to Pledgie (thanks @Krinkle)
 - **v2.10.0**, *21 February 2013*
   - Adds Sublime Text 3 support (thanks to @lxe and @rmarscher)
   - YUI-style `@method` tags can be automatically added with the `jsdocs_autoadd_method_tag` setting (thanks to @maheshjag)
