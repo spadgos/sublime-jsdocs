@@ -154,7 +154,8 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         out = list(out)
         lastItem = len(out)
         if (self.settings.get('jsdocs_per_section_indent')):
-            if (self.settings.get('jsdocs_return_tag') in out[-1]):
+            returnTag = self.settings.get('jsdocs_return_tag') or '@return'
+            if (returnTag in out[-1]):
                 lastItem -= 1
 
         #  skip the first one, since that's always the "description" line
