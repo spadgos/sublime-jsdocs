@@ -151,6 +151,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         widths = []
 
         # Skip the return tag if we're faking "per-section" indenting.
+        out = list(out)
         lastItem = len(out)
         if (self.settings.get('jsdocs_per_section_indent')):
             if (self.settings.get('jsdocs_return_tag') in out[-1]):
