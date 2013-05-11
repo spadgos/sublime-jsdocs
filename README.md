@@ -1,17 +1,27 @@
-DocBlockr is a [Sublime Text 2][sublime] package which makes writing documentation a breeze. DocBlockr supports **Javascript**, **PHP**, **ActionScript**, **CoffeeScript**, **Java**, **Objective C**, **C** and **C++**.
+DocBlockr is a package for [Sublime Text 2 & 3][sublime] which makes writing documentation a breeze. DocBlockr supports **Javascript**, **PHP**, **ActionScript**, **CoffeeScript**, **Java**, **Objective C**, **C** and **C++**.
 
 ## Installation ##
 
 ### With Package Control ###
 
-**Recommended install**. If you have the [Package Control][package_control] package installed, you can install DocBlockr from inside Sublime Text itself. Open the Command Palette and select "Package Control: Install Package", then search for DocBlockr and you're done!
+With [Package Control][package_control] installed, you can install DocBlockr from inside Sublime Text itself. Open the Command Palette and select "Package Control: Install Package", then search for DocBlockr and you're done!
 
 ## Feature requests & bug reports ##
 
-You can leave either of these things [here][issues]. Pull requests are welcomed heartily! In this repo, the main development branch is `develop` and the stable 'production' branch is `master`. Please remember to base your branch from `develop` and issue the pull request back to that branch.
+You can leave either of these things [here][issues]. Pull requests are welcomed heartily, but please read [CONTRIBUTING.md][contrib] first! Basically: in this repo, the main development branch is `develop` and the stable 'production' branch is `master`. Please remember to base your branch from `develop` and issue the pull request back to that branch.
 
 ## Changelog ##
 
+- **v2.11.0**, *11 May 2013*
+  - It isn't broken in ST3 any more. (yay)
+  - New options:
+    - `jsdocs_simple_mode` for when you don't want dynamic templates
+    - `jsdocs_lower_case_primitives` for YUIDoc which requires lower case for primitive data types
+    - `jsdocs_extra_tags_go_after` to put custom text at the end of the docblock
+  - Better handling of IIFEs
+  - Hotkey for reparsing a block changed to <kbd>alt+shift+tab</kbd> to avoid OS-level conflicts
+  - Adding a new line at the start of the docblock is handled properly
+  - C/C++: arguments containing square brackets are handled properly
 - **v2.10.1**, *19 April 2013*
   - Adds variable substitution in `jsdocs_extra_tags`
   - Fixes indentation bug in `jsdocs_extra_tags`
@@ -23,11 +33,6 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
   - Variables starting with `$` are not wiped out when reparsing a docblock (thanks @ryrun)
 - **v2.9.3**, *12 December 2012*
   - Fixed bug which stopped regular comments from closing automatically
-- **v2.9.2**, *11 December 2012*
-  - This one goes out to [Thanasis Polychronakis](https://github.com/thanpolas).
-    - Structure of the modules greatly improved
-    - Fixes bug with matching languages with hyphens in the name
-  - Adds support for CUDA-C++
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
@@ -372,6 +377,7 @@ This is my first package for Sublime Text, and the first time I've written any P
 [![Click here to lend your support to: DocBlockr and make a donation at pledgie.com!](https://pledgie.com/campaigns/16316.png?skin_name=chrome)](http://pledgie.com/campaigns/16316)
 
 [closure]: http://code.google.com/closure/compiler/docs/js-for-compiler.html
+[contrib]: blob/master/CONTRIBUTING.md
 [issues]: https://github.com/spadgos/sublime-jsdocs/issues
 [jsdoc]: http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
 [magicmethods]: http://www.php.net/manual/en/language.oop5.magic.php

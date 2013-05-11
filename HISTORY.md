@@ -1,5 +1,15 @@
 # DocBlockr Extended Changelog
 
+- **v2.11.0**, *11 May 2013*
+  - It isn't broken in ST3 any more. (yay)
+  - New options:
+    - `jsdocs_simple_mode` for when you don't want dynamic templates
+    - `jsdocs_lower_case_primitives` for YUIDoc which requires lower case for primitive data types
+    - `jsdocs_extra_tags_go_after` to put custom text at the end of the docblock
+  - Better handling of IIFEs
+  - Hotkey for reparsing a block changed to <kbd>alt+shift+tab</kbd> to avoid OS-level conflicts
+  - Adding a new line at the start of the docblock is handled properly
+  - C/C++: arguments containing square brackets are handled properly
 - **v2.10.1**, *19 April 2013*
   - Adds variable substitution in `jsdocs_extra_tags`
   - Fixes indentation bug in `jsdocs_extra_tags`
