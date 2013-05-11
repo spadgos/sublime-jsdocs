@@ -260,6 +260,9 @@ class JsdocsParser(object):
         return self.nameOverride
 
     def parse(self, line):
+        if self.viewSettings.get('jsdocs_simple_mode'):
+            return None
+
         out = self.parseFunction(line)  # (name, args, retval, options)
         if (out):
             return self.formatFunction(*out)

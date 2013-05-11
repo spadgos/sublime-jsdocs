@@ -345,11 +345,11 @@ You can access the configuration settings by selecting `Preferences -> Package S
          * @return   {[type]}
          */
 
-- `jsdocs_extra_tags_go_after` *(Boolean)* If true, the extra tags are placed at the end of the block (after param/return).
+- `jsdocs_extra_tags_go_after` *(Boolean)* If true, the extra tags are placed at the end of the block (after param/return). Default: `false`
 
-- `jsdocs_extend_double_slash` *(Boolean)* Whether double-slash comments should be extended. An example of this feature is described above.
+- `jsdocs_extend_double_slash` *(Boolean)* Whether double-slash comments should be extended. An example of this feature is described above. Default: `true`
 
-- `jsdocs_deep_indent` *(Boolean)* Whether pressing tab at the start of a line in docblock should indent to match the previous line's description field. An example of this feature is described above.
+- `jsdocs_deep_indent` *(Boolean)* Whether pressing tab at the start of a line in docblock should indent to match the previous line's description field. An example of this feature is described above. Default: `true`
 
 - `jsdocs_notation_map` *(Array)* An array of notation objects. Each notation object must define either a `prefix` OR a `regex` property, and a `type` property.
 
@@ -360,6 +360,8 @@ You can access the configuration settings by selecting `Preferences -> Package S
 - `jsdocs_indentation_spaces_same_para` *(Number)* Described above in the *Reformatting paragraphs* section. Default: `1`
 
 - `jsdocs_autoadd_method_tag` *(Boolean)* Add a `@method` tag to docblocks of functions. Default: `false`
+
+- `jsdocs_simple_mode` *(Boolean)* If true, DocBlockr won't add a template when creating a doc block before a function or variable. Useful if you don't want to write Javadoc-style, but still want your editor to help when writing block comments. Default: `false` 
 
 This is my first package for Sublime Text, and the first time I've written any Python, so I heartily welcome feedback and [feature requests or bug reports][issues].
 

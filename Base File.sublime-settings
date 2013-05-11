@@ -93,7 +93,8 @@
   "jsdocs_min_spaces_between_columns": 1,
 
   // indicates whether the @method tag should be added automatically
-  "jsdocs_autoadd_method_tag": false
+  "jsdocs_autoadd_method_tag": false,
 
-
+  // If set to true, DocBlockr won't parse any code, providing no default templates. All other functions work as normal.
+  "jsdocs_simple_mode": true
 }
