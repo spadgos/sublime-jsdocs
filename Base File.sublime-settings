@@ -46,6 +46,10 @@
   // Tab points can be added by using snippet syntax, eg: ${1:default text}
   "jsdocs_extra_tags": [],
 
+  // If extra tags are defined, by default they go between the description and the param/return tags. If this is set to
+  // true, the extra tags are placed at the very end.
+  "jsdocs_extra_tags_go_after": false,
+
   // A map to determine the value of variables, should hungarian notation (or similar) be in use
   "jsdocs_notation_map": [],
 
@@ -89,6 +93,11 @@
   "jsdocs_min_spaces_between_columns": 1,
 
   // indicates whether the @method tag should be added automatically
-  "jsdocs_autoadd_method_tag": false
+  "jsdocs_autoadd_method_tag": false,
 
+  // If set to true, DocBlockr won't parse any code, providing no default templates. All other functions work as normal.
+  "jsdocs_simple_mode": false,
+
+  // If set to true, primitives such as "Number" and "String" will be documented as "number" and "string".
+  "jsdocs_lower_case_primitives": false
 }

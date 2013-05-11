@@ -2,28 +2,28 @@
   // open a docblock with enter
   { "keys": ["enter"], "command": "jsdocs",
     "context": [
-      { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,                    "match_all": true },
-      { "key": "selection_empty",       "operator": "equal",          "operand": true,                    "match_all": true },
-      { "key": "auto_complete_visible", "operator": "equal",          "operand": false,                   "match_all": true },
-      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*(\\/\\*|###)\\*$", "match_all": true }
+      { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,                        "match_all": true },
+      { "key": "selection_empty",       "operator": "equal",          "operand": true,                        "match_all": true },
+      { "key": "auto_complete_visible", "operator": "equal",          "operand": false,                       "match_all": true },
+      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*(\\/\\*|###)\\*\\s*$", "match_all": true }
     ]
   },
   // open a docblock with keypad enter
   { "keys": ["keypad_enter"], "command": "jsdocs",
     "context": [
-      { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,                    "match_all": true },
-      { "key": "selection_empty",       "operator": "equal",          "operand": true,                    "match_all": true },
-      { "key": "auto_complete_visible", "operator": "equal",          "operand": false,                   "match_all": true },
-      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*(\\/\\*|###)\\*$", "match_all": true }
+      { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,                        "match_all": true },
+      { "key": "selection_empty",       "operator": "equal",          "operand": true,                        "match_all": true },
+      { "key": "auto_complete_visible", "operator": "equal",          "operand": false,                       "match_all": true },
+      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*(\\/\\*|###)\\*\\s*$", "match_all": true }
     ]
   },
   // open a docblock with tab
   { "keys": ["tab"], "command": "jsdocs",
     "context": [
-      { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,                    "match_all": true },
-      { "key": "selection_empty",       "operator": "equal",          "operand": true,                    "match_all": true },
-      { "key": "auto_complete_visible", "operator": "equal",          "operand": false,                   "match_all": true },
-      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*(\\/\\*|###)\\*$", "match_all": true }
+      { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,                        "match_all": true },
+      { "key": "selection_empty",       "operator": "equal",          "operand": true,                        "match_all": true },
+      { "key": "auto_complete_visible", "operator": "equal",          "operand": false,                       "match_all": true },
+      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*(\\/\\*|###)\\*\\s*$", "match_all": true }
     ]
   },
   // extend a docblock by adding an asterisk at the start
@@ -213,7 +213,7 @@
     ]
   },
   // reparse a comment block's placeholders
-  { "keys": ["ctrl+alt+tab"], "command": "jsdocs_reparse",
+  { "keys": ["shift+alt+tab"], "command": "jsdocs_reparse",
     "context": [
       { "key": "selector", "operator": "equal", "operand": "comment.block" }
     ]

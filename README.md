@@ -1,17 +1,27 @@
-DocBlockr is a [Sublime Text 2][sublime] package which makes writing documentation a breeze. DocBlockr supports **Javascript**, **PHP**, **ActionScript**, **CoffeeScript**, **Java**, **Objective C**, **C** and **C++**.
+DocBlockr is a package for [Sublime Text 2 & 3][sublime] which makes writing documentation a breeze. DocBlockr supports **Javascript**, **PHP**, **ActionScript**, **CoffeeScript**, **Java**, **Objective C**, **C** and **C++**.
 
 ## Installation ##
 
 ### With Package Control ###
 
-**Recommended install**. If you have the [Package Control][package_control] package installed, you can install DocBlockr from inside Sublime Text itself. Open the Command Palette and select "Package Control: Install Package", then search for DocBlockr and you're done!
+With [Package Control][package_control] installed, you can install DocBlockr from inside Sublime Text itself. Open the Command Palette and select "Package Control: Install Package", then search for DocBlockr and you're done!
 
 ## Feature requests & bug reports ##
 
-You can leave either of these things [here][issues]. Pull requests are welcomed heartily! In this repo, the main development branch is `develop` and the stable 'production' branch is `master`. Please remember to base your branch from `develop` and issue the pull request back to that branch.
+You can leave either of these things [here][issues]. Pull requests are welcomed heartily, but please read [CONTRIBUTING.md][contrib] first! Basically: in this repo, the main development branch is `develop` and the stable 'production' branch is `master`. Please remember to base your branch from `develop` and issue the pull request back to that branch.
 
 ## Changelog ##
 
+- **v2.11.0**, *11 May 2013*
+  - It isn't broken in ST3 any more. (yay)
+  - New options:
+    - `jsdocs_simple_mode` for when you don't want dynamic templates
+    - `jsdocs_lower_case_primitives` for YUIDoc which requires lower case for primitive data types
+    - `jsdocs_extra_tags_go_after` to put custom text at the end of the docblock
+  - Better handling of IIFEs
+  - Hotkey for reparsing a block changed to <kbd>alt+shift+tab</kbd> to avoid OS-level conflicts
+  - Adding a new line at the start of the docblock is handled properly
+  - C/C++: arguments containing square brackets are handled properly
 - **v2.10.1**, *19 April 2013*
   - Adds variable substitution in `jsdocs_extra_tags`
   - Fixes indentation bug in `jsdocs_extra_tags`
@@ -23,11 +33,6 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
   - Variables starting with `$` are not wiped out when reparsing a docblock (thanks @ryrun)
 - **v2.9.3**, *12 December 2012*
   - Fixed bug which stopped regular comments from closing automatically
-- **v2.9.2**, *11 December 2012*
-  - This one goes out to [Thanasis Polychronakis](https://github.com/thanpolas).
-    - Structure of the modules greatly improved
-    - Fixes bug with matching languages with hyphens in the name
-  - Adds support for CUDA-C++
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
@@ -62,7 +67,7 @@ If you press asterisk on the first line, it becomes indented with the line above
     /*
     |<<*>>
      */
-    
+
     /*
      *|
      */
@@ -204,14 +209,14 @@ Pressing enter inside a docblock will automatically insert a leading asterisk an
      *  Foo bar
      *  |
      */
-    
+
     -- and --
 
     /**
      *  @param foo Lorem ipsum dolor sit amet, consectetur
      *             adipisicing elit, sed do eiusmod tempor<<enter>>
      */
-    
+
     -- becomes --
 
     /**
@@ -261,12 +266,12 @@ If you write a double-slash comment and then press `Ctrl+Enter`, DocBlockr will 
 
 Sometimes, you'll perform some action which clears the fields (sections of text which you can navigate through using `tab`). This leaves you with a number of placeholders in the DocBlock with no easy way to jump to them.
 
-With DocBlockr, you can reparse a comment and reactivate the fields by pressing the hotkey `Ctrl+Alt+Tab` (`Alt+Shift+Tab` on Linux).
+With DocBlockr, you can reparse a comment and reactivate the fields by pressing the hotkey `Alt+Shift+Tab`
 
 ### Reformatting paragraphs ###
 
 Inside a comment block, hit `Alt+Q` to wrap the lines to make them fit within your rulers. If you would like subsequent lines in a paragraph to be indented, you can adjust the `jsdocs_indentation_spaces_same_para` setting. For example, a value of `3` might look like this:
-    
+
     /**
      * Duis sed arcu non tellus eleifend ullamcorper quis non erat. Curabitur
      *   metus elit, ultrices et tristique a, blandit at justo.
@@ -300,21 +305,21 @@ You can access the configuration settings by selecting `Preferences -> Package S
          */
 
 - `jsdocs_align_tags` *(String)* Whether the words following the tags should align. Possible values are `'no'`, `'shallow'` and `'deep'`
-   
+
     > For backwards compatibility, `false` is equivalent to `'no'`, `true` is equivalent to `'shallow'`
-  
+
     `'shallow'` will align only the first words after the tag. eg:
 
         @param    {MyCustomClass} myVariable desc1
         @return   {String} foo desc2
         @property {Number} blahblah desc3
-  
+
     `'deep'` will align each component of the tags, eg:
 
         @param    {MyCustomClass} myVariable desc1
         @return   {String}        foo        desc2
         @property {Number}        blahblah   desc3
-  
+
 
 - `jsdocs_extra_tags` *(Array.String)* An array of strings, each representing extra boilerplate comments to add to *functions*. These can also include arbitrary text (not just tags).
 
@@ -345,9 +350,11 @@ You can access the configuration settings by selecting `Preferences -> Package S
          * @return   {[type]}
          */
 
-- `jsdocs_extend_double_slash` *(Boolean)* Whether double-slash comments should be extended. An example of this feature is described above.
+- `jsdocs_extra_tags_go_after` *(Boolean)* If true, the extra tags are placed at the end of the block (after param/return). Default: `false`
 
-- `jsdocs_deep_indent` *(Boolean)* Whether pressing tab at the start of a line in docblock should indent to match the previous line's description field. An example of this feature is described above.
+- `jsdocs_extend_double_slash` *(Boolean)* Whether double-slash comments should be extended. An example of this feature is described above. Default: `true`
+
+- `jsdocs_deep_indent` *(Boolean)* Whether pressing tab at the start of a line in docblock should indent to match the previous line's description field. An example of this feature is described above. Default: `true`
 
 - `jsdocs_notation_map` *(Array)* An array of notation objects. Each notation object must define either a `prefix` OR a `regex` property, and a `type` property.
 
@@ -359,6 +366,10 @@ You can access the configuration settings by selecting `Preferences -> Package S
 
 - `jsdocs_autoadd_method_tag` *(Boolean)* Add a `@method` tag to docblocks of functions. Default: `false`
 
+- `jsdocs_simple_mode` *(Boolean)* If true, DocBlockr won't add a template when creating a doc block before a function or variable. Useful if you don't want to write Javadoc-style, but still want your editor to help when writing block comments. Default: `false`
+
+- `jsdocs_lower_case_primitives` *(Boolean)* If true, primitive data types are added in lower case, eg "number" instead of "Number". Default: `false`
+
 This is my first package for Sublime Text, and the first time I've written any Python, so I heartily welcome feedback and [feature requests or bug reports][issues].
 
 ## Show your love ##
@@ -366,6 +377,7 @@ This is my first package for Sublime Text, and the first time I've written any P
 [![Click here to lend your support to: DocBlockr and make a donation at pledgie.com!](https://pledgie.com/campaigns/16316.png?skin_name=chrome)](http://pledgie.com/campaigns/16316)
 
 [closure]: http://code.google.com/closure/compiler/docs/js-for-compiler.html
+[contrib]: blob/master/CONTRIBUTING.md
 [issues]: https://github.com/spadgos/sublime-jsdocs/issues
 [jsdoc]: http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
 [magicmethods]: http://www.php.net/manual/en/language.oop5.magic.php
