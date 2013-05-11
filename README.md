@@ -12,6 +12,8 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
 
 ## Changelog ##
 
+- **v2.11.1**, *11 May 2013*
+  - No changes, just removes some debugging code that wasn't cleaned up in the last release (oops).
 - **v2.11.0**, *11 May 2013*
   - It isn't broken in ST3 any more. (yay)
   - New options:
@@ -31,8 +33,6 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
   - Adds Sublime Text 3 support (thanks to @lxe and @rmarscher)
   - YUI-style `@method` tags can be automatically added with the `jsdocs_autoadd_method_tag` setting (thanks to @maheshjag)
   - Variables starting with `$` are not wiped out when reparsing a docblock (thanks @ryrun)
-- **v2.9.3**, *12 December 2012*
-  - Fixed bug which stopped regular comments from closing automatically
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
