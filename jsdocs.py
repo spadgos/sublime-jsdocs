@@ -314,6 +314,8 @@ class JsdocsParser(object):
             out.append('@private')
             return out
 
+        extraTagAfter = self.viewSettings.get("jsdocs_extra_tags_go_after") or False
+
         description = self.getNameOverride() or ('[%s description]' % escape(name))
         out.append("${1:%s}" % description)
 
@@ -323,7 +325,8 @@ class JsdocsParser(object):
                 escape(name)
             ))
 
-        self.addExtraTags(out)
+        if not extraTagAfter:
+            self.addExtraTags(out)
 
         # if there are arguments, add a @param for each
         if (args):
@@ -375,6 +378,9 @@ class JsdocsParser(object):
         for notation in self.getMatchingNotations(name):
             if 'tags' in notation:
                 out.extend(notation['tags'])
+
+        if extraTagAfter:
+            self.addExtraTags(out)
 
         return out
 

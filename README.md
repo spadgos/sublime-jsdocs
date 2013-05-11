@@ -62,7 +62,7 @@ If you press asterisk on the first line, it becomes indented with the line above
     /*
     |<<*>>
      */
-    
+
     /*
      *|
      */
@@ -204,14 +204,14 @@ Pressing enter inside a docblock will automatically insert a leading asterisk an
      *  Foo bar
      *  |
      */
-    
+
     -- and --
 
     /**
      *  @param foo Lorem ipsum dolor sit amet, consectetur
      *             adipisicing elit, sed do eiusmod tempor<<enter>>
      */
-    
+
     -- becomes --
 
     /**
@@ -266,7 +266,7 @@ With DocBlockr, you can reparse a comment and reactivate the fields by pressing 
 ### Reformatting paragraphs ###
 
 Inside a comment block, hit `Alt+Q` to wrap the lines to make them fit within your rulers. If you would like subsequent lines in a paragraph to be indented, you can adjust the `jsdocs_indentation_spaces_same_para` setting. For example, a value of `3` might look like this:
-    
+
     /**
      * Duis sed arcu non tellus eleifend ullamcorper quis non erat. Curabitur
      *   metus elit, ultrices et tristique a, blandit at justo.
@@ -300,21 +300,21 @@ You can access the configuration settings by selecting `Preferences -> Package S
          */
 
 - `jsdocs_align_tags` *(String)* Whether the words following the tags should align. Possible values are `'no'`, `'shallow'` and `'deep'`
-   
+
     > For backwards compatibility, `false` is equivalent to `'no'`, `true` is equivalent to `'shallow'`
-  
+
     `'shallow'` will align only the first words after the tag. eg:
 
         @param    {MyCustomClass} myVariable desc1
         @return   {String} foo desc2
         @property {Number} blahblah desc3
-  
+
     `'deep'` will align each component of the tags, eg:
 
         @param    {MyCustomClass} myVariable desc1
         @return   {String}        foo        desc2
         @property {Number}        blahblah   desc3
-  
+
 
 - `jsdocs_extra_tags` *(Array.String)* An array of strings, each representing extra boilerplate comments to add to *functions*. These can also include arbitrary text (not just tags).
 
@@ -344,6 +344,8 @@ You can access the configuration settings by selecting `Preferences -> Package S
          * @datetime 2013-03-25T21:16:25+0100
          * @return   {[type]}
          */
+
+- `jsdocs_extra_tags_go_after` *(Boolean)* If true, the extra tags are placed at the end of the block (after param/return).
 
 - `jsdocs_extend_double_slash` *(Boolean)* Whether double-slash comments should be extended. An example of this feature is described above.
 
