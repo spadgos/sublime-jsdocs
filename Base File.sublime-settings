@@ -96,5 +96,8 @@
   "jsdocs_autoadd_method_tag": false,
 
   // If set to true, DocBlockr won't parse any code, providing no default templates. All other functions work as normal.
-  "jsdocs_simple_mode": false
+  "jsdocs_simple_mode": false,
+
+  // If set to true, primitives such as "Number" and "String" will be documented as "number" and "string".
+  "jsdocs_lower_case_primitives": false
 }

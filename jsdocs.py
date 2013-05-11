@@ -546,16 +546,17 @@ class JsdocsJavascript(JsdocsParser):
         return (res.group('name'), res.group('val').strip())
 
     def guessTypeFromValue(self, val):
+        lowerPrimitives = self.viewSettings.get('jsdocs_lower_case_primitives') or False
         if is_numeric(val):
-            return "Number"
+            return "number" if lowerPrimitives else "Number"
         if val[0] == '"' or val[0] == "'":
-            return "String"
+            return "string" if lowerPrimitives else "String"
         if val[0] == '[':
             return "Array"
         if val[0] == '{':
             return "Object"
         if val == 'true' or val == 'false':
-            return 'Boolean'
+            return "boolean" if lowerPrimitives else "Boolean"
         if re.match('RegExp\\b|\\/[^\\/]', val):
             return 'RegExp'
         if val[:4] == 'new ':
@@ -765,16 +766,17 @@ class JsdocsCoffee(JsdocsParser):
         return (res.group('name'), res.group('val').strip())
 
     def guessTypeFromValue(self, val):
+        lowerPrimitives = self.viewSettings.get('jsdocs_lower_case_primitives') or False
         if is_numeric(val):
-            return "Number"
+            return "number" if lowerPrimitives else "Number"
         if val[0] == '"' or val[0] == "'":
-            return "String"
+            return "string" if lowerPrimitives else "String"
         if val[0] == '[':
             return "Array"
         if val[0] == '{':
             return "Object"
         if val == 'true' or val == 'false':
-            return 'Boolean'
+            return "boolean" if lowerPrimitives else "Boolean"
         if re.match('RegExp\\b|\\/[^\\/]', val):
             return 'RegExp'
         if val[:4] == 'new ':
