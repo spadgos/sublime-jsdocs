@@ -73,14 +73,12 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
         self.initialize(self.view, inline)
 
-        # erase characters in the view (will be added to the output later)
-        self.view.erase(edit, self.trailingRgn)
-
-        out = None
-
         if self.parser.isExistingComment(self.line):
             write(self.view, "\n *" + self.indentSpaces)
             return
+
+        # erase characters in the view (will be added to the output later)
+        self.view.erase(edit, self.trailingRgn)
 
         # match against a function declaration.
         out = self.parser.parse(self.line)
@@ -115,7 +113,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             parser.setNameOverride(self.trailingString)
 
         # read the next line
-        self.line = parser.getDefinition(v, point + 1)
+        self.line = parser.getDefinition(v, v.line(point).end() + 1)
 
     def generateSnippet(self, out, inline=False):
         # substitute any variables in the tags
