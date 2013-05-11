@@ -213,7 +213,7 @@
     ]
   },
   // reparse a comment block's placeholders
-  { "keys": ["ctrl+alt+tab"], "command": "jsdocs_reparse",
+  { "keys": ["shift+alt+tab"], "command": "jsdocs_reparse",
     "context": [
       { "key": "selector", "operator": "equal", "operand": "comment.block" }
     ]
