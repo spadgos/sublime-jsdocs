@@ -471,16 +471,23 @@ class JsdocsParser(object):
 
             pos += len(line) + 1
             # strip comments
-            line = re.sub("//.*", "", line)
+            line = re.sub(r"//.*",     "", line)
             line = re.sub(r"/\*.*\*/", "", line)
+            print (line)
             if definition == '':
-                if not self.settings['fnOpener'] or not re.search(self.settings['fnOpener'], line):
+                opener = re.search(self.settings['fnOpener'], line) if self.settings['fnOpener'] else False
+                if not opener:
                     definition = line
-                    break
+                else:
+                    # ignore everything before the function opener
+                    line = line[opener.start():]
+
+
             definition += line
             openBrackets = reduce(countBrackets, re.findall('[()]', line), openBrackets)
             if openBrackets == 0:
                 break
+        print(definition)
         return definition
 
 
