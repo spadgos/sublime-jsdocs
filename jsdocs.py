@@ -1001,7 +1001,7 @@ class JsdocsJava(JsdocsParser):
         definition = ''
         open_curly_annotation = False
         open_paren_annotation = False
-        for i in xrange(0, maxLines):
+        for i in range(0, maxLines):
             line = read_line(view, pos)
             if line is None:
                 break
