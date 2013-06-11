@@ -1,5 +1,5 @@
 """
-DocBlockr v2.11.1
+DocBlockr v2.11.2
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
@@ -209,7 +209,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         def subLine(line):
             return re.sub(r'\{\{([^}]+)\}\}', getVar, line)
 
-        return map(subLine, out)
+        return list(map(subLine, out))
 
     def fixTabStops(self, out):
         tabIndex = counter()
@@ -1001,7 +1001,7 @@ class JsdocsJava(JsdocsParser):
         definition = ''
         open_curly_annotation = False
         open_paren_annotation = False
-        for i in xrange(0, maxLines):
+        for i in range(0, maxLines):
             line = read_line(view, pos)
             if line is None:
                 break
