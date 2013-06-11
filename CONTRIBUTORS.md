@@ -1,4 +1,4 @@
-Many thanks to all those who have sent bug reports and especially to those who sent pull requests. Here are the names of those who have helped:
+Many thanks to all those who have sent bug reports and especially to those who sent pull requests. Here are the names of those who have contributed code:
 
 - Aleksey Smolenchuk (@lxe)
 - Alex Whitman (@alexwhitman)
@@ -17,7 +17,7 @@ Many thanks to all those who have sent bug reports and especially to those who s
 - Nick Fisher (@spadgos)
 - Pavel Voronin (@pavel-voronin)
 - Rafal Chlodnicki (@rchl)
-- Roberto (@phproberto)
+- Roberto Segura (@phproberto)
 - Scott Kuroda (@skuroda)
 - Sven Axelsson (@svenax)
 - Thanasis Polychronakis (@thanpolas)
