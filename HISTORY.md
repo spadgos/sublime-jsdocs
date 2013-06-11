@@ -1,5 +1,7 @@
 # DocBlockr Extended Changelog
 
+- **v2.11.2**, *12 June 2013*
+  - Compatibility fixes for ST3, thanks to Marc Neuhaus (@mneuhaus) and Daniel Julius Lasiman (@danieljl).
 - **v2.11.1**, *11 May 2013*
   - No changes, just removes some debugging code that wasn't cleaned up in the last release (oops).
 - **v2.11.0**, *11 May 2013*

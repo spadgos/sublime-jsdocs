@@ -12,6 +12,8 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
 
 ## Changelog ##
 
+- **v2.11.2**, *12 June 2013*
+  - Compatibility fixes for ST3, thanks to Marc Neuhaus (@mneuhaus) and Daniel Julius Lasiman (@danieljl).
 - **v2.11.1**, *11 May 2013*
   - No changes, just removes some debugging code that wasn't cleaned up in the last release (oops).
 - **v2.11.0**, *11 May 2013*
@@ -29,10 +31,6 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
   - Fixes indentation bug in `jsdocs_extra_tags`
   - Fixes bug when adding a new line after a docblock which contains text afterwards
   - Fixes link to Pledgie (thanks @Krinkle)
-- **v2.10.0**, *21 February 2013*
-  - Adds Sublime Text 3 support (thanks to @lxe and @rmarscher)
-  - YUI-style `@method` tags can be automatically added with the `jsdocs_autoadd_method_tag` setting (thanks to @maheshjag)
-  - Variables starting with `$` are not wiped out when reparsing a docblock (thanks @ryrun)
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
