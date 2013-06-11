@@ -209,7 +209,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         def subLine(line):
             return re.sub(r'\{\{([^}]+)\}\}', getVar, line)
 
-        return map(subLine, out)
+        return list(map(subLine, out))
 
     def fixTabStops(self, out):
         tabIndex = counter()
