@@ -60,16 +60,6 @@ Single-asterisk comment blocks behave similarly:
     |
      */
 
-If you press asterisk on the first line, it becomes indented with the line above:
-
-    /*
-    |<<*>>
-     */
-
-    /*
-     *|
-     */
-
 ### Function documentation ###
 
 However, if the line directly afterwards contains a function definition, then its name and parameters are parsed and some documentation is automatically added.
