@@ -42,82 +42,28 @@ Older history can be found in [the history file](https://github.com/spadgos/subl
 
 Pressing **enter** or **tab** after `/**` (or `###*` for Coffee-Script) will yield a new line and will close the comment.
 
-    /**<<enter>>
-
-    -- becomes --
-
-    /**
-     * |
-     */
+![](http://spadgos.github.io/sublime-jsdocs/images/basic.gif)
 
 Single-asterisk comment blocks behave similarly:
 
-    /*<<enter>
-
-    -- becomes --
-
-    /*
-    |
-     */
+![](http://spadgos.github.io/sublime-jsdocs/images/basic-block.gif)
 
 ### Function documentation ###
 
 However, if the line directly afterwards contains a function definition, then its name and parameters are parsed and some documentation is automatically added.
 
-    /**<<enter>>
-    function foobar (baz, quux) { }
-
-    -- becomes --
-
-    /**
-     * [foobar description]
-     * @param  {[type]} baz [description]
-     * @param  {[type]} quux [description]
-     * @return {[type]}
-     */
-    function foobar (baz, quux) { }
+![](http://spadgos.github.io/sublime-jsdocs/images/function-template.gif)
 
 You can then press `tab` to move between the different fields.
 
 If you have many arguments, or long variable names, it might be useful to spread your arguments across multiple lines. DocBlockr will handle this situation too:
 
-    /**<<enter>>
-    function someLongFunctionName(
-            withArguments, across,
-            many, lines
-        ) {
-
-    -- becomes --
-
-    /**
-     * [someLongFunctionName description]
-     * @param  {[type]} withArguments [description]
-     * @param  {[type]} across        [description]
-     * @param  {[type]} many          [description]
-     * @param  {[type]} lines         [description]
-     * @return {[type]}               [description]
-     */
-    function someLongFunctionName(
-            withArguments, across,
-            many, lines
-        ) {
+![](http://spadgos.github.io/sublime-jsdocs/images/long-args.gif)
 
 
-In PHP, if [type hinting][typehinting] or default values are used, then those types are prefilled as the datatypes.
+In languages which support [type hinting][typehinting] or default values, then those types are prefilled as the datatypes.
 
-    /**|<<enter>>
-    function foo(Array $arr, MyClass $cls, $str = "abc", $i = 0, $b = false) {}
-
-    /**
-     * [foo description]
-     * @param  Array $arr [description]
-     * @param  MyClass $cls [description]
-     * @param  string $str [description]
-     * @param  int $i [description]
-     * @param  bool $b [description]
-     * @return [type]
-     */
-    function foo(Array $arr, MyClass $cls, $str = "abc", $i = 0) {}
+![](http://spadgos.github.io/sublime-jsdocs/images/type-hinting.gif)
 
 DocBlockr will try to make an intelligent guess about the return value of the function.
 
@@ -137,25 +83,9 @@ In Javascript, functions beginning with an underscore are given a `@private` tag
 
 If the line following your docblock contains a variable declaration, DocBlockr will try to determine the data type of the variable and insert that into the comment.
 
-    /**<<enter>>
-    foo = 1
-
-    -- becomes --
-
-    /**
-     * [foo description]
-     * @type {Number}
-     */
-    foo = 1
-
 If you press `shift+enter` after the opening `/**` then the docblock will be inserted inline.
 
-    /**<<shift+enter>>
-    bar = new Module();
-
-    -- becomes --
-    /** @type {Module} [bar description] */
-    bar = new Module();
+![](http://spadgos.github.io/sublime-jsdocs/images/vars.gif)
 
 DocBlockr will also try to determine the type of the variable from its name. Variables starting with `is` or `has` are assumed to be booleans, and `callback`, `cb`, `done`, `fn`, and `next` are assumed to be functions. If you use your own variable naming system (eg: hungarian notation: booleans all start with `b`, arrays start with `arr`), you can define these rules yourself. Modify the `jsdocs_notation_map` setting *(in `Base File.sublime-settings`)* like so:
 
@@ -187,56 +117,19 @@ The notation map can also be used to add arbitrary tags, according to your own c
 
 Pressing enter inside a docblock will automatically insert a leading asterisk and maintain your indentation.
 
-    /**
-     *  Foo bar<<enter>>
-     */
+![](http://spadgos.github.io/sublime-jsdocs/images/auto-indent.gif)
 
-    -- becomes --
-
-    /**
-     *  Foo bar
-     *  |
-     */
-
-    -- and --
-
-    /**
-     *  @param foo Lorem ipsum dolor sit amet, consectetur
-     *             adipisicing elit, sed do eiusmod tempor<<enter>>
-     */
-
-    -- becomes --
-
-    /**
-     *  @param foo Lorem ipsum dolor sit amet, consectetur
-     *             adipisicing elit, sed do eiusmod tempor
-     *             |
-     */
+![](http://spadgos.github.io/sublime-jsdocs/images/auto-indent-2.gif)
 
 This applies to docblock comments `/** like this */` as well as inline double-slash comments `// like this`
 
-    //   foo<<enter>>
-
-    -- becomes
-
-    //   foo
-    //   |
+![](http://spadgos.github.io/sublime-jsdocs/images/single-line.gif)
 
 In either case, you can press `shift+enter` to stop the automatic extension.
 
 Oftentimes, when documenting a parameter, or adding a description to a tag, your description will cover multiple lines. If the line you are on is directly following a tag line, pressing `tab` will move the indentation to the correct position.
 
-    /**
-     * @param {String} foo Lorem ipsum dolor sit amet
-     * |<<tab>>
-     */
-
-     -- becomes
-
-    /**
-     * @param {String} foo Lorem ipsum dolor sit amet
-     *                     |
-     */
+![](http://spadgos.github.io/sublime-jsdocs/images/deep-indent.gif)
 
 ### Comment decoration ###
 
