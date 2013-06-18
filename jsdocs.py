@@ -1,5 +1,5 @@
 """
-DocBlockr v2.11.2
+DocBlockr v2.11.3
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
@@ -62,7 +62,7 @@ def getParser(view):
         return JsdocsCPP(viewSettings)
     elif sourceLang == 'objc' or sourceLang == 'objc++':
         return JsdocsObjC(viewSettings)
-    elif sourceLang == 'java':
+    elif sourceLang == 'java' or sourceLang == 'groovy':
         return JsdocsJava(viewSettings)
     return JsdocsJavascript(viewSettings)
 
