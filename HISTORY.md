@@ -1,5 +1,8 @@
 # DocBlockr Extended Changelog
 
+- **v2.11.3**, *18 June 2013*
+  - Adds support for Groovy (thanks to [Tiago Santos](https://github.com/tmcsantos))
+  - README has gifs. So many gifs.
 - **v2.11.2**, *12 June 2013*
   - Compatibility fixes for ST3, thanks to Marc Neuhaus (@mneuhaus) and Daniel Julius Lasiman (@danieljl).
 - **v2.11.1**, *11 May 2013*
