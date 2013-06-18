@@ -1,4 +1,4 @@
-DocBlockr is a package for [Sublime Text 2 & 3][sublime] which makes writing documentation a breeze. DocBlockr supports **Javascript**, **PHP**, **ActionScript**, **CoffeeScript**, **Java**, **Objective C**, **C** and **C++**.
+DocBlockr is a package for [Sublime Text 2 & 3][sublime] which makes writing documentation a breeze. DocBlockr supports **Javascript**, **PHP**, **ActionScript**, **CoffeeScript**, **Java**, **Groovy**, **Objective C**, **C** and **C++**.
 
 ## Installation ##
 
@@ -12,6 +12,9 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
 
 ## Changelog ##
 
+- **v2.11.3**, *18 June 2013*
+  - Adds support for Groovy (thanks to [Tiago Santos](https://github.com/tmcsantos))
+  - README has gifs. So many gifs.
 - **v2.11.2**, *12 June 2013*
   - Compatibility fixes for ST3, thanks to Marc Neuhaus (@mneuhaus) and Daniel Julius Lasiman (@danieljl).
 - **v2.11.1**, *11 May 2013*
@@ -26,11 +29,6 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
   - Hotkey for reparsing a block changed to <kbd>alt+shift+tab</kbd> to avoid OS-level conflicts
   - Adding a new line at the start of the docblock is handled properly
   - C/C++: arguments containing square brackets are handled properly
-- **v2.10.1**, *19 April 2013*
-  - Adds variable substitution in `jsdocs_extra_tags`
-  - Fixes indentation bug in `jsdocs_extra_tags`
-  - Fixes bug when adding a new line after a docblock which contains text afterwards
-  - Fixes link to Pledgie (thanks @Krinkle)
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 

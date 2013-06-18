@@ -21,5 +21,6 @@ Many thanks to all those who have sent bug reports and especially to those who s
 - Scott Kuroda (@skuroda)
 - Sven Axelsson (@svenax)
 - Thanasis Polychronakis (@thanpolas)
+- Tiago Santos (@tmcsantos)
 - Timo Tijhof (@Krinkle)
 - wronex (@wronex)
