@@ -1,5 +1,7 @@
 # DocBlockr Extended Changelog
 
+- **v2.11.5**, *11 Aug 2013*
+  - Fix for last deploy which accidentally changed the default `var` tag to "property". Default is "type" once again.
 - **v2.11.4**, *10 Aug 2013*
   - The tag used on `var` declarations can be customised (eg: to "property" for YUIDoc)
   - Small fix for function declarations in C/C++ (thanks to [Simon Aittamaa](https://github.com/simait))
