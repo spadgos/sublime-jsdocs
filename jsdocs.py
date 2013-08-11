@@ -496,7 +496,7 @@ class JsdocsJavascript(JsdocsParser):
             # curly brackets around the type information
             "curlyTypes": True,
             'typeInfo': True,
-            "typeTag": "type",
+            "typeTag": self.viewSettings.get('jsdocs_override_js_var') or "type",
             # technically, they can contain all sorts of unicode, but w/e
             "varIdentifier": identifier,
             "fnIdentifier":  identifier,
@@ -719,7 +719,7 @@ class JsdocsCoffee(JsdocsParser):
         self.settings = {
             # curly brackets around the type information
             'curlyTypes': True,
-            'typeTag': "type",
+            'typeTag': self.viewSettings.get('jsdocs_override_js_var') or "type",
             'typeInfo': True,
             # technically, they can contain all sorts of unicode, but w/e
             'varIdentifier': identifier,
