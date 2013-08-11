@@ -405,14 +405,52 @@ class JsdocsParser(object):
         return self.guessTypeFromName(name) or False
 
     def parseArgs(self, args):
-        """ an array of tuples, the first being the best guess at the type, the second being the name """
+        """
+        an array of tuples, the first being the best guess at the type, the second being the name
+        """
         out = []
 
         if not args:
             return out
 
-        for arg in re.split('\s*,\s*', args):
-            arg = arg.strip()
+        # the current token
+        current = ''
+
+        # characters which open a section inside which commas are not separators between different arguments
+        openQuotes  = '"\'<'
+        # characters which close the the section. The position of the character here should match the opening
+        # indicator in `openQuotes`
+        closeQuotes = '"\'>'
+
+        matchingQuote = ''
+        insideQuotes = False
+        nextIsLiteral = False
+        blocks = []
+
+        for char in args:
+            if nextIsLiteral:  # previous char was a \
+                current += char
+                nextIsLiteral = False
+            elif char == '\\':
+                nextIsLiteral = True
+            elif insideQuotes:
+                current += char
+                if char == matchingQuote:
+                    insideQuotes = False
+            else:
+                if char == ',':
+                    blocks.append(current.strip())
+                    current = ''
+                else:
+                    current += char
+                    quoteIndex = openQuotes.find(char)
+                    if quoteIndex > -1:
+                        matchingQuote = closeQuotes[quoteIndex]
+                        insideQuotes = True
+
+        blocks.append(current.strip())
+
+        for arg in blocks:
             out.append((self.getArgType(arg), self.getArgName(arg)))
         return out
 
