@@ -180,7 +180,8 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         minColSpaces = self.settings.get('jsdocs_min_spaces_between_columns', 1)
 
         for index, line in enumerate(out):
-            if line.startswith('@'):
+            # format the spacing of columns, but ignore the author tag. (See #197)
+            if line.startswith('@') and not line.startswith('@author'):
                 newOut = []
                 for partIndex, part in enumerate(line.split(" ")):
                     newOut.append(part)
