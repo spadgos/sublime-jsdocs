@@ -1,5 +1,5 @@
 """
-DocBlockr v2.11.3
+DocBlockr v2.11.4
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
@@ -496,7 +496,7 @@ class JsdocsJavascript(JsdocsParser):
             # curly brackets around the type information
             "curlyTypes": True,
             'typeInfo': True,
-            "typeTag": "type",
+            "typeTag": self.viewSettings.get('jsdocs_override_js_var') or "type",
             # technically, they can contain all sorts of unicode, but w/e
             "varIdentifier": identifier,
             "fnIdentifier":  identifier,
@@ -681,7 +681,7 @@ class JsdocsCPP(JsdocsParser):
     def parseFunction(self, line):
         res = re.search(
             '(?P<retval>' + self.settings['varIdentifier'] + ')[&*\\s]+'
-            + '(?P<name>' + self.settings['varIdentifier'] + ')'
+            + '(?P<name>' + self.settings['varIdentifier'] + ');?'
             # void fnName
             # (arg1, arg2)
             + '\\s*\\(\\s*(?P<args>.*)\)',
@@ -719,7 +719,7 @@ class JsdocsCoffee(JsdocsParser):
         self.settings = {
             # curly brackets around the type information
             'curlyTypes': True,
-            'typeTag': "type",
+            'typeTag': self.viewSettings.get('jsdocs_override_js_var') or "type",
             'typeInfo': True,
             # technically, they can contain all sorts of unicode, but w/e
             'varIdentifier': identifier,

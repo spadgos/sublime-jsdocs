@@ -1,5 +1,8 @@
 # DocBlockr Extended Changelog
 
+- **v2.11.4**, *10 Aug 2013*
+  - The tag used on `var` declarations can be customised (eg: to "property" for YUIDoc)
+  - Small fix for function declarations in C/C++ (thanks to [Simon Aittamaa](https://github.com/simait))
 - **v2.11.3**, *18 June 2013*
   - Adds support for Groovy (thanks to [Tiago Santos](https://github.com/tmcsantos))
   - README has gifs. So many gifs.
