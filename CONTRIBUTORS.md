@@ -19,6 +19,7 @@ Many thanks to all those who have sent bug reports and especially to those who s
 - Rafal Chlodnicki (@rchl)
 - Roberto Segura (@phproberto)
 - Scott Kuroda (@skuroda)
+- Simon Aittamaa (@simait)
 - Sven Axelsson (@svenax)
 - Thanasis Polychronakis (@thanpolas)
 - Tiago Santos (@tmcsantos)
