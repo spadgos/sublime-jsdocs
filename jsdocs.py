@@ -159,7 +159,9 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         #  skip the first one, since that's always the "description" line
         for line in out:
             if line.startswith('@'):
-                widths.append(list(map(outputWidth, line.split(" "))))
+                # ignore all the words after `@author`
+                columns = line.split(" ") if not line.startswith('@author') else ['@author']
+                widths.append(list(map(outputWidth, columns)))
                 maxCols = max(maxCols, len(widths[-1]))
 
         #  initialise a list to 0
