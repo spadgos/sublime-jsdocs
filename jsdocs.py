@@ -320,7 +320,7 @@ class JsdocsParser(object):
 
         extraTagAfter = self.viewSettings.get("jsdocs_extra_tags_go_after") or False
 
-        description = self.getNameOverride() or ('[%s description]' % escape(name))
+        description = self.getNameOverride() or ('[%s%sdescription]' % (escape(name), ' ' if name else ''))
         out.append("${1:%s}" % description)
 
         if (self.viewSettings.get("jsdocs_autoadd_method_tag") is True):
