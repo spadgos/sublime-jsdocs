@@ -27,7 +27,7 @@ Older history can be found in [the history file](https://github.com/spadgos/subl
 
 ## Usage ##
 
-> Below are some examples of what the package does. The pipe (`|`) indicates where the cursor will be after the action has run. Note that there are no keyboard shortcuts required to trigger these completions - just type as normal and it happens for you!
+> Below are some examples of what the package does. Note that there are no keyboard shortcuts required to trigger these completions - just type as normal and it happens for you!
 
 ### Docblock completion ###
 
@@ -51,7 +51,6 @@ If you have many arguments, or long variable names, it might be useful to spread
 
 ![](http://spadgos.github.io/sublime-jsdocs/images/long-args.gif)
 
-
 In languages which support [type hinting][typehinting] or default values, then those types are prefilled as the datatypes.
 
 ![](http://spadgos.github.io/sublime-jsdocs/images/type-hinting.gif)
@@ -61,14 +60,11 @@ DocBlockr will try to make an intelligent guess about the return value of the fu
 - If the function name is or begins with "set" or "add", then no `@return` is inserted.
 - If the function name is or begins with "is" or "has", then it is assumed to return a `Boolean`.
 - In Javascript, if the function begins with an uppercase letter then it is assumed that the function is a class definition. No `@return` tag is added.
-- In Javascript, functions beginning with an underscore are assumed to be private: `@private` is added to these.
 - In PHP, some of the [magic methods][magicmethods] have their values prefilled:
   - `__construct`, `__destruct`, `__set`, `__unset`, `__wakeup` have no `@return` tag.
   - `__sleep` returns an `Array`.
   - `__toString` returns a `string`.
   - `__isset` returns a `bool`.
-
-In Javascript, functions beginning with an underscore are given a `@private` tag by default.
 
 ### Variable documentation ###
 
@@ -80,7 +76,7 @@ If you press `shift+enter` after the opening `/**` then the docblock will be ins
 
 DocBlockr will also try to determine the type of the variable from its name. Variables starting with `is` or `has` are assumed to be booleans, and `callback`, `cb`, `done`, `fn`, and `next` are assumed to be functions. If you use your own variable naming system (eg: hungarian notation: booleans all start with `b`, arrays start with `arr`), you can define these rules yourself. Modify the `jsdocs_notation_map` setting *(in `Base File.sublime-settings`)* like so:
 
-```javascript
+```json
 {
     "jsdocs_notation_map": [
         {
@@ -97,7 +93,7 @@ DocBlockr will also try to determine the type of the variable from its name. Var
 
 The notation map can also be used to add arbitrary tags, according to your own code conventions. For example, if your conventions state that functions beginning with an underscore are private, you could add this to the `jsdocs_notation_map`:
 
-```javascript
+```json
 {
     "prefix": "_",
     "tags": ["@private"]
