@@ -502,6 +502,7 @@ class JsdocsParser(object):
 
         definition = ''
 
+        # count the number of open parentheses
         def countBrackets(total, bracket):
             return total + (1 if bracket == '(' else -1)
 
@@ -514,17 +515,21 @@ class JsdocsParser(object):
             # strip comments
             line = re.sub(r"//.*",     "", line)
             line = re.sub(r"/\*.*\*/", "", line)
+
+            searchForBrackets = line
+
+            # on the first line, only start looking from *after* the actual function starts. This is
+            # needed for cases like this:
+            # (function (foo, bar) { ... })
             if definition == '':
                 opener = re.search(self.settings['fnOpener'], line) if self.settings['fnOpener'] else False
-                if not opener:
-                    definition = line
-                else:
+                if opener:
                     # ignore everything before the function opener
-                    line = line[opener.start():]
+                    searchForBrackets = line[opener.start():]
 
+            openBrackets = reduce(countBrackets, re.findall('[()]', searchForBrackets), openBrackets)
 
             definition += line
-            openBrackets = reduce(countBrackets, re.findall('[()]', line), openBrackets)
             if openBrackets == 0:
                 break
         return definition
@@ -541,7 +546,7 @@ class JsdocsJavascript(JsdocsParser):
             # technically, they can contain all sorts of unicode, but w/e
             "varIdentifier": identifier,
             "fnIdentifier":  identifier,
-            "fnOpener": 'function(?:\\s+' + identifier + ')?\\s*\\(',
+            "fnOpener": r'function(?:\s+' + identifier + r')?\s*\(',
             "commentCloser": " */",
             "bool": "Boolean",
             "function": "Function"
@@ -550,12 +555,12 @@ class JsdocsJavascript(JsdocsParser):
     def parseFunction(self, line):
         res = re.search(
             #   fnName = function,  fnName : function
-            '(?:(?P<name1>' + self.settings['varIdentifier'] + ')\s*[:=]\s*)?'
+            r'(?:(?P<name1>' + self.settings['varIdentifier'] + r')\s*[:=]\s*)?'
             + 'function'
             # function fnName
-            + '(?:\s+(?P<name2>' + self.settings['fnIdentifier'] + '))?'
+            + r'(?:\s+(?P<name2>' + self.settings['fnIdentifier'] + '))?'
             # (arg1, arg2)
-            + '\s*\(\s*(?P<args>.*)\)',
+            + r'\s*\(\s*(?P<args>.*)\)',
             line
         )
         if not res:
