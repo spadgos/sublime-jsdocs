@@ -12,6 +12,11 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
 
 ## Changelog ##
 
+- **v2.11.6**, *14 Aug 2013*
+  - Predefined `@author` tags do not get parsed for column spacing
+  - Handles the case when an arguments list contains a comma, for example, within a default value
+  - A new keybinding for Windows to re-parse a doc block (<kbd>Alt+W</kbd>)
+  - Fixes a regression that some function names were not being parsed correctly
 - **v2.11.5**, *11 Aug 2013*
   - Fix for last deploy which accidentally changed the default `var` tag to "property". Default is "type" once again.
 - **v2.11.4**, *10 Aug 2013*
