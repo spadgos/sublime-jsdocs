@@ -1,5 +1,5 @@
 """
-DocBlockr v2.11.5
+DocBlockr v2.11.6
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
 """
@@ -159,7 +159,9 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         #  skip the first one, since that's always the "description" line
         for line in out:
             if line.startswith('@'):
-                widths.append(list(map(outputWidth, line.split(" "))))
+                # ignore all the words after `@author`
+                columns = line.split(" ") if not line.startswith('@author') else ['@author']
+                widths.append(list(map(outputWidth, columns)))
                 maxCols = max(maxCols, len(widths[-1]))
 
         #  initialise a list to 0
@@ -180,7 +182,8 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         minColSpaces = self.settings.get('jsdocs_min_spaces_between_columns', 1)
 
         for index, line in enumerate(out):
-            if line.startswith('@'):
+            # format the spacing of columns, but ignore the author tag. (See #197)
+            if line.startswith('@') and not line.startswith('@author'):
                 newOut = []
                 for partIndex, part in enumerate(line.split(" ")):
                     newOut.append(part)
@@ -317,7 +320,7 @@ class JsdocsParser(object):
 
         extraTagAfter = self.viewSettings.get("jsdocs_extra_tags_go_after") or False
 
-        description = self.getNameOverride() or ('[%s description]' % escape(name))
+        description = self.getNameOverride() or ('[%s%sdescription]' % (escape(name), ' ' if name else ''))
         out.append("${1:%s}" % description)
 
         if (self.viewSettings.get("jsdocs_autoadd_method_tag") is True):
@@ -402,14 +405,52 @@ class JsdocsParser(object):
         return self.guessTypeFromName(name) or False
 
     def parseArgs(self, args):
-        """ an array of tuples, the first being the best guess at the type, the second being the name """
+        """
+        an array of tuples, the first being the best guess at the type, the second being the name
+        """
         out = []
 
         if not args:
             return out
 
-        for arg in re.split('\s*,\s*', args):
-            arg = arg.strip()
+        # the current token
+        current = ''
+
+        # characters which open a section inside which commas are not separators between different arguments
+        openQuotes  = '"\'<'
+        # characters which close the the section. The position of the character here should match the opening
+        # indicator in `openQuotes`
+        closeQuotes = '"\'>'
+
+        matchingQuote = ''
+        insideQuotes = False
+        nextIsLiteral = False
+        blocks = []
+
+        for char in args:
+            if nextIsLiteral:  # previous char was a \
+                current += char
+                nextIsLiteral = False
+            elif char == '\\':
+                nextIsLiteral = True
+            elif insideQuotes:
+                current += char
+                if char == matchingQuote:
+                    insideQuotes = False
+            else:
+                if char == ',':
+                    blocks.append(current.strip())
+                    current = ''
+                else:
+                    current += char
+                    quoteIndex = openQuotes.find(char)
+                    if quoteIndex > -1:
+                        matchingQuote = closeQuotes[quoteIndex]
+                        insideQuotes = True
+
+        blocks.append(current.strip())
+
+        for arg in blocks:
             out.append((self.getArgType(arg), self.getArgName(arg)))
         return out
 
@@ -461,6 +502,7 @@ class JsdocsParser(object):
 
         definition = ''
 
+        # count the number of open parentheses
         def countBrackets(total, bracket):
             return total + (1 if bracket == '(' else -1)
 
@@ -473,17 +515,21 @@ class JsdocsParser(object):
             # strip comments
             line = re.sub(r"//.*",     "", line)
             line = re.sub(r"/\*.*\*/", "", line)
+
+            searchForBrackets = line
+
+            # on the first line, only start looking from *after* the actual function starts. This is
+            # needed for cases like this:
+            # (function (foo, bar) { ... })
             if definition == '':
                 opener = re.search(self.settings['fnOpener'], line) if self.settings['fnOpener'] else False
-                if not opener:
-                    definition = line
-                else:
+                if opener:
                     # ignore everything before the function opener
-                    line = line[opener.start():]
+                    searchForBrackets = line[opener.start():]
 
+            openBrackets = reduce(countBrackets, re.findall('[()]', searchForBrackets), openBrackets)
 
             definition += line
-            openBrackets = reduce(countBrackets, re.findall('[()]', line), openBrackets)
             if openBrackets == 0:
                 break
         return definition
@@ -500,7 +546,7 @@ class JsdocsJavascript(JsdocsParser):
             # technically, they can contain all sorts of unicode, but w/e
             "varIdentifier": identifier,
             "fnIdentifier":  identifier,
-            "fnOpener": 'function(?:\\s+' + identifier + ')?\\s*\\(',
+            "fnOpener": r'function(?:\s+' + identifier + r')?\s*\(',
             "commentCloser": " */",
             "bool": "Boolean",
             "function": "Function"
@@ -509,12 +555,12 @@ class JsdocsJavascript(JsdocsParser):
     def parseFunction(self, line):
         res = re.search(
             #   fnName = function,  fnName : function
-            '(?:(?P<name1>' + self.settings['varIdentifier'] + ')\s*[:=]\s*)?'
+            r'(?:(?P<name1>' + self.settings['varIdentifier'] + r')\s*[:=]\s*)?'
             + 'function'
             # function fnName
-            + '(?:\s+(?P<name2>' + self.settings['fnIdentifier'] + '))?'
+            + r'(?:\s+(?P<name2>' + self.settings['fnIdentifier'] + '))?'
             # (arg1, arg2)
-            + '\s*\(\s*(?P<args>.*)\)',
+            + r'\s*\(\s*(?P<args>.*)\)',
             line
         )
         if not res:
