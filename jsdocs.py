@@ -417,10 +417,10 @@ class JsdocsParser(object):
         current = ''
 
         # characters which open a section inside which commas are not separators between different arguments
-        openQuotes  = '"\'<'
+        openQuotes  = '"\'<('
         # characters which close the the section. The position of the character here should match the opening
         # indicator in `openQuotes`
-        closeQuotes = '"\'>'
+        closeQuotes = '"\'>)'
 
         matchingQuote = ''
         insideQuotes = False
@@ -718,7 +718,7 @@ class JsdocsCPP(JsdocsParser):
             'typeTag': 'param',
             'commentCloser': ' */',
             'fnIdentifier': identifier,
-            'varIdentifier': identifier + '(?:\\[' + identifier + '\\])?',
+            'varIdentifier': '(' + identifier + ')\\s*(?:\\[(?:' + identifier + ')?\\]|\\((?:(?:\\s*,\\s*)?[a-z]+)+\\s*\\))?',
             'fnOpener': identifier + '\\s+' + identifier + '\\s*\\(',
             'bool': 'bool',
             'function': 'function'
@@ -747,7 +747,7 @@ class JsdocsCPP(JsdocsParser):
         return None
 
     def getArgName(self, arg):
-        return re.search("(" + self.settings['varIdentifier'] + r")(?:\s*\[\s*\])?(?:\s*=.*)?$", arg).group(1)
+        return re.search(self.settings['varIdentifier'] + r"(?:\s*=.*)?$", arg).group(1)
 
     def parseVar(self, line):
         return None
