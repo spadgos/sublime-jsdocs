@@ -64,6 +64,8 @@ def getParser(view):
         return JsdocsObjC(viewSettings)
     elif sourceLang == 'java' or sourceLang == 'groovy':
         return JsdocsJava(viewSettings)
+    elif sourceLang == 'rust':
+        return JsdocsRust(viewSettings)
     return JsdocsJavascript(viewSettings)
 
 
@@ -1089,6 +1091,32 @@ class JsdocsJava(JsdocsParser):
                 break
         return definition
 
+class JsdocsRust(JsdocsParser):
+    def setupSettings(self):
+        self.settings = {
+            "curlyTypes": False,
+            'typeInfo': False,
+            "typeTag": False,
+            "varIdentifier": ".*",
+            "fnIdentifier":  ".*",
+            "fnOpener": "^\s*fn",
+            "commentCloser": " */",
+            "bool": "Boolean",
+            "function": "Function"
+        }
+
+    def parseFunction(self, line):
+        res = re.search('\s*fn\s+(?P<name>\S+)', line)
+        if not res:
+            return None
+
+        name = res.group('name').join('');
+
+        return (name, [])
+
+    def formatFunction(self, name, args):
+        return name
+
 ############################################################33
 
 
@@ -1133,7 +1161,7 @@ class JsdocsJoinCommand(sublime_plugin.TextCommand):
         v = self.view
         for sel in v.sel():
             for lineRegion in reversed(v.lines(sel)):
-                v.replace(edit, v.find("[ \\t]*\\n[ \\t]*((?:\\*|//|#)[ \\t]*)?", lineRegion.begin()), ' ')
+                v.replace(edit, v.find("[ \\t]*\\n[ \\t]*((?:\\*|//[!/]?|#)[ \\t]*)?", lineRegion.begin()), ' ')
 
 
 class JsdocsDecorateCommand(sublime_plugin.TextCommand):
