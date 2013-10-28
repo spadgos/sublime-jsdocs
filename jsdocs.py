@@ -593,6 +593,7 @@ class JsdocsJavascript(JsdocsParser):
 
     def guessTypeFromValue(self, val):
         lowerPrimitives = self.viewSettings.get('jsdocs_lower_case_primitives') or False
+        shortPrimitives = self.viewSettings.get('jsdocs_short_primitives') or False
         if is_numeric(val):
             return "number" if lowerPrimitives else "Number"
         if val[0] == '"' or val[0] == "'":
@@ -602,7 +603,8 @@ class JsdocsJavascript(JsdocsParser):
         if val[0] == '{':
             return "Object"
         if val == 'true' or val == 'false':
-            return "boolean" if lowerPrimitives else "Boolean"
+            returnVal = 'Bool' if shortPrimitives else 'Boolean'
+            return returnVal.lower() if lowerPrimitives else returnVal
         if re.match('RegExp\\b|\\/[^\\/]', val):
             return 'RegExp'
         if val[:4] == 'new ':
@@ -613,6 +615,7 @@ class JsdocsJavascript(JsdocsParser):
 
 class JsdocsPHP(JsdocsParser):
     def setupSettings(self):
+        shortPrimitives = self.viewSettings.get('jsdocs_short_primitives') or False
         nameToken = '[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*'
         self.settings = {
             # curly brackets around the type information
@@ -623,7 +626,7 @@ class JsdocsPHP(JsdocsParser):
             'fnIdentifier': nameToken,
             'fnOpener': 'function(?:\\s+' + nameToken + ')?\\s*\\(',
             'commentCloser': ' */',
-            'bool': "boolean",
+            'bool': 'bool' if shortPrimitives else 'boolean',
             'function': "function"
         }
 
@@ -684,20 +687,22 @@ class JsdocsPHP(JsdocsParser):
         return None
 
     def guessTypeFromValue(self, val):
+        shortPrimitives = self.viewSettings.get('jsdocs_short_primitives') or False
         if is_numeric(val):
-            return "float" if '.' in val else "integer"
+            return "float" if '.' in val else 'int' if shortPrimitives else 'integer'
         if val[0] == '"' or val[0] == "'":
             return "string"
         if val[:5] == 'array':
             return "array"
         if val.lower() in ('true', 'false', 'filenotfound'):
-            return 'boolean'
+            return 'bool' if shortPrimitives else 'boolean'
         if val[:4] == 'new ':
             res = re.search('new (' + self.settings['fnIdentifier'] + ')', val)
             return res and res.group(1) or None
         return None
 
     def getFunctionReturnType(self, name, retval):
+        shortPrimitives = self.viewSettings.get('jsdocs_short_primitives') or False
         if (name[:2] == '__'):
             if name in ('__construct', '__destruct', '__set', '__unset', '__wakeup'):
                 return None
@@ -706,7 +711,7 @@ class JsdocsPHP(JsdocsParser):
             if name == '__toString':
                 return 'string'
             if name == '__isset':
-                return 'boolean'
+                return 'bool' if shortPrimitives else 'boolean'
         return JsdocsParser.getFunctionReturnType(self, name, retval)
 
 
