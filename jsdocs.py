@@ -150,17 +150,17 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         # this is a 2d list of the widths per column per line
         widths = []
 
-        # Skip the return tag if we're faking "per-section" indenting.
-        out = list(out)
-        lastItem = len(out)
-        if (self.settings.get('jsdocs_per_section_indent')):
+        # Grab the return tag if required.
+        if self.settings.get('jsdocs_per_section_indent'):
             returnTag = self.settings.get('jsdocs_return_tag') or '@return'
-            if (returnTag in out[-1]):
-                lastItem -= 1
+        else:
+            returnTag = False
 
-        #  skip the first one, since that's always the "description" line
         for line in out:
             if line.startswith('@'):
+                # Ignore the return tag if we're doing per-section indenting.
+                if returnTag and line.startswith(returnTag):
+                    continue
                 # ignore all the words after `@author`
                 columns = line.split(" ") if not line.startswith('@author') else ['@author']
                 widths.append(list(map(outputWidth, columns)))
