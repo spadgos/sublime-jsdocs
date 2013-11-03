@@ -1,7 +1,10 @@
 """
-DocBlockr v2.11.6
+DocBlockr v2.11.7
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
+
+*** Please read CONTIBUTING.md before sending pull requests. Thanks! ***
+
 """
 import sublime
 import sublime_plugin

@@ -1,5 +1,11 @@
 # DocBlockr Extended Changelog
 
+- **v2.11.7**, *3 Nov 2013*
+  - Added support for triple `///`, `//!` and `/*!` style comments, thanks to [Jordi Boggiano](https://github.com/seldaek).
+  - Added basic **Rust** support, again thanks to Jordi Boggiano.
+  - Added an option to use short names for bools and ints (`jsdocs_short_primitives`), thanks to [Mat Gadd](https://github.com/drarok).
+  - Fixed a bug with per-section indenting, again thanks to Mat Gadd.
+  - Improved handling of Java return type detection, thanks to [Ben Linskey](https://github.com/blinskey)
 - **v2.11.6**, *14 Aug 2013*
   - Predefined `@author` tags do not get parsed for column spacing
   - Handles the case when an arguments list contains a comma, for example, within a default value
