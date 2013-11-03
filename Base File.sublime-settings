@@ -101,7 +101,13 @@
   // If set to true, primitives such as "Number" and "String" will be documented as "number" and "string".
   "jsdocs_lower_case_primitives": false,
 
+  // If set to true, primitives such as "boolean" and "integer" will be shortened to "bool" and "int".
+  "jsdocs_short_primitives": false,
+
   // This property affects the default tag added to `var` declarations in Javascript/Coffeescript. If `false`, the
   // default is used ("var"), otherwise it can be set to any String, eg: "property"
-  "jsdocs_override_js_var": false
+  "jsdocs_override_js_var": false,
+
+  // If set to true, an extra line break is added after the end of a docblock to separate it from the code.
+  "jsdocs_newline_after_block": false 
 }

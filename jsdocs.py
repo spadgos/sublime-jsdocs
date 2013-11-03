@@ -1,7 +1,10 @@
 """
-DocBlockr v2.11.6
+DocBlockr v2.11.7
 by Nick Fisher
 https://github.com/spadgos/sublime-jsdocs
+
+*** Please read CONTIBUTING.md before sending pull requests. Thanks! ***
+
 """
 import sublime
 import sublime_plugin
@@ -64,6 +67,8 @@ def getParser(view):
         return JsdocsObjC(viewSettings)
     elif sourceLang == 'java' or sourceLang == 'groovy':
         return JsdocsJava(viewSettings)
+    elif sourceLang == 'rust':
+        return JsdocsRust(viewSettings)
     return JsdocsJavascript(viewSettings)
 
 
@@ -135,7 +140,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             else:
                 return " $0 */"
         else:
-            return self.createSnippet(out)
+            return self.createSnippet(out) + ('\n' if self.settings.get('jsdocs_newline_after_block') else '')
 
     def alignTags(self, out):
         def outputWidth(str):
@@ -148,17 +153,17 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         # this is a 2d list of the widths per column per line
         widths = []
 
-        # Skip the return tag if we're faking "per-section" indenting.
-        out = list(out)
-        lastItem = len(out)
-        if (self.settings.get('jsdocs_per_section_indent')):
+        # Grab the return tag if required.
+        if self.settings.get('jsdocs_per_section_indent'):
             returnTag = self.settings.get('jsdocs_return_tag') or '@return'
-            if (returnTag in out[-1]):
-                lastItem -= 1
+        else:
+            returnTag = False
 
-        #  skip the first one, since that's always the "description" line
         for line in out:
             if line.startswith('@'):
+                # Ignore the return tag if we're doing per-section indenting.
+                if returnTag and line.startswith(returnTag):
+                    continue
                 # ignore all the words after `@author`
                 columns = line.split(" ") if not line.startswith('@author') else ['@author']
                 widths.append(list(map(outputWidth, columns)))
@@ -417,10 +422,10 @@ class JsdocsParser(object):
         current = ''
 
         # characters which open a section inside which commas are not separators between different arguments
-        openQuotes  = '"\'<'
+        openQuotes  = '"\'<('
         # characters which close the the section. The position of the character here should match the opening
         # indicator in `openQuotes`
-        closeQuotes = '"\'>'
+        closeQuotes = '"\'>)'
 
         matchingQuote = ''
         insideQuotes = False
@@ -591,6 +596,7 @@ class JsdocsJavascript(JsdocsParser):
 
     def guessTypeFromValue(self, val):
         lowerPrimitives = self.viewSettings.get('jsdocs_lower_case_primitives') or False
+        shortPrimitives = self.viewSettings.get('jsdocs_short_primitives') or False
         if is_numeric(val):
             return "number" if lowerPrimitives else "Number"
         if val[0] == '"' or val[0] == "'":
@@ -600,7 +606,8 @@ class JsdocsJavascript(JsdocsParser):
         if val[0] == '{':
             return "Object"
         if val == 'true' or val == 'false':
-            return "boolean" if lowerPrimitives else "Boolean"
+            returnVal = 'Bool' if shortPrimitives else 'Boolean'
+            return returnVal.lower() if lowerPrimitives else returnVal
         if re.match('RegExp\\b|\\/[^\\/]', val):
             return 'RegExp'
         if val[:4] == 'new ':
@@ -611,6 +618,7 @@ class JsdocsJavascript(JsdocsParser):
 
 class JsdocsPHP(JsdocsParser):
     def setupSettings(self):
+        shortPrimitives = self.viewSettings.get('jsdocs_short_primitives') or False
         nameToken = '[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*'
         self.settings = {
             # curly brackets around the type information
@@ -621,7 +629,7 @@ class JsdocsPHP(JsdocsParser):
             'fnIdentifier': nameToken,
             'fnOpener': 'function(?:\\s+' + nameToken + ')?\\s*\\(',
             'commentCloser': ' */',
-            'bool': "boolean",
+            'bool': 'bool' if shortPrimitives else 'boolean',
             'function': "function"
         }
 
@@ -682,20 +690,22 @@ class JsdocsPHP(JsdocsParser):
         return None
 
     def guessTypeFromValue(self, val):
+        shortPrimitives = self.viewSettings.get('jsdocs_short_primitives') or False
         if is_numeric(val):
-            return "float" if '.' in val else "integer"
+            return "float" if '.' in val else 'int' if shortPrimitives else 'integer'
         if val[0] == '"' or val[0] == "'":
             return "string"
         if val[:5] == 'array':
             return "array"
         if val.lower() in ('true', 'false', 'filenotfound'):
-            return 'boolean'
+            return 'bool' if shortPrimitives else 'boolean'
         if val[:4] == 'new ':
             res = re.search('new (' + self.settings['fnIdentifier'] + ')', val)
             return res and res.group(1) or None
         return None
 
     def getFunctionReturnType(self, name, retval):
+        shortPrimitives = self.viewSettings.get('jsdocs_short_primitives') or False
         if (name[:2] == '__'):
             if name in ('__construct', '__destruct', '__set', '__unset', '__wakeup'):
                 return None
@@ -704,7 +714,7 @@ class JsdocsPHP(JsdocsParser):
             if name == '__toString':
                 return 'string'
             if name == '__isset':
-                return 'boolean'
+                return 'bool' if shortPrimitives else 'boolean'
         return JsdocsParser.getFunctionReturnType(self, name, retval)
 
 
@@ -718,7 +728,7 @@ class JsdocsCPP(JsdocsParser):
             'typeTag': 'param',
             'commentCloser': ' */',
             'fnIdentifier': identifier,
-            'varIdentifier': identifier + '(?:\\[' + identifier + '\\])?',
+            'varIdentifier': '(' + identifier + ')\\s*(?:\\[(?:' + identifier + ')?\\]|\\((?:(?:\\s*,\\s*)?[a-z]+)+\\s*\\))?',
             'fnOpener': identifier + '\\s+' + identifier + '\\s*\\(',
             'bool': 'bool',
             'function': 'function'
@@ -747,7 +757,7 @@ class JsdocsCPP(JsdocsParser):
         return None
 
     def getArgName(self, arg):
-        return re.search("(" + self.settings['varIdentifier'] + r")(?:\s*\[\s*\])?(?:\s*=.*)?$", arg).group(1)
+        return re.search(self.settings['varIdentifier'] + r"(?:\s*=.*)?$", arg).group(1)
 
     def parseVar(self, line):
         return None
@@ -987,7 +997,7 @@ class JsdocsJava(JsdocsParser):
         line = line.strip()
         res = re.search(
             # Modifiers
-            '(?:public|protected|private|static|abstract|final|transient|synchronized|native|strictfp){0,1}\s*'
+            '(?:(public|protected|private|static|abstract|final|transient|synchronized|native|strictfp)\s+)*'
             # Return value
             + '(?P<retval>[a-zA-Z_$][\<\>\., a-zA-Z_$0-9]+)\s+'
             # Method name
@@ -1089,6 +1099,32 @@ class JsdocsJava(JsdocsParser):
                 break
         return definition
 
+class JsdocsRust(JsdocsParser):
+    def setupSettings(self):
+        self.settings = {
+            "curlyTypes": False,
+            'typeInfo': False,
+            "typeTag": False,
+            "varIdentifier": ".*",
+            "fnIdentifier":  ".*",
+            "fnOpener": "^\s*fn",
+            "commentCloser": " */",
+            "bool": "Boolean",
+            "function": "Function"
+        }
+
+    def parseFunction(self, line):
+        res = re.search('\s*fn\s+(?P<name>\S+)', line)
+        if not res:
+            return None
+
+        name = res.group('name').join('');
+
+        return (name, [])
+
+    def formatFunction(self, name, args):
+        return name
+
 ############################################################33
 
 
@@ -1133,7 +1169,7 @@ class JsdocsJoinCommand(sublime_plugin.TextCommand):
         v = self.view
         for sel in v.sel():
             for lineRegion in reversed(v.lines(sel)):
-                v.replace(edit, v.find("[ \\t]*\\n[ \\t]*((?:\\*|//|#)[ \\t]*)?", lineRegion.begin()), ' ')
+                v.replace(edit, v.find("[ \\t]*\\n[ \\t]*((?:\\*|//[!/]?|#)[ \\t]*)?", lineRegion.begin()), ' ')
 
 
 class JsdocsDecorateCommand(sublime_plugin.TextCommand):
