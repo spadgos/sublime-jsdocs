@@ -137,7 +137,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             else:
                 return " $0 */"
         else:
-            return self.createSnippet(out)
+            return self.createSnippet(out) + ('\n' if self.settings.get('jsdocs_newline_after_block') else '')
 
     def alignTags(self, out):
         def outputWidth(str):

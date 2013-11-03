@@ -106,5 +106,8 @@
 
   // This property affects the default tag added to `var` declarations in Javascript/Coffeescript. If `false`, the
   // default is used ("var"), otherwise it can be set to any String, eg: "property"
-  "jsdocs_override_js_var": false
+  "jsdocs_override_js_var": false,
+
+  // If set to true, an extra line break is added after the end of a docblock to separate it from the code.
+  "jsdocs_newline_after_block": false 
 }
