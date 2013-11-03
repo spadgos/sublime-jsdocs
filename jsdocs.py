@@ -989,7 +989,7 @@ class JsdocsJava(JsdocsParser):
         line = line.strip()
         res = re.search(
             # Modifiers
-            '(?:public|protected|private|static|abstract|final|transient|synchronized|native|strictfp){0,1}\s*'
+            '(?:(public|protected|private|static|abstract|final|transient|synchronized|native|strictfp)\s+)*'
             # Return value
             + '(?P<retval>[a-zA-Z_$][\<\>\., a-zA-Z_$0-9]+)\s+'
             # Method name
