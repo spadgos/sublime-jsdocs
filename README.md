@@ -1,4 +1,4 @@
-DocBlockr is a package for [Sublime Text 2 & 3][sublime] which makes writing documentation a breeze. DocBlockr supports **Javascript**, **PHP**, **ActionScript**, **CoffeeScript**, **Java**, **Groovy**, **Objective C**, **C** and **C++**.
+DocBlockr is a package for [Sublime Text 2 & 3][sublime] which makes writing documentation a breeze. DocBlockr supports **Javascript**, **PHP**, **ActionScript**, **CoffeeScript**, **Java**, **Groovy**, **Objective C**, **C**, **C++** and **Rust**.
 
 ## Installation ##
 
@@ -12,6 +12,12 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
 
 ## Changelog ##
 
+- **v2.11.7**, *3 Nov 2013*
+  - Added support for triple `///`, `//!` and `/*!` style comments, thanks to [Jordi Boggiano](https://github.com/seldaek).
+  - Added basic **Rust** support, again thanks to Jordi Boggiano.
+  - Added an option to use short names for bools and ints (`jsdocs_short_primitives`), thanks to [Mat Gadd](https://github.com/drarok).
+  - Fixed a bug with per-section indenting, again thanks to Mat Gadd.
+  - Improved handling of Java return type detection, thanks to [Ben Linskey](https://github.com/blinskey)
 - **v2.11.6**, *14 Aug 2013*
   - Predefined `@author` tags do not get parsed for column spacing
   - Handles the case when an arguments list contains a comma, for example, within a default value
@@ -25,8 +31,6 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
 - **v2.11.3**, *18 June 2013*
   - Adds support for Groovy (thanks to [Tiago Santos](https://github.com/tmcsantos))
   - README has gifs. So many gifs.
-- **v2.11.2**, *12 June 2013*
-  - Compatibility fixes for ST3, thanks to Marc Neuhaus (@mneuhaus) and Daniel Julius Lasiman (@danieljl).
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
