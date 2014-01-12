@@ -1,5 +1,5 @@
 {
-  "scope": "source.java,source.groovy comment.block.documentation",
+  "scope": "source.java comment.block.documentation,source.groovy comment.block.documentation",
   "completions":
   [
     { "trigger" : "@author",            "contents": "@author ${1:[author]}"},
