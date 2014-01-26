@@ -242,5 +242,13 @@
       { "key": "auto_complete_visible", "operator": "equal",          "operand": false,           "match_all": true },
       { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*",      "match_all": true }
     ]
+  },
+
+  // run tests. requires jsdocs_development_mode to be on
+  {
+    "keys": ["ctrl+k", "ctrl+t"], "command": "jsdocs_tests",
+    "context": [
+      { "key": "setting.jsdocs_development_mode", "operator": "equal", "operand": true }
+    ]
   }
 ]

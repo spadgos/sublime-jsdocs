@@ -11,8 +11,8 @@ import sublime_plugin
 import re
 import datetime
 import time
+import imp
 from functools import reduce
-
 
 def read_line(view, point):
     if (point >= view.size()):
@@ -1360,3 +1360,131 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
 
         text = escape(text)
         write(v, text)
+
+# to run, enable jsdocs_development_mode and press Ctrl+K, Ctrl+T
+class JsdocsTests(sublime_plugin.WindowCommand):
+
+    def run(self):
+        import tests.javascript
+
+        # sublime.active_window().run_command('show_panel', panel='output.console')
+        self.window.run_command("show_panel", {"panel": "console"})
+        for modName in tests.__dict__:
+            if not modName.startswith('__'):
+                mod = getattr(tests, modName)
+                mod = imp.reload(mod)
+                self.runTests(mod, modName)
+
+    def runTests(self, mod, modName):
+        successes = 0
+        failures = 0
+
+        helper = TestHelper(self.window)
+        helper.set_syntax(mod.syntax)
+
+        for member in mod.__dict__:
+            if member.startswith('test_'):
+                helper.startTest()
+                try:
+                    testFn = getattr(mod, member)
+                    ret = testFn(helper)
+                    expected = "\n".join(ret) if isinstance(ret, list) else ret
+
+                    assert isinstance(expected, str),  'Did not return a string to check'
+
+                    self.compare(helper.view, expected)
+                    self.report(member, modName, True)
+                    successes += 1
+                except AssertionError, e:
+                    self.report(member, modName, False, testFn, e.args[0])
+                    failures += 1
+                finally:
+                    helper.endTest()
+
+        helper.dispose()
+        print '%s/%s passed.' % ( successes, successes + failures )
+
+    def compare(self, view, expected):
+        delim = '|'
+        expectedRegion = None
+        checkRegions = delim in expected
+        if checkRegions:
+            # compare selections
+            (beforeSelection, d, tempAfter) = expected.partition(delim)
+            (selected, d, afterSelection) = tempAfter.partition(delim)
+            expectedRegion = sublime.Region(
+                len(beforeSelection),
+                len(beforeSelection) + (len(selected) if afterSelection else 0)
+            )
+            expected = beforeSelection + selected + afterSelection
+
+        actual = view.substr(sublime.Region(0, view.size()))
+
+        assert actual == expected, "Actual:\n%s\nExpected:\n%s" % (actual, expected)
+
+        if checkRegions:
+            actualRegion = view.sel()[0]
+            assert actualRegion == expectedRegion, \
+                "Selection doesn't match. Actual %s, expected %s" % (actualRegion, expectedRegion)
+
+    def report(self, testName, modName, success, testFn=None, errorMessage=''):
+        print "[%s] %s: %s %s%s" % (
+            " OK " if success else "FAIL",
+            modName,
+            testName[5:].replace('_', ' ').title(),
+            "" if success else "-- " + testFn.func_doc + '.\n',
+            errorMessage
+        )
+
+class TestHelper():
+    def __init__(self, window):
+        self.window = window
+        self.view = self.window.new_file()
+        self.cursorPos = 0
+        self.savedPos = 0
+
+    def dispose(self):
+        self.window.run_command('close')
+
+    def set_syntax(self, file):
+        self.view.set_syntax_file(file)
+
+    def startTest(self):
+        self.cursorPos = 0
+        self.edit = self.view.begin_edit()
+
+    def endTest(self):
+        self.view.end_edit(self.edit)
+        self.view.run_command('undo')
+        self.edit = None
+
+    def insert(self, text, pos = -1):
+        if pos == -1:
+            pos = self.cursorPos
+
+        if '|' in text:
+            (before, __, after) = text.partition('|')
+            adjustCursor = len(before)
+            text = before + after
+        else:
+            adjustCursor = len(text)
+
+        self.view.insert(self.edit, pos, text)
+        self.cursorPos = pos + adjustCursor
+        self.setCursor(self.cursorPos)
+
+    def run(self, cmdName = 'jsdocs'):
+        self.view.run_command(cmdName)
+
+    def saveCursor(self):
+        self.savedPos = self.cursorPos
+        # print 'Saved: ' + self.savedPos
+
+    def restoreCursor(self):
+        self.setCursor(self.savedPos)
+
+    def setCursor(self, pos):
+        # print 'Saved: ' + self.savedPos
+        self.view.sel().clear()
+        self.view.sel().add(pos)
+

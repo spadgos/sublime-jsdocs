@@ -109,5 +109,7 @@
   "jsdocs_override_js_var": false,
 
   // If set to true, an extra line break is added after the end of a docblock to separate it from the code.
-  "jsdocs_newline_after_block": false 
+  "jsdocs_newline_after_block": false,
+
+  "jsdocs_development_mode": false
 }
