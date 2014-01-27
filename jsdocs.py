@@ -1369,6 +1369,8 @@ class JsdocsTests(sublime_plugin.WindowCommand):
 
         # sublime.active_window().run_command('show_panel', panel='output.console')
         self.window.run_command("show_panel", {"panel": "console"})
+        print '\nDocBlockr tests'
+        print '---------------'
         for modName in tests.__dict__:
             if not modName.startswith('__'):
                 mod = getattr(tests, modName)
@@ -1462,6 +1464,9 @@ class TestHelper():
         if pos == -1:
             pos = self.cursorPos
 
+        if isinstance(text, list):
+            text = '\n'.join(text)
+
         if '|' in text:
             (before, __, after) = text.partition('|')
             adjustCursor = len(before)
@@ -1478,13 +1483,11 @@ class TestHelper():
 
     def saveCursor(self):
         self.savedPos = self.cursorPos
-        # print 'Saved: ' + self.savedPos
 
     def restoreCursor(self):
         self.setCursor(self.savedPos)
 
     def setCursor(self, pos):
-        # print 'Saved: ' + self.savedPos
         self.view.sel().clear()
         self.view.sel().add(pos)
 
