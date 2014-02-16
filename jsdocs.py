@@ -234,13 +234,21 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         snippet = ""
         closer = self.parser.settings['commentCloser']
         if out:
-            if self.settings.get('jsdocs_spacer_between_sections'):
+            if self.settings.get('jsdocs_spacer_between_sections') == True:
                 lastTag = None
                 for idx, line in enumerate(out):
                     res = re.match("^\\s*@([a-zA-Z]+)", line)
                     if res and (lastTag != res.group(1)):
                         lastTag = res.group(1)
                         out.insert(idx, "")
+            elif self.settings.get('jsdocs_spacer_between_sections') == 'after_description':
+                lastLineIsTag = False
+                for idx, line in enumerate(out):
+                    res = re.match("^\\s*@([a-zA-Z]+)", line)
+                    if res:
+                        if not lastLineIsTag:
+                            out.insert(idx, "")
+                        lastLineIsTag = True
             for line in out:
                 snippet += "\n " + self.prefix + (self.indentSpaces + line if line else "")
         else:
@@ -1272,7 +1280,8 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
         numIndentSpaces = max(0, settings.get("jsdocs_indentation_spaces", 1))
         indentSpaces = " " * numIndentSpaces
         indentSpacesSamePara = " " * max(0, settings.get("jsdocs_indentation_spaces_same_para", numIndentSpaces))
-        spacerBetweenSections = settings.get("jsdocs_spacer_between_sections")
+        spacerBetweenSections = settings.get("jsdocs_spacer_between_sections") == True
+        spacerBetweenDescriptionAndTags = settings.get("jsdocs_spacer_between_sections") == "after_description"
 
         v.run_command('expand_selection', {'to': 'scope'})
 
@@ -1353,7 +1362,8 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             nextIsSameTag = nextIsTagged and para['tag'] == wrappedParas[i + 1]['tag']
 
             if last or (para['lineTagged'] or nextIsTagged) and \
-                    not (spacerBetweenSections and not nextIsSameTag):
+                    not (spacerBetweenSections and not nextIsSameTag) and \
+                    not (not para['lineTagged'] and nextIsTagged and spacerBetweenDescriptionAndTags):
                 text += para['text']
             else:
                 text += para['text'] + '\n *'
