@@ -69,6 +69,8 @@ def getParser(view):
         return JsdocsJava(viewSettings)
     elif sourceLang == 'rust':
         return JsdocsRust(viewSettings)
+    elif sourceLang == 'ts':
+        return JsdocsTypescript(viewSettings)
     return JsdocsJavascript(viewSettings)
 
 
@@ -289,13 +291,13 @@ class JsdocsParser(object):
 
         return None
 
-    def formatVar(self, name, val):
+    def formatVar(self, name, val, valType=None):
         out = []
-        if not val or val == '':  # quick short circuit
-            valType = "[type]"
-        else:
-            valType = self.guessTypeFromValue(val) or self.guessTypeFromName(name) or "[type]"
-
+        if not valType:
+            if not val or val == '':  # quick short circuit
+                valType = "[type]"
+            else:
+                valType = self.guessTypeFromValue(val) or self.guessTypeFromName(name) or "[type]"
         if self.inline:
             out.append("@%s %s${1:%s}%s ${1:[description]}" % (
                 self.settings['typeTag'],
@@ -1370,6 +1372,91 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
 
         text = escape(text)
         write(v, text)
+
+
+class JsdocsTypescript(JsdocsParser):
+
+    def setupSettings(self):
+        identifier = '[a-zA-Z_$][a-zA-Z_$0-9]*'
+        base_type_identifier = r'%s(\.%s)*(\[\])?' % ((identifier, ) * 2)
+        parametric_type_identifier = r'%s(\s*<\s*%s(\s*,\s*%s\s*)*>)?' % ((base_type_identifier, ) * 3)
+        self.settings = {
+            # curly brackets around the type information
+            "curlyTypes": True,
+            'typeInfo': True,
+            "typeTag": "type",
+            # technically, they can contain all sorts of unicode, but w/e
+            "varIdentifier": identifier,
+            "fnIdentifier": identifier,
+            "fnOpener": 'function(?:\\s+' + identifier + ')?\\s*\\(',
+            "commentCloser": " */",
+            "bool": "Boolean",
+            "function": "Function",
+            "functionRE":
+                # Modifiers
+                r'(?:public|private|static)?\s*'
+                # Method name
+                + r'(?P<name>' + identifier + r')\s*'
+                # Params
+                + r'\((?P<args>.*)\)\s*'
+                # Return value
+                + r'(:\s*(?P<retval>' + parametric_type_identifier + r'))?',
+            "varRE":
+                r'((public|private|static|var)\s+)?(?P<name>' + identifier
+                + r')\s*(:\s*(?P<type>' + parametric_type_identifier
+                + r'))?(\s*=\s*(?P<val>.*?))?([;,]|$)'
+        }
+        self.functionRE = re.compile(self.settings['functionRE'])
+        self.varRE = re.compile(self.settings['varRE'])
+
+    def parseFunction(self, line):
+        line = line.strip()
+        res = self.functionRE.search(line)
+
+        if not res:
+            return None
+        group_dict = res.groupdict()
+        return (group_dict["name"], group_dict["args"], group_dict["retval"])
+
+    def getArgType(self, arg):
+        if ':' in arg:
+            return arg.split(':')[-1].strip()
+        return None
+
+    def getArgName(self, arg):
+        if ':' in arg:
+            arg = arg.split(':')[0]
+        return arg.strip('[ \?]')
+
+    def parseVar(self, line):
+        res = self.varRE.search(line)
+        if not res:
+            return None
+        val = res.group('val')
+        if val: val = val.strip()
+        return (res.group('name'), val, res.group('type'))
+
+    def getFunctionReturnType(self, name, retval):
+        return retval if retval != 'void' else None
+
+    def guessTypeFromValue(self, val):
+        lowerPrimitives = self.viewSettings.get('jsdocs_lower_case_primitives') or False
+        if is_numeric(val):
+            return "number" if lowerPrimitives else "Number"
+        if val[0] == '"' or val[0] == "'":
+            return "string" if lowerPrimitives else "String"
+        if val[0] == '[':
+            return "Array"
+        if val[0] == '{':
+            return "Object"
+        if val == 'true' or val == 'false':
+            return "boolean" if lowerPrimitives else "Boolean"
+        if re.match('RegExp\\b|\\/[^\\/]', val):
+            return 'RegExp'
+        if val[:4] == 'new ':
+            res = re.search('new (' + self.settings['fnIdentifier'] + ')', val)
+            return res and res.group(1) or None
+        return None
 
 # to run, enable jsdocs_development_mode and press Ctrl+K, Ctrl+T
 class JsdocsTests(sublime_plugin.WindowCommand):
