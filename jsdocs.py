@@ -1268,7 +1268,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
         rulers = settings.get('rulers')
         tabSize = settings.get('tab_size')
 
-        wrapLength = rulers[0] or 80
+        wrapLength = rulers[0] if (len(rulers) > 0) else 80
         numIndentSpaces = max(0, settings.get("jsdocs_indentation_spaces", 1))
         indentSpaces = " " * numIndentSpaces
         indentSpacesSamePara = " " * max(0, settings.get("jsdocs_indentation_spaces_same_para", numIndentSpaces))
