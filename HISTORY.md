@@ -1,5 +1,11 @@
 # DocBlockr Extended Changelog
 
+- **v2.12.0**, *4 Mar 2014*
+  - Adds support for **TypeScript**, thanks to [Marc-Antoine Parent](https://github.com/maparent)
+  - Adds option to add a spacer line after the description (`"jsdocs_spacer_between_sections": "after_description"`), thanks to [Milos Levacic](https://github.com/levacic)
+  - PHP autocompletions support only the [PSR-5](https://github.com/phpDocumentor/fig-standards/blob/master/proposed/phpdoc.md) tags, thanks to [Gary Jones](https://github.com/GaryJones)
+  - Fix scope issues for Java autocompletions, thanks to [Dominique Wahli](https://github.com/bizoo)
+  - Fix for reflowing paragraphs when no rulers are set.
 - **v2.11.7**, *3 Nov 2013*
   - Added support for triple `///`, `//!` and `/*!` style comments, thanks to [Jordi Boggiano](https://github.com/seldaek).
   - Added basic **Rust** support, again thanks to Jordi Boggiano.
