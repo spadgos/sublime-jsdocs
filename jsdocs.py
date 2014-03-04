@@ -1466,8 +1466,8 @@ class JsdocsTests(sublime_plugin.WindowCommand):
 
         # sublime.active_window().run_command('show_panel', panel='output.console')
         self.window.run_command("show_panel", {"panel": "console"})
-        print '\nDocBlockr tests'
-        print '---------------'
+        print ('\nDocBlockr tests')
+        print ('---------------')
         for modName in tests.__dict__:
             if not modName.startswith('__'):
                 mod = getattr(tests, modName)
@@ -1494,14 +1494,14 @@ class JsdocsTests(sublime_plugin.WindowCommand):
                     self.compare(helper.view, expected)
                     self.report(member, modName, True)
                     successes += 1
-                except AssertionError, e:
+                except AssertionError as e:
                     self.report(member, modName, False, testFn, e.args[0])
                     failures += 1
                 finally:
                     helper.endTest()
 
         helper.dispose()
-        print '%s/%s passed.' % ( successes, successes + failures )
+        print ('%s/%s passed.' % ( successes, successes + failures ))
 
     def compare(self, view, expected):
         delim = '|'
@@ -1527,13 +1527,13 @@ class JsdocsTests(sublime_plugin.WindowCommand):
                 "Selection doesn't match. Actual %s, expected %s" % (actualRegion, expectedRegion)
 
     def report(self, testName, modName, success, testFn=None, errorMessage=''):
-        print "[%s] %s: %s %s%s" % (
+        print ("[%s] %s: %s %s%s" % (
             " OK " if success else "FAIL",
             modName,
             testName[5:].replace('_', ' ').title(),
             "" if success else "-- " + testFn.func_doc + '.\n',
             errorMessage
-        )
+        ))
 
 class TestHelper():
     def __init__(self, window):
