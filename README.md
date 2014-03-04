@@ -12,6 +12,8 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
 
 ## Changelog ##
 
+- **v2.12.1**, *4 Mar 2014*
+  - Fix for Sublime Text 3
 - **v2.12.0**, *4 Mar 2014*
   - Adds support for **TypeScript**, thanks to [Marc-Antoine Parent](https://github.com/maparent)
   - Adds option to add a spacer line after the description (`"jsdocs_spacer_between_sections": "after_description"`), thanks to [Milos Levacic](https://github.com/levacic)
@@ -31,9 +33,6 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
   - Fixes a regression that some function names were not being parsed correctly
 - **v2.11.5**, *11 Aug 2013*
   - Fix for last deploy which accidentally changed the default `var` tag to "property". Default is "type" once again.
-- **v2.11.4**, *10 Aug 2013*
-  - The tag used on `var` declarations can be customised (eg: to "property" for YUIDoc)
-  - Small fix for function declarations in C/C++ (thanks to [Simon Aittamaa](https://github.com/simait))
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 

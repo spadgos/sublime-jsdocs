@@ -1,5 +1,7 @@
 # DocBlockr Extended Changelog
 
+- **v2.12.1**, *4 Mar 2014*
+  - Fix for Sublime Text 3
 - **v2.12.0**, *4 Mar 2014*
   - Adds support for **TypeScript**, thanks to [Marc-Antoine Parent](https://github.com/maparent)
   - Adds option to add a spacer line after the description (`"jsdocs_spacer_between_sections": "after_description"`), thanks to [Milos Levacic](https://github.com/levacic)
