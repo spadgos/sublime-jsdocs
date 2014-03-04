@@ -1,4 +1,4 @@
-DocBlockr is a package for [Sublime Text 2 & 3][sublime] which makes writing documentation a breeze. DocBlockr supports **Javascript**, **PHP**, **ActionScript**, **CoffeeScript**, **Java**, **Groovy**, **Objective C**, **C**, **C++** and **Rust**.
+DocBlockr is a package for [Sublime Text 2 & 3][sublime] which makes writing documentation a breeze. DocBlockr supports **JavaScript**, **PHP**, **ActionScript**, **CoffeeScript**, **TypeScript**, **Java**, **Groovy**, **Objective C**, **C**, **C++** and **Rust**.
 
 ## Installation ##
 
@@ -12,6 +12,12 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
 
 ## Changelog ##
 
+- **v2.12.0**, *4 Mar 2014*
+  - Adds support for **TypeScript**, thanks to [Marc-Antoine Parent](https://github.com/maparent)
+  - Adds option to add a spacer line after the description (`"jsdocs_spacer_between_sections": "after_description"`), thanks to [Milos Levacic](https://github.com/levacic)
+  - PHP autocompletions support only the [PSR-5](https://github.com/phpDocumentor/fig-standards/blob/master/proposed/phpdoc.md) tags, thanks to [Gary Jones](https://github.com/GaryJones)
+  - Fix scope issues for Java autocompletions, thanks to [Dominique Wahli](https://github.com/bizoo)
+  - Fix for reflowing paragraphs when no rulers are set.
 - **v2.11.7**, *3 Nov 2013*
   - Added support for triple `///`, `//!` and `/*!` style comments, thanks to [Jordi Boggiano](https://github.com/seldaek).
   - Added basic **Rust** support, again thanks to Jordi Boggiano.
@@ -28,11 +34,13 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
 - **v2.11.4**, *10 Aug 2013*
   - The tag used on `var` declarations can be customised (eg: to "property" for YUIDoc)
   - Small fix for function declarations in C/C++ (thanks to [Simon Aittamaa](https://github.com/simait))
-- **v2.11.3**, *18 June 2013*
-  - Adds support for Groovy (thanks to [Tiago Santos](https://github.com/tmcsantos))
-  - README has gifs. So many gifs.
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
+
+## Show your love
+
+[![Click here to lend your support to: DocBlockr and make a donation at pledgie.com!](https://pledgie.com/campaigns/16316.png?skin_name=chrome)](http://pledgie.com/campaigns/16316)
+
 
 ## Usage ##
 
@@ -237,7 +245,7 @@ You can access the configuration settings by selecting `Preferences -> Package S
 
 - `jsdocs_return_tag` *(String)* The text which should be used for a `@return` tag. By default, `@return` is used, however this can be changed to `@returns` if you use that style.
 
-- `jsdocs_spacer_between_sections` *(Boolean)* If true, then extra blank lines are inserted between the sections of the docblock. Default: `false`.
+- `jsdocs_spacer_between_sections` *(Boolean|String)* If true, then extra blank lines are inserted between the sections of the docblock. If set to `"after_description"` then a spacer will only be added between the description and the first tag. Default: `false`.
 
 - `jsdocs_indentation_spaces_same_para` *(Number)* Described above in the *Reformatting paragraphs* section. Default: `1`
 
@@ -252,10 +260,6 @@ You can access the configuration settings by selecting `Preferences -> Package S
 - `jsdocs_newline_after_block` *(Boolean)* If true, an extra line break is added after the end of a docblock to separate it from the code. Default `false`
 
 This is my first package for Sublime Text, and the first time I've written any Python, so I heartily welcome feedback and [feature requests or bug reports][issues].
-
-## Show your love ##
-
-[![Click here to lend your support to: DocBlockr and make a donation at pledgie.com!](https://pledgie.com/campaigns/16316.png?skin_name=chrome)](http://pledgie.com/campaigns/16316)
 
 [closure]: http://code.google.com/closure/compiler/docs/js-for-compiler.html
 [contrib]: blob/master/CONTRIBUTING.md
