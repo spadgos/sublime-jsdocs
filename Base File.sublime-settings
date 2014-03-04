@@ -63,6 +63,7 @@
   "jsdocs_param_description": true,
 
   // Whether there should be blank lines added between the description line, and between tags of different types.
+  // Possible values are true, false, or "after_description".
   // If true, the output might look like this:
   //
   // /**
@@ -71,6 +72,17 @@
   //  * @param  {String} foo
   //  * @param  {Number} bar
   //  *
+  //  * @return {[Type]}
+  //  */
+  //
+  // If "after_description" is configured, a blank line is only added between the description and the first tag, but not
+  // between different tag sections, so the output, in that case, might look like this:
+  //
+  // /**
+  //  * [description]
+  //  *
+  //  * @param  {String} foo
+  //  * @param  {Number} bar
   //  * @return {[Type]}
   //  */
   "jsdocs_spacer_between_sections": false,
@@ -109,5 +121,7 @@
   "jsdocs_override_js_var": false,
 
   // If set to true, an extra line break is added after the end of a docblock to separate it from the code.
-  "jsdocs_newline_after_block": false 
+  "jsdocs_newline_after_block": false,
+
+  "jsdocs_development_mode": false
 }
