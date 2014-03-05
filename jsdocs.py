@@ -561,7 +561,7 @@ class JsdocsJavascript(JsdocsParser):
             # technically, they can contain all sorts of unicode, but w/e
             "varIdentifier": identifier,
             "fnIdentifier":  identifier,
-            "fnOpener": r'function(?:\s+' + identifier + r')?\s*\(',
+            "fnOpener": r'function(?:\s+\*|\s+|\*)\s*' + identifier + r'\s*\(',
             "commentCloser": " */",
             "bool": "Boolean",
             "function": "Function"
@@ -573,7 +573,7 @@ class JsdocsJavascript(JsdocsParser):
             r'(?:(?P<name1>' + self.settings['varIdentifier'] + r')\s*[:=]\s*)?'
             + 'function'
             # function fnName
-            + r'(?:\s+(?P<name2>' + self.settings['fnIdentifier'] + '))?'
+            + r'(?:\s+(?P<gnrtr1>\*)|\s+|(?P<gnrtr2>\*))\s*(?P<name2>' + self.settings['fnIdentifier'] + ')?'
             # (arg1, arg2)
             + r'\s*\(\s*(?P<args>.*)\)',
             line
@@ -582,7 +582,10 @@ class JsdocsJavascript(JsdocsParser):
             return None
 
         # grab the name out of "name1 = function name2(foo)" preferring name1
-        name = res.group('name1') or res.group('name2') or ''
+        generatorSymbol = ''
+        if res.group('gnrtr1') or res.group('gnrtr2'):
+            generatorSymbol = '*'
+        name = generatorSymbol + (res.group('name1') or res.group('name2') or '')
         args = res.group('args')
 
         return (name, args, None)
