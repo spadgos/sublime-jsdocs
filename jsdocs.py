@@ -422,7 +422,7 @@ class JsdocsParser(object):
         current = ''
 
         # characters which open a section inside which commas are not separators between different arguments
-        openQuotes  = '"\'<('
+        openQuotes = '"\'<('
         # characters which close the the section. The position of the character here should match the opening
         # indicator in `openQuotes`
         closeQuotes = '"\'>)'
