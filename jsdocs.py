@@ -1118,7 +1118,7 @@ class JsdocsRust(JsdocsParser):
         if not res:
             return None
 
-        name = res.group('name').join('');
+        name = res.group('name').join('')
 
         return (name, [])
 
@@ -1318,7 +1318,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                     tag = word
 
                 if len(line) + len(word) >= wrapLength - 1:
-                    # appending the word to the current line whould exceed its
+                    # appending the word to the current line would exceed its
                     # length requirements
                     text += line.rstrip() + '\n'
                     line = ' *' + indentSpacesSamePara + word + ' '
