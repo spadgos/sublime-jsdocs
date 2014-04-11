@@ -1,5 +1,5 @@
 """
-DocBlockr v2.12.1
+DocBlockr v2.12.2
 by Nick Fisher, and all the great people listed in CONTRIBUTORS.md
 https://github.com/spadgos/sublime-jsdocs
 
@@ -432,7 +432,7 @@ class JsdocsParser(object):
         current = ''
 
         # characters which open a section inside which commas are not separators between different arguments
-        openQuotes  = '"\'<('
+        openQuotes = '"\'<('
         # characters which close the the section. The position of the character here should match the opening
         # indicator in `openQuotes`
         closeQuotes = '"\'>)'
@@ -1128,7 +1128,7 @@ class JsdocsRust(JsdocsParser):
         if not res:
             return None
 
-        name = res.group('name').join('');
+        name = res.group('name').join('')
 
         return (name, [])
 
@@ -1329,7 +1329,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                     tag = word
 
                 if len(line) + len(word) >= wrapLength - 1:
-                    # appending the word to the current line whould exceed its
+                    # appending the word to the current line would exceed its
                     # length requirements
                     text += line.rstrip() + '\n'
                     line = ' *' + indentSpacesSamePara + word + ' '

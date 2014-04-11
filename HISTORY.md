@@ -1,5 +1,8 @@
 # DocBlockr Extended Changelog
 
+- **v2.12.2**, *11 Apr 2014*
+  - Fix for PHP autocompletions
+  - Fix `@name` completion for Javascript
 - **v2.12.1**, *4 Mar 2014*
   - Fix for Sublime Text 3
 - **v2.12.0**, *4 Mar 2014*

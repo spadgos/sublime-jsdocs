@@ -44,7 +44,7 @@
     { "trigger" : "@memberOf",      "contents": "@memberOf ${1:[parentNamePath]}"},
     { "trigger" : "@method",        "contents": "@method ${1:[name]}"},
     { "trigger" : "@module",        "contents": "@module ${1:[module name]}"},
-    { "trigger" : "@name",          "contents": "@name {$1:[name]}"},
+    { "trigger" : "@name",          "contents": "@name ${1:[name]}"},
     { "trigger" : "@namespace",     "contents": "@namespace ${1:[description]}"},
     { "trigger" : "@nosideeffects", "contents": ""},
     { "trigger" : "@optional",      "contents": ""},

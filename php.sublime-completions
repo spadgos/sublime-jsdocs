@@ -29,6 +29,6 @@
     { "trigger" : "{@example}",     "contents": "{@example ${1:[path]}}"},
     { "trigger" : "{@inheritdoc}",  "contents": ""},
     { "trigger" : "{@internal}",    "contents": "{@internal ${1:[description]}}"},
-    { "trigger" : "{@link}",        "contents": "{@link ${1:[url]}}"},
+    { "trigger" : "{@link}",        "contents": "{@link ${1:[url]}}"}
   ]
 }
