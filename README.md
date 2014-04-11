@@ -12,6 +12,9 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
 
 ## Changelog ##
 
+- **v2.12.2**, *11 Apr 2014*
+  - Fix for PHP autocompletions
+  - Fix `@name` completion for Javascript
 - **v2.12.1**, *4 Mar 2014*
   - Fix for Sublime Text 3
 - **v2.12.0**, *4 Mar 2014*
@@ -31,8 +34,6 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
   - Handles the case when an arguments list contains a comma, for example, within a default value
   - A new keybinding for Windows to re-parse a doc block (<kbd>Alt+W</kbd>)
   - Fixes a regression that some function names were not being parsed correctly
-- **v2.11.5**, *11 Aug 2013*
-  - Fix for last deploy which accidentally changed the default `var` tag to "property". Default is "type" once again.
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
