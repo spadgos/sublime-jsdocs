@@ -635,7 +635,7 @@ class JsdocsPHP(JsdocsParser):
             'curlyTypes': False,
             'typeInfo': True,
             'typeTag': "var",
-            'varIdentifier': '[$]' + nameToken + '(?:->' + nameToken + ')*',
+            'varIdentifier': '&?[$]' + nameToken + '(?:->' + nameToken + ')*',
             'fnIdentifier': nameToken,
             'fnOpener': 'function(?:\\s+' + nameToken + ')?\\s*\\(',
             'commentCloser': ' */',
