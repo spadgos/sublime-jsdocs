@@ -19,3 +19,18 @@ def test_for_issue_292_php_args_pass_by_reference_missing_ampersand_char(helper)
         " */",
         "function function_name($a1,  $a2 = 'x', array $a3, &$b1, &$b2 = 'x', array &$b3) {}"
     ]
+
+def test_for_issue_286_php_args_namespace_char_is_missing(helper):
+    "PHP namespaces are 'mutilated' for namespaced params https://github.com/spadgos/sublime-jsdocs/issues/286"
+
+    helper.insert("/**|\nfunction function_name(A\NS\ClassName $class) {}")
+    helper.run()
+
+    return [
+        "/**",
+        " * |[function_name description]|",
+        " * @param  A\NS\ClassName $class [description]",
+        " * @return {[type]}                [description]",
+        " */",
+        "function function_name(A\NS\ClassName $class) {}"
+    ]

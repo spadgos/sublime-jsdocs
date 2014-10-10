@@ -446,12 +446,13 @@ class JsdocsParser(object):
             if nextIsLiteral:  # previous char was a \
                 current += char
                 nextIsLiteral = False
-            elif char == '\\':
-                nextIsLiteral = True
             elif insideQuotes:
-                current += char
-                if char == matchingQuote:
-                    insideQuotes = False
+                if char == '\\':
+                    nextIsLiteral = True
+                else:
+                    current += char
+                    if char == matchingQuote:
+                        insideQuotes = False
             else:
                 if char == ',':
                     blocks.append(current.strip())
