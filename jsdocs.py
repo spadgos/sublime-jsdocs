@@ -641,6 +641,7 @@ class JsdocsPHP(JsdocsParser):
             'typeTag': "var",
             'varIdentifier': '&?[$]' + nameToken + '(?:->' + nameToken + ')*',
             'fnIdentifier': nameToken,
+            'typeIdentifier': '\\\\?' + nameToken + '(\\\\' + nameToken + ')*',
             'fnOpener': 'function(?:\\s+' + nameToken + ')?\\s*\\(',
             'commentCloser': ' */',
             'bool': 'bool' if shortPrimitives else 'boolean',
@@ -662,19 +663,41 @@ class JsdocsPHP(JsdocsParser):
         return (res.group('name'), res.group('args'), None)
 
     def getArgType(self, arg):
-        #  function add($x, $y = 1)
-        res = re.search(
-            '(?P<name>' + self.settings['varIdentifier'] + ")\\s*=\\s*(?P<val>.*)",
-            arg
-        )
-        if res:
-            return self.guessTypeFromValue(res.group('val'))
 
-        #  function sum(Array $x)
-        if re.search('\\S\\s', arg):
-            return re.search("^(\\S+)", arg).group(1)
-        else:
-            return None
+        res = re.search(
+            '(?P<type>' + self.settings['typeIdentifier'] + ')?'
+            + '\\s*(?P<name>' + self.settings['varIdentifier'] + ')'
+            + '(\\s*=\\s*(?P<val>.*))?',
+            arg
+        );
+
+        if (res):
+
+            argType = res.group("type")
+            argName = res.group("name")
+            argVal = res.group("val")
+
+            # function fnc_name(type $name = val)
+            if (argType and argVal):
+
+                # function fnc_name(array $x = array())
+                argValType = self.guessTypeFromValue(argVal)
+                if argType == argValType:
+                    return argType
+
+                # function fnc_name(type $name = null)
+                return argType + "|" + argValType
+
+            # function fnc_name(type $name)
+            if (argType):
+                return argType
+
+            # function fnc_name($name = value)
+            if (argVal):
+                return self.guessTypeFromValue(argVal)
+
+        # function fnc_name()
+        return None
 
     def getArgName(self, arg):
         return re.search("(" + self.settings['varIdentifier'] + ")(?:\\s*=.*)?$", arg).group(1)
@@ -716,6 +739,8 @@ class JsdocsPHP(JsdocsParser):
         if val[:4] == 'new ':
             res = re.search('new (' + self.settings['fnIdentifier'] + ')', val)
             return res and res.group(1) or None
+        if val.lower() in ('null'):
+            return 'null'
         return None
 
     def getFunctionReturnType(self, name, retval):

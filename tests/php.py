@@ -34,3 +34,48 @@ def test_for_issue_286_php_args_namespace_char_is_missing(helper):
         " */",
         "function function_name(A\NS\ClassName $class) {}"
     ]
+
+def test_issue_312_array_type_missing_when_param_is_null(helper):
+
+    helper.insert("/**|\nfunction fname(array $a, array $b = null) {}")
+    helper.run()
+
+    return [
+        "/**",
+        " * |[fname description]|",
+        " * @param  array      $a [description]",
+        " * @param  array|null $b [description]",
+        " * @return [type]        [description]",
+        " */",
+        "function fname(array $a, array $b = null) {}"
+    ]
+
+def test_issue_312_qualified_namespace_type_missing_when_param_is_null(helper):
+
+    helper.insert("/**|\nfunction fname(NS\ClassA $a, NS\ClassB $b = null) {}")
+    helper.run()
+
+    return [
+        "/**",
+        " * |[fname description]|",
+        " * @param  NS\ClassA      $a [description]",
+        " * @param  NS\ClassB|null $b [description]",
+        " * @return [type]            [description]",
+        " */",
+        "function fname(NS\ClassA $a, NS\ClassB $b = null) {}"
+    ]
+
+def test_issue_312_fully_qualified_namespace_type_missing_when_param_is_null(helper):
+
+    helper.insert("/**|\nfunction fname(\NS\ClassA $a, \NS\ClassB $b = null) {}")
+    helper.run()
+
+    return [
+        "/**",
+        " * |[fname description]|",
+        " * @param  \NS\ClassA      $a [description]",
+        " * @param  \NS\ClassB|null $b [description]",
+        " * @return [type]             [description]",
+        " */",
+        "function fname(\NS\ClassA $a, \NS\ClassB $b = null) {}"
+    ]
