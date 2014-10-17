@@ -275,7 +275,7 @@ You can access the configuration settings by selecting `Preferences -> Package S
 This is my first package for Sublime Text, and the first time I've written any Python, so I heartily welcome feedback and [feature requests or bug reports][issues].
 
 [closure]: http://code.google.com/closure/compiler/docs/js-for-compiler.html
-[contrib]: blob/master/CONTRIBUTING.md
+[contrib]: CONTRIBUTING.md
 [issues]: https://github.com/spadgos/sublime-jsdocs/issues
 [jsdoc]: http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
 [magicmethods]: http://www.php.net/manual/en/language.oop5.magic.php
