@@ -1,17 +1,41 @@
-DocBlockr is a package for [Sublime Text 2 & 3][sublime] which makes writing documentation a breeze. DocBlockr supports **JavaScript**, **PHP**, **ActionScript**, **CoffeeScript**, **TypeScript**, **Java**, **Groovy**, **Objective C**, **C**, **C++** and **Rust**.
+DocBlockr
+=========
 
-## Installation ##
+DocBlockr is a package for [Sublime Text 2 & 3][sublime] which makes writing
+documentation a breeze. DocBlockr supports **JavaScript**, **PHP**,
+**ActionScript**, **CoffeeScript**, **TypeScript**, **Java**, **Groovy**,
+**Objective C**, **C**, **C++** and **Rust**.
 
-### With Package Control ###
+## Installation
 
-With [Package Control][package_control] installed, you can install DocBlockr from inside Sublime Text itself. Open the Command Palette and select "Package Control: Install Package", then search for DocBlockr and you're done!
+### [Package Control](https://sublime.wbond.net/installation)
 
-## Feature requests & bug reports ##
+1. Open Package Control: `Preferences -> Package Control`
+2. Select `Package Control: Install Package`
+3. Type `DocBlockr` into the search box and select the package to install it
 
-You can leave either of these things [here][issues]. Pull requests are welcomed heartily, but please read [CONTRIBUTING.md][contrib] first! Basically: in this repo, the main development branch is `develop` and the stable 'production' branch is `master`. Please remember to base your branch from `develop` and issue the pull request back to that branch.
+## Feature requests & bug reports
 
-## Changelog ##
+You can leave either of these things [here][issues]. Pull requests are welcomed
+heartily, but please read [CONTRIBUTING.md][contrib] first! Basically: in this
+repo, the main development branch is `develop` and the stable 'production'
+branch is `master`. Please remember to base your branch from `develop` and issue
+the pull request back to that branch.
 
+## Show your love
+
+[![Click here to lend your support to: DocBlockr and make a donation at pledgie.com!](https://pledgie.com/campaigns/16316.png?skin_name=chrome)](http://pledgie.com/campaigns/16316)
+
+## Changelog
+
+- **v2.12.3**, *7 Dec 2014*
+  - PHP arguments with pass-by-reference handled properly, thanks to [Gerard Roche](https://github.com/gerardroche)
+  - PHP namespaces handled properly, thanks to Gerard Roche
+  - PHP parameters with default null values handled properly, thanks to Gerard Roche
+  - ECMAScript 6 generator functions handled properly, thanks to [Sergey Zarouski](https://github.com/szarouski)
+  - Parameter name can be omitted with `jsdocs_param_name` option, thanks to [Daniel Kurecka](https://github.com/danielkurecka)
+  - Inline docblocks are expanded with <kbd>space</kbd>, thanks to Daniel Kurecka
+  - Java array types handled properly, thanks to [Alessio Linares](https://github.com/Galbar)
 - **v2.12.2**, *11 Apr 2014*
   - Fix for PHP autocompletions
   - Fix `@name` completion for Javascript
@@ -29,24 +53,15 @@ You can leave either of these things [here][issues]. Pull requests are welcomed 
   - Added an option to use short names for bools and ints (`jsdocs_short_primitives`), thanks to [Mat Gadd](https://github.com/drarok).
   - Fixed a bug with per-section indenting, again thanks to Mat Gadd.
   - Improved handling of Java return type detection, thanks to [Ben Linskey](https://github.com/blinskey)
-- **v2.11.6**, *14 Aug 2013*
-  - Predefined `@author` tags do not get parsed for column spacing
-  - Handles the case when an arguments list contains a comma, for example, within a default value
-  - A new keybinding for Windows to re-parse a doc block (<kbd>Alt+W</kbd>)
-  - Fixes a regression that some function names were not being parsed correctly
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
-## Show your love
 
-[![Click here to lend your support to: DocBlockr and make a donation at pledgie.com!](https://pledgie.com/campaigns/16316.png?skin_name=chrome)](http://pledgie.com/campaigns/16316)
-
-
-## Usage ##
+## Usage
 
 > Below are some examples of what the package does. Note that there are no keyboard shortcuts required to trigger these completions - just type as normal and it happens for you!
 
-### Docblock completion ###
+### Docblock completion
 
 Pressing **enter** or **tab** after `/**` (or `###*` for Coffee-Script) will yield a new line and will close the comment.
 
@@ -56,7 +71,7 @@ Single-asterisk comment blocks behave similarly:
 
 ![](http://spadgos.github.io/sublime-jsdocs/images/basic-block.gif)
 
-### Function documentation ###
+### Function documentation
 
 However, if the line directly afterwards contains a function definition, then its name and parameters are parsed and some documentation is automatically added.
 
@@ -83,11 +98,11 @@ DocBlockr will try to make an intelligent guess about the return value of the fu
   - `__toString` returns a `string`.
   - `__isset` returns a `bool`.
 
-### Variable documentation ###
+### Variable documentation
 
 If the line following your docblock contains a variable declaration, DocBlockr will try to determine the data type of the variable and insert that into the comment.
 
-If you press `shift+enter` after the opening `/**` then the docblock will be inserted inline.
+If you press `space` or `shift+enter` after the opening `/**` then the docblock will be inserted inline.
 
 ![](http://spadgos.github.io/sublime-jsdocs/images/vars.gif)
 
@@ -97,12 +112,12 @@ DocBlockr will also try to determine the type of the variable from its name. Var
 {
     "jsdocs_notation_map": [
         {
-            "prefix": "b", // a prefix, matches only if followed by an underscore or A-Z
-            "type": "bool" // translates to "Boolean" in javascript, "bool" in PHP
+            "prefix": "b", /* a prefix, matches only if followed by an underscore or A-Z */
+            "type": "bool" /* translates to "Boolean" in javascript, "bool" in PHP */
         },
         {
-            "regex": "tbl_?[Rr]ow", // any arbitrary regex to test against the variable name
-            "type": "TableRow"      // you can add your own types
+            "regex": "tbl_?[Rr]ow", /* any arbitrary regex to test against the variable name */
+            "type": "TableRow"      /* you can add your own types */
         }
     ]
 }
@@ -117,7 +132,7 @@ The notation map can also be used to add arbitrary tags, according to your own c
 }
 ```
 
-### Comment extension ###
+### Comment extension
 
 Pressing enter inside a docblock will automatically insert a leading asterisk and maintain your indentation.
 
@@ -135,7 +150,7 @@ Oftentimes, when documenting a parameter, or adding a description to a tag, your
 
 ![](http://spadgos.github.io/sublime-jsdocs/images/deep-indent.gif)
 
-### Comment decoration ###
+### Comment decoration
 
 If you write a double-slash comment and then press `Ctrl+Enter`, DocBlockr will 'decorate' that line for you.
 
@@ -147,13 +162,13 @@ If you write a double-slash comment and then press `Ctrl+Enter`, DocBlockr will 
     // Foo bar baz //
     /////////////////
 
-### Reparsing a DocBlock ###
+### Reparsing a DocBlock
 
 Sometimes, you'll perform some action which clears the fields (sections of text which you can navigate through using `tab`). This leaves you with a number of placeholders in the DocBlock with no easy way to jump to them.
 
 With DocBlockr, you can reparse a comment and reactivate the fields by pressing the hotkey `Alt+Shift+Tab` in OS X or Linux, or `Alt+W` in Windows
 
-### Reformatting paragraphs ###
+### Reformatting paragraphs
 
 Inside a comment block, hit `Alt+Q` to wrap the lines to make them fit within your rulers. If you would like subsequent lines in a paragraph to be indented, you can adjust the `jsdocs_indentation_spaces_same_para` setting. For example, a value of `3` might look like this:
 
@@ -167,11 +182,11 @@ Inside a comment block, hit `Alt+Q` to wrap the lines to make them fit within yo
      * @return {[Type]}
      */
 
-### Adding extra tags ###
+### Adding extra tags
 
 Finally, typing `@` inside a docblock will show a completion list for all tags supported by [JSDoc][jsdoc], the [Google Closure Compiler][closure], [YUIDoc][yui] or [PHPDoc][phpdoc]. Extra help is provided for each of these tags by prefilling the arguments each expects. Pressing `tab` will move the cursor to the next argument.
 
-## Configuration ##
+## Configuration
 
 You can access the configuration settings by selecting `Preferences -> Package Settings -> DocBlockr`.
 
@@ -259,10 +274,10 @@ You can access the configuration settings by selecting `Preferences -> Package S
 
 - `jsdocs_newline_after_block` *(Boolean)* If true, an extra line break is added after the end of a docblock to separate it from the code. Default `false`
 
-This is my first package for Sublime Text, and the first time I've written any Python, so I heartily welcome feedback and [feature requests or bug reports][issues].
+- `jsdocs_param_name` *(Boolean)* If true, the name of a function parameter is added to the template. If false, it is omitted. Default: `true`
 
 [closure]: http://code.google.com/closure/compiler/docs/js-for-compiler.html
-[contrib]: blob/master/CONTRIBUTING.md
+[contrib]: https://github.com/spadgos/sublime-jsdocs/blob/master/CONTRIBUTING.md
 [issues]: https://github.com/spadgos/sublime-jsdocs/issues
 [jsdoc]: http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
 [magicmethods]: http://www.php.net/manual/en/language.oop5.magic.php

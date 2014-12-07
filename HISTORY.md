@@ -1,5 +1,13 @@
 # DocBlockr Extended Changelog
 
+- **v2.12.3**, *7 Dec 2014*
+  - PHP arguments with pass-by-reference handled properly, thanks to [Gerard Roche](https://github.com/gerardroche)
+  - PHP namespaces handled properly, thanks to Gerard Roche
+  - PHP parameters with default null values handled properly, thanks to Gerard Roche
+  - ECMAScript 6 generator functions handled properly, thanks to [Sergey Zarouski](https://github.com/szarouski)
+  - Parameter name can be omitted with `jsdocs_param_name` option, thanks to [Daniel Kurecka](https://github.com/danielkurecka)
+  - Inline docblocks are expanded with <kbd>space</kbd>, thanks to Daniel Kurecka
+  - Java array types handled properly, thanks to [Alessio Linares](https://github.com/Galbar)
 - **v2.12.2**, *11 Apr 2014*
   - Fix for PHP autocompletions
   - Fix `@name` completion for Javascript

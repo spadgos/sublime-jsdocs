@@ -1,5 +1,5 @@
 """
-DocBlockr v2.12.2
+DocBlockr v2.12.3
 by Nick Fisher, and all the great people listed in CONTRIBUTORS.md
 https://github.com/spadgos/sublime-jsdocs
 
@@ -360,7 +360,7 @@ class JsdocsParser(object):
 
                 out.append(format_str % (
                     typeInfo,
-                    escape(argName)
+                    escape(argName) if self.viewSettings.get('jsdocs_param_name') else ''
                 ))
 
         # return value type might be already available in some languages but
@@ -433,7 +433,7 @@ class JsdocsParser(object):
 
         # characters which open a section inside which commas are not separators between different arguments
         openQuotes = '"\'<('
-        # characters which close the the section. The position of the character here should match the opening
+        # characters which close the section. The position of the character here should match the opening
         # indicator in `openQuotes`
         closeQuotes = '"\'>)'
 
@@ -446,12 +446,13 @@ class JsdocsParser(object):
             if nextIsLiteral:  # previous char was a \
                 current += char
                 nextIsLiteral = False
-            elif char == '\\':
-                nextIsLiteral = True
             elif insideQuotes:
-                current += char
-                if char == matchingQuote:
-                    insideQuotes = False
+                if char == '\\':
+                    nextIsLiteral = True
+                else:
+                    current += char
+                    if char == matchingQuote:
+                        insideQuotes = False
             else:
                 if char == ',':
                     blocks.append(current.strip())
@@ -561,7 +562,7 @@ class JsdocsJavascript(JsdocsParser):
             # technically, they can contain all sorts of unicode, but w/e
             "varIdentifier": identifier,
             "fnIdentifier":  identifier,
-            "fnOpener": r'function(?:\s+' + identifier + r')?\s*\(',
+            "fnOpener": r'function(?:\s+\*|\s+|\*)\s*' + identifier + r'\s*\(',
             "commentCloser": " */",
             "bool": "Boolean",
             "function": "Function"
@@ -573,7 +574,7 @@ class JsdocsJavascript(JsdocsParser):
             r'(?:(?P<name1>' + self.settings['varIdentifier'] + r')\s*[:=]\s*)?'
             + 'function'
             # function fnName
-            + r'(?:\s+(?P<name2>' + self.settings['fnIdentifier'] + '))?'
+            + r'(?:\s+(?P<gnrtr1>\*)|\s+|(?P<gnrtr2>\*))\s*(?P<name2>' + self.settings['fnIdentifier'] + ')?'
             # (arg1, arg2)
             + r'\s*\(\s*(?P<args>.*)\)',
             line
@@ -582,7 +583,10 @@ class JsdocsJavascript(JsdocsParser):
             return None
 
         # grab the name out of "name1 = function name2(foo)" preferring name1
-        name = res.group('name1') or res.group('name2') or ''
+        generatorSymbol = ''
+        if res.group('gnrtr1') or res.group('gnrtr2'):
+            generatorSymbol = '*'
+        name = generatorSymbol + (res.group('name1') or res.group('name2') or '')
         args = res.group('args')
 
         return (name, args, None)
@@ -635,8 +639,9 @@ class JsdocsPHP(JsdocsParser):
             'curlyTypes': False,
             'typeInfo': True,
             'typeTag': "var",
-            'varIdentifier': '[$]' + nameToken + '(?:->' + nameToken + ')*',
+            'varIdentifier': '&?[$]' + nameToken + '(?:->' + nameToken + ')*',
             'fnIdentifier': nameToken,
+            'typeIdentifier': '\\\\?' + nameToken + '(\\\\' + nameToken + ')*',
             'fnOpener': 'function(?:\\s+' + nameToken + ')?\\s*\\(',
             'commentCloser': ' */',
             'bool': 'bool' if shortPrimitives else 'boolean',
@@ -658,19 +663,41 @@ class JsdocsPHP(JsdocsParser):
         return (res.group('name'), res.group('args'), None)
 
     def getArgType(self, arg):
-        #  function add($x, $y = 1)
-        res = re.search(
-            '(?P<name>' + self.settings['varIdentifier'] + ")\\s*=\\s*(?P<val>.*)",
-            arg
-        )
-        if res:
-            return self.guessTypeFromValue(res.group('val'))
 
-        #  function sum(Array $x)
-        if re.search('\\S\\s', arg):
-            return re.search("^(\\S+)", arg).group(1)
-        else:
-            return None
+        res = re.search(
+            '(?P<type>' + self.settings['typeIdentifier'] + ')?'
+            + '\\s*(?P<name>' + self.settings['varIdentifier'] + ')'
+            + '(\\s*=\\s*(?P<val>.*))?',
+            arg
+        );
+
+        if (res):
+
+            argType = res.group("type")
+            argName = res.group("name")
+            argVal = res.group("val")
+
+            # function fnc_name(type $name = val)
+            if (argType and argVal):
+
+                # function fnc_name(array $x = array())
+                argValType = self.guessTypeFromValue(argVal)
+                if argType == argValType:
+                    return argType
+
+                # function fnc_name(type $name = null)
+                return argType + "|" + argValType
+
+            # function fnc_name(type $name)
+            if (argType):
+                return argType
+
+            # function fnc_name($name = value)
+            if (argVal):
+                guessedType = self.guessTypeFromValue(argVal)
+                return guessedType if guessedType != 'null' else None
+        # function fnc_name()
+        return None
 
     def getArgName(self, arg):
         return re.search("(" + self.settings['varIdentifier'] + ")(?:\\s*=.*)?$", arg).group(1)
@@ -712,6 +739,8 @@ class JsdocsPHP(JsdocsParser):
         if val[:4] == 'new ':
             res = re.search('new (' + self.settings['fnIdentifier'] + ')', val)
             return res and res.group(1) or None
+        if val.lower() in ('null'):
+            return 'null'
         return None
 
     def getFunctionReturnType(self, name, retval):
@@ -1007,15 +1036,15 @@ class JsdocsJava(JsdocsParser):
         line = line.strip()
         res = re.search(
             # Modifiers
-            '(?:(public|protected|private|static|abstract|final|transient|synchronized|native|strictfp)\s+)*'
+            r'(?:(public|protected|private|static|abstract|final|transient|synchronized|native|strictfp)\s+)*'
             # Return value
-            + '(?P<retval>[a-zA-Z_$][\<\>\., a-zA-Z_$0-9]+)\s+'
+            + r'(?P<retval>[a-zA-Z_$][<>., a-zA-Z_$0-9]+(\[\])*)\s+'
             # Method name
-            + '(?P<name>' + self.settings['fnIdentifier'] + ')\s*'
+            + r'(?P<name>' + self.settings['fnIdentifier'] + r')\s*'
             # Params
-            + '\((?P<args>.*)\)\s*'
+            + r'\((?P<args>.*)\)\s*'
             # # Throws ,
-            + '(?:throws){0,1}\s*(?P<throws>[a-zA-Z_$0-9\.,\s]*)',
+            + r'(?:throws){0,1}\s*(?P<throws>[a-zA-Z_$0-9\.,\s]*)',
             line
         )
 

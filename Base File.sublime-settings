@@ -62,6 +62,9 @@
   // Add a '[description]' placeholder for the param tag?
   "jsdocs_param_description": true,
 
+  // Add a name of parameter in param tag?
+  "jsdocs_param_name": true,
+
   // Whether there should be blank lines added between the description line, and between tags of different types.
   // Possible values are true, false, or "after_description".
   // If true, the output might look like this:
