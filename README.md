@@ -28,6 +28,14 @@ the pull request back to that branch.
 
 ## Changelog
 
+- **v2.12.3**, *7 Dec 2014*
+  - PHP arguments with pass-by-reference handled properly, thanks to [Gerard Roche](https://github.com/gerardroche)
+  - PHP namespaces handled properly, thanks to Gerard Roche
+  - PHP parameters with default null values handled properly, thanks to Gerard Roche
+  - ECMAScript 6 generator functions handled properly, thanks to [Sergey Zarouski](https://github.com/szarouski)
+  - Parameter name can be omitted with `jsdocs_param_name` option, thanks to [Daniel Kurecka](https://github.com/danielkurecka)
+  - Inline docblocks are expanded with <kbd>space</kbd>, thanks to Daniel Kurecka
+  - Java array types handled properly, thanks to [Alessio Linares](https://github.com/Galbar)
 - **v2.12.2**, *11 Apr 2014*
   - Fix for PHP autocompletions
   - Fix `@name` completion for Javascript
@@ -45,11 +53,6 @@ the pull request back to that branch.
   - Added an option to use short names for bools and ints (`jsdocs_short_primitives`), thanks to [Mat Gadd](https://github.com/drarok).
   - Fixed a bug with per-section indenting, again thanks to Mat Gadd.
   - Improved handling of Java return type detection, thanks to [Ben Linskey](https://github.com/blinskey)
-- **v2.11.6**, *14 Aug 2013*
-  - Predefined `@author` tags do not get parsed for column spacing
-  - Handles the case when an arguments list contains a comma, for example, within a default value
-  - A new keybinding for Windows to re-parse a doc block (<kbd>Alt+W</kbd>)
-  - Fixes a regression that some function names were not being parsed correctly
 
 Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
 
