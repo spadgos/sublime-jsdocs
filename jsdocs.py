@@ -1036,15 +1036,15 @@ class JsdocsJava(JsdocsParser):
         line = line.strip()
         res = re.search(
             # Modifiers
-            '(?:(public|protected|private|static|abstract|final|transient|synchronized|native|strictfp)\s+)*'
+            r'(?:(public|protected|private|static|abstract|final|transient|synchronized|native|strictfp)\s+)*'
             # Return value
-            + '(?P<retval>[a-zA-Z_$][\<\>\., a-zA-Z_$0-9]+)\s+'
+            + r'(?P<retval>[a-zA-Z_$][<>., a-zA-Z_$0-9]+(\[\])*)\s+'
             # Method name
-            + '(?P<name>' + self.settings['fnIdentifier'] + ')\s*'
+            + r'(?P<name>' + self.settings['fnIdentifier'] + r')\s*'
             # Params
-            + '\((?P<args>.*)\)\s*'
+            + r'\((?P<args>.*)\)\s*'
             # # Throws ,
-            + '(?:throws){0,1}\s*(?P<throws>[a-zA-Z_$0-9\.,\s]*)',
+            + r'(?:throws){0,1}\s*(?P<throws>[a-zA-Z_$0-9\.,\s]*)',
             line
         )
 
