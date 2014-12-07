@@ -694,8 +694,8 @@ class JsdocsPHP(JsdocsParser):
 
             # function fnc_name($name = value)
             if (argVal):
-                return self.guessTypeFromValue(argVal)
-
+                guessedType = self.guessTypeFromValue(argVal)
+                return guessedType if guessedType != 'null' else None
         # function fnc_name()
         return None
 
