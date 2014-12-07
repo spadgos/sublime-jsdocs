@@ -259,6 +259,8 @@ You can access the configuration settings by selecting `Preferences -> Package S
 
 - `jsdocs_newline_after_block` *(Boolean)* If true, an extra line break is added after the end of a docblock to separate it from the code. Default `false`
 
+- `jsdocs_param_name` *(Boolean)* If true, the name of a function parameter is added to the template. If false, it is omitted. Default: `true`
+
 This is my first package for Sublime Text, and the first time I've written any Python, so I heartily welcome feedback and [feature requests or bug reports][issues].
 
 [closure]: http://code.google.com/closure/compiler/docs/js-for-compiler.html
