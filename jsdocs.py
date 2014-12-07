@@ -360,7 +360,7 @@ class JsdocsParser(object):
 
                 out.append(format_str % (
                     typeInfo,
-                    escape(argName)
+                    escape(argName) if self.viewSettings.get('jsdocs_param_name') else ''
                 ))
 
         # return value type might be already available in some languages but
