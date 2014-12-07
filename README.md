@@ -1,14 +1,26 @@
-DocBlockr is a package for [Sublime Text 2 & 3][sublime] which makes writing documentation a breeze. DocBlockr supports **JavaScript**, **PHP**, **ActionScript**, **CoffeeScript**, **TypeScript**, **Java**, **Groovy**, **Objective C**, **C**, **C++** and **Rust**.
+DocBlockr
+=========
+
+DocBlockr is a package for [Sublime Text 2 & 3][sublime] which makes writing
+documentation a breeze. DocBlockr supports **JavaScript**, **PHP**,
+**ActionScript**, **CoffeeScript**, **TypeScript**, **Java**, **Groovy**,
+**Objective C**, **C**, **C++** and **Rust**.
 
 ## Installation ##
 
-### With Package Control ###
+### [Package Control](https://sublime.wbond.net/installation)
 
-With [Package Control][package_control] installed, you can install DocBlockr from inside Sublime Text itself. Open the Command Palette and select "Package Control: Install Package", then search for DocBlockr and you're done!
+1. Open Package Control: `Preferences -> Package Control`
+2. Select `Package Control: Install Package`
+3. Type `DocBlockr` into the search box and select the package to install it
 
 ## Feature requests & bug reports ##
 
-You can leave either of these things [here][issues]. Pull requests are welcomed heartily, but please read [CONTRIBUTING.md][contrib] first! Basically: in this repo, the main development branch is `develop` and the stable 'production' branch is `master`. Please remember to base your branch from `develop` and issue the pull request back to that branch.
+You can leave either of these things [here][issues]. Pull requests are welcomed
+heartily, but please read [CONTRIBUTING.md][contrib] first! Basically: in this
+repo, the main development branch is `develop` and the stable 'production'
+branch is `master`. Please remember to base your branch from `develop` and issue
+the pull request back to that branch.
 
 ## Changelog ##
 
@@ -40,7 +52,6 @@ Older history can be found in [the history file](https://github.com/spadgos/subl
 ## Show your love
 
 [![Click here to lend your support to: DocBlockr and make a donation at pledgie.com!](https://pledgie.com/campaigns/16316.png?skin_name=chrome)](http://pledgie.com/campaigns/16316)
-
 
 ## Usage ##
 
@@ -264,7 +275,7 @@ You can access the configuration settings by selecting `Preferences -> Package S
 This is my first package for Sublime Text, and the first time I've written any Python, so I heartily welcome feedback and [feature requests or bug reports][issues].
 
 [closure]: http://code.google.com/closure/compiler/docs/js-for-compiler.html
-[contrib]: blob/master/CONTRIBUTING.md
+[contrib]: https://github.com/spadgos/sublime-jsdocs/blob/master/CONTRIBUTING.md
 [issues]: https://github.com/spadgos/sublime-jsdocs/issues
 [jsdoc]: http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
 [magicmethods]: http://www.php.net/manual/en/language.oop5.magic.php
