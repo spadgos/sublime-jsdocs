@@ -87,7 +87,7 @@ DocBlockr will try to make an intelligent guess about the return value of the fu
 
 If the line following your docblock contains a variable declaration, DocBlockr will try to determine the data type of the variable and insert that into the comment.
 
-If you press `shift+enter` after the opening `/**` then the docblock will be inserted inline.
+If you press `space` or `shift+enter` after the opening `/**` then the docblock will be inserted inline.
 
 ![](http://spadgos.github.io/sublime-jsdocs/images/vars.gif)
 
