@@ -626,11 +626,36 @@ class JsdocsJavascript(JsdocsParser):
 
     def getArgType(self, arg):
         parts = re.split(r'\s*=\s*', arg, 1)
-        if len(parts) > 1:
+
+        # rest parameters
+        if parts[0].find('...') == 0:
+            return '...[type]'
+        elif len(parts) > 1:
             return self.guessTypeFromValue(parts[1])
 
     def getArgName(self, arg):
-        return re.split(r'\s*=\s*', arg, 1)[0]
+        namePart = re.split(r'\s*=\s*', arg, 1)[0]
+
+        # check for rest parameters, eg: function (foo, ...rest) {}
+        if namePart.find('...') == 0:
+            return namePart[3:]
+        return namePart
+
+    def getFunctionReturnType(self, name, retval):
+        if name and name[0] == '*':
+            return None
+        return super(JsdocsJavascript, self).getFunctionReturnType(name, retval)
+
+    def getMatchingNotations(self, name):
+        out = super(JsdocsJavascript, self).getMatchingNotations(name)
+        if name and name[0] == '*':
+            # if '@returns' is preferred, then also use '@yields'. Otherwise, '@return' and '@yield'
+            yieldTag = '@yield' + ('s' if self.viewSettings.get('jsdocs_return_tag', '_')[-1] == 's' else '')
+            description = ' ${1:[description]}' if self.viewSettings.get('jsdocs_return_description', True) else ''
+            out.append({ 'tags': [
+                '%s {${1:[type]}}%s' % (yieldTag, description)
+            ]})
+        return out
 
     def guessTypeFromValue(self, val):
         lowerPrimitives = self.viewSettings.get('jsdocs_lower_case_primitives') or False
