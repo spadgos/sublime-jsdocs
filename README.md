@@ -28,6 +28,8 @@ the pull request back to that branch.
 
 ## Changelog
 
+- **v2.12.4**, *10 Dec 2014*
+  - Fixes regression in handling Javascript function expressions
 - **v2.12.3**, *7 Dec 2014*
   - PHP arguments with pass-by-reference handled properly, thanks to [Gerard Roche](https://github.com/gerardroche)
   - PHP namespaces handled properly, thanks to Gerard Roche
@@ -47,15 +49,8 @@ the pull request back to that branch.
   - PHP autocompletions support only the [PSR-5](https://github.com/phpDocumentor/fig-standards/blob/master/proposed/phpdoc.md) tags, thanks to [Gary Jones](https://github.com/GaryJones)
   - Fix scope issues for Java autocompletions, thanks to [Dominique Wahli](https://github.com/bizoo)
   - Fix for reflowing paragraphs when no rulers are set.
-- **v2.11.7**, *3 Nov 2013*
-  - Added support for triple `///`, `//!` and `/*!` style comments, thanks to [Jordi Boggiano](https://github.com/seldaek).
-  - Added basic **Rust** support, again thanks to Jordi Boggiano.
-  - Added an option to use short names for bools and ints (`jsdocs_short_primitives`), thanks to [Mat Gadd](https://github.com/drarok).
-  - Fixed a bug with per-section indenting, again thanks to Mat Gadd.
-  - Improved handling of Java return type detection, thanks to [Ben Linskey](https://github.com/blinskey)
 
-Older history can be found in [the history file](https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md).
-
+Older history can be found in [the history file][history].
 
 ## Usage
 
@@ -278,6 +273,7 @@ You can access the configuration settings by selecting `Preferences -> Package S
 
 [closure]: http://code.google.com/closure/compiler/docs/js-for-compiler.html
 [contrib]: https://github.com/spadgos/sublime-jsdocs/blob/master/CONTRIBUTING.md
+[history]: https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md
 [issues]: https://github.com/spadgos/sublime-jsdocs/issues
 [jsdoc]: http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
 [magicmethods]: http://www.php.net/manual/en/language.oop5.magic.php
