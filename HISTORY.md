@@ -1,5 +1,7 @@
 # DocBlockr Extended Changelog
 
+- **v2.12.4**, *10 Dec 2014*
+  - Fixes regression in handling Javascript function expressions
 - **v2.12.3**, *7 Dec 2014*
   - PHP arguments with pass-by-reference handled properly, thanks to [Gerard Roche](https://github.com/gerardroche)
   - PHP namespaces handled properly, thanks to Gerard Roche
