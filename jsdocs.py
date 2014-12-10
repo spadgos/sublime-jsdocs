@@ -350,7 +350,7 @@ class JsdocsParser(object):
         # if there are arguments, add a @param for each
         if (args):
             # remove comments inside the argument list.
-            args = re.sub("/\*.*?\*/", '', args)
+            args = re.sub(r'/\*.*?\*/', '', args)
             for argType, argName in self.parseArgs(args):
                 typeInfo = self.getTypeInfo(argType, argName)
 
@@ -562,7 +562,11 @@ class JsdocsJavascript(JsdocsParser):
             # technically, they can contain all sorts of unicode, but w/e
             "varIdentifier": identifier,
             "fnIdentifier":  identifier,
-            "fnOpener": r'function(?:\s+\*|\s+|\*)\s*(?:' + identifier + r')?\s*\(',
+            "fnOpener": '(?:'
+                    + r'function[\s*]*(?:' + identifier + r')?\s*\('
+                    + '|'
+                    + '(?:' + identifier + r'|\(.*\)\s*=>)'
+                    + ')',
             "commentCloser": " */",
             "bool": "Boolean",
             "function": "Function"
@@ -570,6 +574,7 @@ class JsdocsJavascript(JsdocsParser):
 
     def parseFunction(self, line):
         res = re.search(
+            # Normal functions...
             #   fnName = function,  fnName : function
             r'(?:(?P<name1>' + self.settings['varIdentifier'] + r')\s*[:=]\s*)?'
             + 'function'
@@ -578,14 +583,27 @@ class JsdocsJavascript(JsdocsParser):
             # (arg1, arg2)
             + r'\s*\(\s*(?P<args>.*)\)',
             line
+        ) or re.search(
+            # ES6 arrow functions
+            # () => y,  x => y,  (x, y) => y,  (x = 4) => y
+            r'(?:(?P<args>' + self.settings['varIdentifier'] + r')|\(\s*(?P<args2>.*)\))\s*=>',
+            line
         )
         if not res:
             return None
 
+        groups = {
+            'name1': '',
+            'name2': '',
+            'generator': '',
+            'args': '',
+            'args2': ''
+        }
+        groups.update(res.groupdict())
         # grab the name out of "name1 = function name2(foo)" preferring name1
-        generatorSymbol = '*' if (res.group('generator') or '').find('*') > -1 else ''
-        name = generatorSymbol + (res.group('name1') or res.group('name2') or '')
-        args = res.group('args')
+        generatorSymbol = '*' if (groups['generator'] or '').find('*') > -1 else ''
+        name = generatorSymbol + (groups['name1'] or groups['name2'] or '')
+        args = groups['args'] or groups['args2'] or ''
 
         return (name, args, None)
 
@@ -606,6 +624,14 @@ class JsdocsJavascript(JsdocsParser):
 
         return (res.group('name'), res.group('val').strip())
 
+    def getArgType(self, arg):
+        parts = re.split(r'\s*=\s*', arg, 1)
+        if len(parts) > 1:
+            return self.guessTypeFromValue(parts[1])
+
+    def getArgName(self, arg):
+        return re.split(r'\s*=\s*', arg, 1)[0]
+
     def guessTypeFromValue(self, val):
         lowerPrimitives = self.viewSettings.get('jsdocs_lower_case_primitives') or False
         shortPrimitives = self.viewSettings.get('jsdocs_short_primitives') or False
@@ -622,6 +648,8 @@ class JsdocsJavascript(JsdocsParser):
             return returnVal.lower() if lowerPrimitives else returnVal
         if re.match('RegExp\\b|\\/[^\\/]', val):
             return 'RegExp'
+        if val.find('=>') > -1:
+            return 'function' if lowerPrimitives else 'Function'
         if val[:4] == 'new ':
             res = re.search('new (' + self.settings['fnIdentifier'] + ')', val)
             return res and res.group(1) or None
