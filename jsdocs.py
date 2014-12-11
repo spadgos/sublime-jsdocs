@@ -74,6 +74,63 @@ def getParser(view):
     return JsdocsJavascript(viewSettings)
 
 
+def splitByCommas(str):
+    """
+    Split a string by unenclosed commas: that is, commas which are not inside of quotes or brackets.
+    splitByCommas('foo, bar(baz, quux), fwip = "hey, hi"')
+     ==> ['foo', 'bar(baz, quux)', 'fwip = "hey, hi"']
+    """
+    out = []
+
+    if not str:
+        return out
+
+    # the current token
+    current = ''
+
+    # characters which open a section inside which commas are not separators between different arguments
+    openQuotes = '"\'<({'
+    # characters which close the section. The position of the character here should match the opening
+    # indicator in `openQuotes`
+    closeQuotes = '"\'>)}'
+
+    matchingQuote = ''
+    insideQuotes = False
+    nextIsLiteral = False
+
+    for char in str:
+        if nextIsLiteral:  # previous char was a \
+            current += char
+            nextIsLiteral = False
+        elif insideQuotes:
+            if char == '\\':
+                nextIsLiteral = True
+            else:
+                current += char
+                if char == matchingQuote:
+                    insideQuotes = False
+        else:
+            if char == ',':
+                out.append(current.strip())
+                current = ''
+            else:
+                current += char
+                quoteIndex = openQuotes.find(char)
+                if quoteIndex > -1:
+                    matchingQuote = closeQuotes[quoteIndex]
+                    insideQuotes = True
+
+    out.append(current.strip())
+    return out
+
+
+def flatten(theList):
+    """
+    Flatten a shallow list. Only works when all items are lists.
+    [[(1,1)], [(2,2), (3, 3)]] --> [(1,1), (2,2), (3,3)]
+    """
+    return [item for sublist in theList for item in sublist]
+
 class JsdocsCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, inline=False):
@@ -350,7 +407,7 @@ class JsdocsParser(object):
         # if there are arguments, add a @param for each
         if (args):
             # remove comments inside the argument list.
-            args = re.sub("/\*.*?\*/", '', args)
+            args = re.sub(r'/\*.*?\*/', '', args)
             for argType, argName in self.parseArgs(args):
                 typeInfo = self.getTypeInfo(argType, argName)
 
@@ -421,54 +478,20 @@ class JsdocsParser(object):
 
     def parseArgs(self, args):
         """
-        an array of tuples, the first being the best guess at the type, the second being the name
+        a list of tuples, the first being the best guess at the type, the second being the name
         """
+        blocks = splitByCommas(args)
         out = []
-
-        if not args:
-            return out
-
-        # the current token
-        current = ''
-
-        # characters which open a section inside which commas are not separators between different arguments
-        openQuotes = '"\'<('
-        # characters which close the section. The position of the character here should match the opening
-        # indicator in `openQuotes`
-        closeQuotes = '"\'>)'
-
-        matchingQuote = ''
-        insideQuotes = False
-        nextIsLiteral = False
-        blocks = []
-
-        for char in args:
-            if nextIsLiteral:  # previous char was a \
-                current += char
-                nextIsLiteral = False
-            elif insideQuotes:
-                if char == '\\':
-                    nextIsLiteral = True
-                else:
-                    current += char
-                    if char == matchingQuote:
-                        insideQuotes = False
-            else:
-                if char == ',':
-                    blocks.append(current.strip())
-                    current = ''
-                else:
-                    current += char
-                    quoteIndex = openQuotes.find(char)
-                    if quoteIndex > -1:
-                        matchingQuote = closeQuotes[quoteIndex]
-                        insideQuotes = True
-
-        blocks.append(current.strip())
-
         for arg in blocks:
-            out.append((self.getArgType(arg), self.getArgName(arg)))
-        return out
+            out.append(self.getArgInfo(arg))
+
+        return flatten(out)
+
+    def getArgInfo(self, arg):
+        """
+        Return a list of tuples, one for each argument derived from the arg param.
+        """
+        return [(self.getArgType(arg), self.getArgName(arg))]
 
     def getArgType(self, arg):
         return None
@@ -562,7 +585,13 @@ class JsdocsJavascript(JsdocsParser):
             # technically, they can contain all sorts of unicode, but w/e
             "varIdentifier": identifier,
             "fnIdentifier":  identifier,
-            "fnOpener": r'function(?:\s+\*|\s+|\*)\s*(?:' + identifier + r')?\s*\(',
+            "fnOpener": '(?:'
+                    + r'function[\s*]*(?:' + identifier + r')?\s*\('
+                    + '|'
+                    + '(?:' + identifier + r'|\(.*\)\s*=>)'
+                    + '|'
+                    + '(?:' + identifier + r'\s*\(.*\)\s*\{)'
+                    + ')',
             "commentCloser": " */",
             "bool": "Boolean",
             "function": "Function"
@@ -570,6 +599,7 @@ class JsdocsJavascript(JsdocsParser):
 
     def parseFunction(self, line):
         res = re.search(
+            # Normal functions...
             #   fnName = function,  fnName : function
             r'(?:(?P<name1>' + self.settings['varIdentifier'] + r')\s*[:=]\s*)?'
             + 'function'
@@ -578,14 +608,32 @@ class JsdocsJavascript(JsdocsParser):
             # (arg1, arg2)
             + r'\s*\(\s*(?P<args>.*)\)',
             line
+        ) or re.search(
+            # ES6 arrow functions
+            # () => y,  x => y,  (x, y) => y,  (x = 4) => y
+            r'(?:(?P<args>' + self.settings['varIdentifier'] + r')|\(\s*(?P<args2>.*)\))\s*=>',
+            line
+        ) or re.search(
+            # ES6 method initializer shorthand
+            # var person = { getName() { return this.name; } }
+            r'(?P<name1>' + self.settings['varIdentifier'] + ')\s*\((?P<args>.*)\)\s*\{',
+            line
         )
         if not res:
             return None
 
+        groups = {
+            'name1': '',
+            'name2': '',
+            'generator': '',
+            'args': '',
+            'args2': ''
+        }
+        groups.update(res.groupdict())
         # grab the name out of "name1 = function name2(foo)" preferring name1
-        generatorSymbol = '*' if (res.group('generator') or '').find('*') > -1 else ''
-        name = generatorSymbol + (res.group('name1') or res.group('name2') or '')
-        args = res.group('args')
+        generatorSymbol = '*' if (groups['generator'] or '').find('*') > -1 else ''
+        name = generatorSymbol + (groups['name1'] or groups['name2'] or '')
+        args = groups['args'] or groups['args2'] or ''
 
         return (name, args, None)
 
@@ -606,6 +654,52 @@ class JsdocsJavascript(JsdocsParser):
 
         return (res.group('name'), res.group('val').strip())
 
+    def getArgInfo(self, arg):
+        if (re.search('^\{.*\}$', arg)):
+            subItems = splitByCommas(arg[1:-1])
+            prefix = 'options.'
+        else:
+            subItems = [arg]
+            prefix = ''
+
+        out = []
+        for subItem in subItems:
+            out.append((self.getArgType(subItem), prefix + self.getArgName(subItem)))
+
+        return out
+
+    def getArgType(self, arg):
+        parts = re.split(r'\s*=\s*', arg, 1)
+        # rest parameters
+        if parts[0].find('...') == 0:
+            return '...[type]'
+        elif len(parts) > 1:
+            return self.guessTypeFromValue(parts[1])
+
+    def getArgName(self, arg):
+        namePart = re.split(r'\s*=\s*', arg, 1)[0]
+
+        # check for rest parameters, eg: function (foo, ...rest) {}
+        if namePart.find('...') == 0:
+            return namePart[3:]
+        return namePart
+
+    def getFunctionReturnType(self, name, retval):
+        if name and name[0] == '*':
+            return None
+        return super(JsdocsJavascript, self).getFunctionReturnType(name, retval)
+
+    def getMatchingNotations(self, name):
+        out = super(JsdocsJavascript, self).getMatchingNotations(name)
+        if name and name[0] == '*':
+            # if '@returns' is preferred, then also use '@yields'. Otherwise, '@return' and '@yield'
+            yieldTag = '@yield' + ('s' if self.viewSettings.get('jsdocs_return_tag', '_')[-1] == 's' else '')
+            description = ' ${1:[description]}' if self.viewSettings.get('jsdocs_return_description', True) else ''
+            out.append({ 'tags': [
+                '%s {${1:[type]}}%s' % (yieldTag, description)
+            ]})
+        return out
+
     def guessTypeFromValue(self, val):
         lowerPrimitives = self.viewSettings.get('jsdocs_lower_case_primitives') or False
         shortPrimitives = self.viewSettings.get('jsdocs_short_primitives') or False
@@ -622,6 +716,8 @@ class JsdocsJavascript(JsdocsParser):
             return returnVal.lower() if lowerPrimitives else returnVal
         if re.match('RegExp\\b|\\/[^\\/]', val):
             return 'RegExp'
+        if val.find('=>') > -1:
+            return 'function' if lowerPrimitives else 'Function'
         if val[:4] == 'new ':
             res = re.search('new (' + self.settings['fnIdentifier'] + ')', val)
             return res and res.group(1) or None
