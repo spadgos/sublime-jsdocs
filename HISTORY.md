@@ -1,5 +1,13 @@
 # DocBlockr Extended Changelog
 
+- **v2.13.0**, *11 Dec 2014*
+  - ECMAScript 6 support! Including:
+    - Arrow functions
+    - Default parameter values
+    - Rest parameters
+    - Parameter destructuring
+    - Shorthand method initialization
+    - `@yield` for generator functions
 - **v2.12.4**, *10 Dec 2014*
   - Fixes regression in handling Javascript function expressions
 - **v2.12.3**, *7 Dec 2014*
