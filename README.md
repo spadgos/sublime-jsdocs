@@ -2,8 +2,8 @@ DocBlockr
 =========
 
 DocBlockr is a package for [Sublime Text 2 & 3][sublime] which makes writing
-documentation a breeze. DocBlockr supports **JavaScript**, **PHP**,
-**ActionScript**, **CoffeeScript**, **TypeScript**, **Java**, **Groovy**,
+documentation a breeze. DocBlockr supports **JavaScript** (including ES6), **PHP**,
+**ActionScript**, **Haxe**, **CoffeeScript**, **TypeScript**, **Java**, **Groovy**,
 **Objective C**, **C**, **C++** and **Rust**.
 
 ## Installation
@@ -92,6 +92,7 @@ DocBlockr will try to make an intelligent guess about the return value of the fu
   - `__sleep` returns an `Array`.
   - `__toString` returns a `string`.
   - `__isset` returns a `bool`.
+- In ES6 Javascript, generator functions get a `@yield` tag instead of `@return`
 
 ### Variable documentation
 
@@ -103,7 +104,7 @@ If you press `space` or `shift+enter` after the opening `/**` then the docblock 
 
 DocBlockr will also try to determine the type of the variable from its name. Variables starting with `is` or `has` are assumed to be booleans, and `callback`, `cb`, `done`, `fn`, and `next` are assumed to be functions. If you use your own variable naming system (eg: hungarian notation: booleans all start with `b`, arrays start with `arr`), you can define these rules yourself. Modify the `jsdocs_notation_map` setting *(in `Base File.sublime-settings`)* like so:
 
-```json
+```js
 {
     "jsdocs_notation_map": [
         {
@@ -174,7 +175,7 @@ Inside a comment block, hit `Alt+Q` to wrap the lines to make them fit within yo
      * @param  {Number} bar Nullam fringilla feugiat pretium. Quisque
      *   consectetur, risus eu pellentesque tincidunt, nulla ipsum imperdiet
      *   massa, sit amet adipiscing dolor.
-     * @return {[Type]}
+     * @return {[type]}
      */
 
 ### Adding extra tags
@@ -271,14 +272,20 @@ You can access the configuration settings by selecting `Preferences -> Package S
 
 - `jsdocs_param_name` *(Boolean)* If true, the name of a function parameter is added to the template. If false, it is omitted. Default: `true`
 
+## Contributors
+
+This package was created by [Nick Fisher][spadgos], but has many contributions from others. Please take a look at the [contributors list][contibutors] to see who else should get some thanks.
+
 [closure]: http://code.google.com/closure/compiler/docs/js-for-compiler.html
 [contrib]: https://github.com/spadgos/sublime-jsdocs/blob/master/CONTRIBUTING.md
+[contributors]: https://github.com/spadgos/sublime-jsdocs/blob/master/CONTRIBUTORS.md
 [history]: https://github.com/spadgos/sublime-jsdocs/blob/master/HISTORY.md
 [issues]: https://github.com/spadgos/sublime-jsdocs/issues
 [jsdoc]: http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
 [magicmethods]: http://www.php.net/manual/en/language.oop5.magic.php
 [package_control]: http://wbond.net/sublime_packages/package_control
 [phpdoc]: http://phpdoc.org/
+[spadgos]: https://github.com/spadgos
 [sublime]: http://www.sublimetext.com/
 [tags]: https://github.com/spadgos/sublime-jsdocs/tags
 [typehinting]: http://php.net/manual/en/language.oop5.typehinting.php
