@@ -28,6 +28,14 @@ the pull request back to that branch.
 
 ## Changelog
 
+- **v2.13.0**, *11 Dec 2014*
+  - ECMAScript 6 support! Including:
+    - Arrow functions
+    - Default parameter values
+    - Rest parameters
+    - Parameter destructuring
+    - Shorthand method initialization
+    - `@yield` for generator functions
 - **v2.12.4**, *10 Dec 2014*
   - Fixes regression in handling Javascript function expressions
 - **v2.12.3**, *7 Dec 2014*
@@ -43,12 +51,6 @@ the pull request back to that branch.
   - Fix `@name` completion for Javascript
 - **v2.12.1**, *4 Mar 2014*
   - Fix for Sublime Text 3
-- **v2.12.0**, *4 Mar 2014*
-  - Adds support for **TypeScript**, thanks to [Marc-Antoine Parent](https://github.com/maparent)
-  - Adds option to add a spacer line after the description (`"jsdocs_spacer_between_sections": "after_description"`), thanks to [Milos Levacic](https://github.com/levacic)
-  - PHP autocompletions support only the [PSR-5](https://github.com/phpDocumentor/fig-standards/blob/master/proposed/phpdoc.md) tags, thanks to [Gary Jones](https://github.com/GaryJones)
-  - Fix scope issues for Java autocompletions, thanks to [Dominique Wahli](https://github.com/bizoo)
-  - Fix for reflowing paragraphs when no rulers are set.
 
 Older history can be found in [the history file][history].
 
