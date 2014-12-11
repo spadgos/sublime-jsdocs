@@ -589,6 +589,8 @@ class JsdocsJavascript(JsdocsParser):
                     + r'function[\s*]*(?:' + identifier + r')?\s*\('
                     + '|'
                     + '(?:' + identifier + r'|\(.*\)\s*=>)'
+                    + '|'
+                    + '(?:' + identifier + r'\s*\(.*\)\s*\{)'
                     + ')',
             "commentCloser": " */",
             "bool": "Boolean",
@@ -610,6 +612,11 @@ class JsdocsJavascript(JsdocsParser):
             # ES6 arrow functions
             # () => y,  x => y,  (x, y) => y,  (x = 4) => y
             r'(?:(?P<args>' + self.settings['varIdentifier'] + r')|\(\s*(?P<args2>.*)\))\s*=>',
+            line
+        ) or re.search(
+            # ES6 method initializer shorthand
+            # var person = { getName() { return this.name; } }
+            r'(?P<name1>' + self.settings['varIdentifier'] + ')\s*\((?P<args>.*)\)\s*\{',
             line
         )
         if not res:
