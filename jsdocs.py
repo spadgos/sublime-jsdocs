@@ -74,6 +74,63 @@ def getParser(view):
     return JsdocsJavascript(viewSettings)
 
 
+def splitByCommas(str):
+    """
+    Split a string by unenclosed commas: that is, commas which are not inside of quotes or brackets.
+    splitByCommas('foo, bar(baz, quux), fwip = "hey, hi"')
+     ==> ['foo', 'bar(baz, quux)', 'fwip = "hey, hi"']
+    """
+    out = []
+
+    if not str:
+        return out
+
+    # the current token
+    current = ''
+
+    # characters which open a section inside which commas are not separators between different arguments
+    openQuotes = '"\'<({'
+    # characters which close the section. The position of the character here should match the opening
+    # indicator in `openQuotes`
+    closeQuotes = '"\'>)}'
+
+    matchingQuote = ''
+    insideQuotes = False
+    nextIsLiteral = False
+
+    for char in str:
+        if nextIsLiteral:  # previous char was a \
+            current += char
+            nextIsLiteral = False
+        elif insideQuotes:
+            if char == '\\':
+                nextIsLiteral = True
+            else:
+                current += char
+                if char == matchingQuote:
+                    insideQuotes = False
+        else:
+            if char == ',':
+                out.append(current.strip())
+                current = ''
+            else:
+                current += char
+                quoteIndex = openQuotes.find(char)
+                if quoteIndex > -1:
+                    matchingQuote = closeQuotes[quoteIndex]
+                    insideQuotes = True
+
+    out.append(current.strip())
+    return out
+
+
+def flatten(theList):
+    """
+    Flatten a shallow list. Only works when all items are lists.
+    [[(1,1)], [(2,2), (3, 3)]] --> [(1,1), (2,2), (3,3)]
+    """
+    return [item for sublist in theList for item in sublist]
+
 class JsdocsCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, inline=False):
@@ -421,54 +478,20 @@ class JsdocsParser(object):
 
     def parseArgs(self, args):
         """
-        an array of tuples, the first being the best guess at the type, the second being the name
+        a list of tuples, the first being the best guess at the type, the second being the name
         """
+        blocks = splitByCommas(args)
         out = []
-
-        if not args:
-            return out
-
-        # the current token
-        current = ''
-
-        # characters which open a section inside which commas are not separators between different arguments
-        openQuotes = '"\'<('
-        # characters which close the section. The position of the character here should match the opening
-        # indicator in `openQuotes`
-        closeQuotes = '"\'>)'
-
-        matchingQuote = ''
-        insideQuotes = False
-        nextIsLiteral = False
-        blocks = []
-
-        for char in args:
-            if nextIsLiteral:  # previous char was a \
-                current += char
-                nextIsLiteral = False
-            elif insideQuotes:
-                if char == '\\':
-                    nextIsLiteral = True
-                else:
-                    current += char
-                    if char == matchingQuote:
-                        insideQuotes = False
-            else:
-                if char == ',':
-                    blocks.append(current.strip())
-                    current = ''
-                else:
-                    current += char
-                    quoteIndex = openQuotes.find(char)
-                    if quoteIndex > -1:
-                        matchingQuote = closeQuotes[quoteIndex]
-                        insideQuotes = True
-
-        blocks.append(current.strip())
-
         for arg in blocks:
-            out.append((self.getArgType(arg), self.getArgName(arg)))
-        return out
+            out.append(self.getArgInfo(arg))
+
+        return flatten(out)
+
+    def getArgInfo(self, arg):
+        """
+        Return a list of tuples, one for each argument derived from the arg param.
+        """
+        return [(self.getArgType(arg), self.getArgName(arg))]
 
     def getArgType(self, arg):
         return None
@@ -624,9 +647,22 @@ class JsdocsJavascript(JsdocsParser):
 
         return (res.group('name'), res.group('val').strip())
 
+    def getArgInfo(self, arg):
+        if (re.search('^\{.*\}$', arg)):
+            subItems = splitByCommas(arg[1:-1])
+            prefix = 'options.'
+        else:
+            subItems = [arg]
+            prefix = ''
+
+        out = []
+        for subItem in subItems:
+            out.append((self.getArgType(subItem), prefix + self.getArgName(subItem)))
+
+        return out
+
     def getArgType(self, arg):
         parts = re.split(r'\s*=\s*', arg, 1)
-
         # rest parameters
         if parts[0].find('...') == 0:
             return '...[type]'
