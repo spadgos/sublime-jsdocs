@@ -65,7 +65,7 @@ def getParser(view):
         return JsdocsCPP(viewSettings)
     elif sourceLang == 'objc' or sourceLang == 'objc++':
         return JsdocsObjC(viewSettings)
-    elif sourceLang == 'java' or sourceLang == 'groovy':
+    elif sourceLang == 'java' or sourceLang == 'groovy' or sourceLang == 'apex':
         return JsdocsJava(viewSettings)
     elif sourceLang == 'rust':
         return JsdocsRust(viewSettings)
