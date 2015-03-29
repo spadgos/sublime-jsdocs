@@ -3,7 +3,7 @@ DocBlockr
 
 DocBlockr is a package for [Sublime Text 2 & 3][sublime] which makes writing
 documentation a breeze. DocBlockr supports **JavaScript** (including ES6), **PHP**,
-**ActionScript**, **Haxe**, **CoffeeScript**, **TypeScript**, **Java**, **Groovy**,
+**ActionScript**, **Haxe**, **CoffeeScript**, **TypeScript**, **Java**, **Apex**, **Groovy**,
 **Objective C**, **C**, **C++** and **Rust**.
 
 ## Installation
@@ -28,6 +28,13 @@ the pull request back to that branch.
 
 ## Changelog
 
+- **v2.13.1**, *29 Mar 2015*
+  - Adds support for Apex language (thanks @michacom)
+  - Fixes identifying multidimensional arrays in C/C++
+  - Fixes reformatting and reparsing docblocks in Java
+  - Adds options to disable:
+    - opening an inline docblock with space (`jsdocs_quick_open_inline`)
+    - inline comment decoration (`jsdocs_decorate`)
 - **v2.13.0**, *11 Dec 2014*
   - ECMAScript 6 support! Including:
     - Arrow functions
@@ -49,8 +56,6 @@ the pull request back to that branch.
 - **v2.12.2**, *11 Apr 2014*
   - Fix for PHP autocompletions
   - Fix `@name` completion for Javascript
-- **v2.12.1**, *4 Mar 2014*
-  - Fix for Sublime Text 3
 
 Older history can be found in [the history file][history].
 
@@ -159,6 +164,8 @@ If you write a double-slash comment and then press `Ctrl+Enter`, DocBlockr will 
     /////////////////
     // Foo bar baz //
     /////////////////
+
+This can be disabled by changing the `jsdocs_decorate` setting to `false`.
 
 ### Reparsing a DocBlock
 
@@ -273,6 +280,10 @@ You can access the configuration settings by selecting `Preferences -> Package S
 - `jsdocs_newline_after_block` *(Boolean)* If true, an extra line break is added after the end of a docblock to separate it from the code. Default `false`
 
 - `jsdocs_param_name` *(Boolean)* If true, the name of a function parameter is added to the template. If false, it is omitted. Default: `true`
+
+- `jsdocs_decorate` *(Boolean)* If false, disable decoration of single line comments with <kbd>Ctrl+Enter</kbd>. Default: `true`
+
+- `jsdocs_quick_open_inline` *(Boolean)* If true, an inline docblock will be opened when pressing <kbd>Space</kbd> after an opener (`/**`). When set to `false`, these can be opened by pressing <kbd>Shift+Enter</kbd>. Default: `true`
 
 ## Contributors
 

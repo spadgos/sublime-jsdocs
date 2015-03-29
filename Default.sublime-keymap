@@ -146,10 +146,11 @@
   // Open an inline docblock on space (/** */)
   { "keys": [" "], "command": "jsdocs", "args": {"inline": true},
     "context": [
-      { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,              "match_all": true },
-      { "key": "selection_empty",       "operator": "equal",          "operand": true,              "match_all": true },
-      { "key": "auto_complete_visible", "operator": "equal",          "operand": false,             "match_all": true },
-      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\/\\*{2}$", "match_all": true }
+      { "key": "setting.auto_indent",              "operator": "equal",          "operand": true,              "match_all": true },
+      { "key": "selection_empty",                  "operator": "equal",          "operand": true,              "match_all": true },
+      { "key": "auto_complete_visible",            "operator": "equal",          "operand": false,             "match_all": true },
+      { "key": "preceding_text",                   "operator": "regex_contains", "operand": "^\\s*\\/\\*{2}$", "match_all": true },
+      { "key": "setting.jsdocs_quick_open_inline", "operator": "equal",          "operand": true,              "match_all": true}
     ]
   },
   // Open an inline docblock (/** */)
@@ -200,13 +201,15 @@
   // decorate a double-slash comment
   { "keys": ["ctrl+enter"], "command": "jsdocs_decorate",
     "context": [
-      { "key": "selector", "operator": "equal", "operand": "comment.line.double-slash"}
+      { "key": "setting.jsdocs_decorate", "operator": "equal", "operand": true, "match_all": true },
+      { "key": "selector",                "operator": "equal", "operand": "comment.line.double-slash", "match_all": true }
     ]
   },
   // decorate a double-slash comment
   { "keys": ["ctrl+keypad_enter"], "command": "jsdocs_decorate",
     "context": [
-      { "key": "selector", "operator": "equal", "operand": "comment.line.double-slash"}
+      { "key": "setting.jsdocs_decorate", "operator": "equal", "operand": true, "match_all": true },
+      { "key": "selector",                "operator": "equal", "operand": "comment.line.double-slash", "match_all": true }
     ]
   },
   // join lines inside a comment block, stripping the leading asterisk

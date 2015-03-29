@@ -1,5 +1,12 @@
 # DocBlockr Extended Changelog
 
+- **v2.13.1**, *29 Mar 2015*
+  - Adds support for Apex language (thanks @michacom)
+  - Fixes identifying multidimensional arrays in C/C++
+  - Fixes reformatting and reparsing docblocks in Java
+  - Adds options to disable:
+    - opening an inline docblock with space (`jsdocs_quick_open_inline`)
+    - inline comment decoration (`jsdocs_decorate`)
 - **v2.13.0**, *11 Dec 2014*
   - ECMAScript 6 support! Including:
     - Arrow functions
@@ -111,7 +118,7 @@
   - Small bug fix, thanks to [djuliusl](https://github.com/djuliusl)
 - **v2.7.1**, *5 August 2012*
   - Adds per-section alignment (can be set using `jsdocs_per_section_indent`)
-  - Description field for `@return` tag can be disabled using `jsdocs_return_description`. *(Both thanks to [Drarok](https://github.com/Drarok))* 
+  - Description field for `@return` tag can be disabled using `jsdocs_return_description`. *(Both thanks to [Drarok](https://github.com/Drarok))*
 - **v2.7.0**, *5 August 2012*
   - Adds support for ASDocs (Actionscript)
   - Changes Linux shortcut for reparsing a comment block to <kbd>Alt+Shift+Tab</kbd>
@@ -149,7 +156,7 @@
   - Some bugfixes due to auto-complete changes in Sublime Text.
   - Fixed bug where indenting would not work on the first line of a comment.
 - **v2.2.0**, *5 January 2012*
-  - A configuration option can be set so that either `@return` or `@returns` is used in your documentation. 
+  - A configuration option can be set so that either `@return` or `@returns` is used in your documentation.
   - Language-specific tags now will only show for that language (eg: PHP has no `@interface` tag).
 - **v2.1.3**, *31 December 2011*
   - Changed path for macro file to point to `Packages/DocBlockr`. If you are having issues, make sure that the plugin is installed in that location (**not** the previous location `Packages/JSDocs`).

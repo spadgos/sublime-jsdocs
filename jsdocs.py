@@ -1,5 +1,5 @@
 """
-DocBlockr v2.13.0
+DocBlockr v2.13.1
 by Nick Fisher, and all the great people listed in CONTRIBUTORS.md
 https://github.com/spadgos/sublime-jsdocs
 
@@ -65,7 +65,7 @@ def getParser(view):
         return JsdocsCPP(viewSettings)
     elif sourceLang == 'objc' or sourceLang == 'objc++':
         return JsdocsObjC(viewSettings)
-    elif sourceLang == 'java' or sourceLang == 'groovy':
+    elif sourceLang == 'java' or sourceLang == 'groovy' or sourceLang == 'apex':
         return JsdocsJava(viewSettings)
     elif sourceLang == 'rust':
         return JsdocsRust(viewSettings)
@@ -130,6 +130,21 @@ def flatten(theList):
     [[(1,1)], [(2,2), (3, 3)]] --> [(1,1), (2,2), (3,3)]
     """
     return [item for sublist in theList for item in sublist]
+
+def getDocBlockRegion(view, point):
+    """
+    Given a starting point inside a DocBlock, return a Region which encompasses the entire block.
+    This is similar to `run_command('expand_selection', { to: 'scope' })`, however it is resilient to bugs which occur
+    due to language files adding scopes inside the DocBlock (eg: to highlight tags)
+    """
+    start = end = point
+    while start > 0 and view.scope_name(start).find('comment.block') > -1:
+        start = start - 1
+
+    while end < view.size() and view.scope_name(end).find('comment.block') > -1:
+        end = end + 1
+
+    return sublime.Region(start, end)
 
 class JsdocsCommand(sublime_plugin.TextCommand):
 
@@ -861,7 +876,7 @@ class JsdocsCPP(JsdocsParser):
             'typeTag': 'param',
             'commentCloser': ' */',
             'fnIdentifier': identifier,
-            'varIdentifier': '(' + identifier + ')\\s*(?:\\[(?:' + identifier + ')?\\]|\\((?:(?:\\s*,\\s*)?[a-z]+)+\\s*\\))?',
+            'varIdentifier': '(' + identifier + ')\\s*(?:\\[(?:' + identifier + r')?\]|\((?:(?:\s*,\s*)?[a-z]+)+\s*\))*',
             'fnOpener': identifier + '\\s+' + identifier + '\\s*\\(',
             'bool': 'bool',
             'function': 'function'
@@ -1360,8 +1375,7 @@ class JsdocsReparse(sublime_plugin.TextCommand):
 
         v = self.view
         v.run_command('clear_fields')
-        v.run_command('expand_selection', {'to': 'scope'})
-        sel = v.sel()[0]
+        sel = getDocBlockRegion(v, v.sel()[0].begin())
 
         # escape string, so variables starting with $ won't be removed
         text = escape(v.substr(sel))
@@ -1408,17 +1422,16 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
         spacerBetweenSections = settings.get("jsdocs_spacer_between_sections") == True
         spacerBetweenDescriptionAndTags = settings.get("jsdocs_spacer_between_sections") == "after_description"
 
-        v.run_command('expand_selection', {'to': 'scope'})
+        dbRegion = getDocBlockRegion(v, v.sel()[0].begin())
 
         # find the first word
-        startPoint = v.find("\n\\s*\\* ", v.sel()[0].begin()).begin()
+        startPoint = v.find(r"\n\s*\* ", dbRegion.begin()).begin()
         # find the first tag, or the end of the comment
-        endPoint = v.find("\\s*\n\\s*\\*(/)", v.sel()[0].begin()).begin()
+        endPoint = v.find(r"\s*\n\s*\*(/)", dbRegion.begin()).begin()
 
         # replace the selection with this ^ new selection
         v.sel().clear()
         v.sel().add(sublime.Region(startPoint, endPoint))
-
         # get the description text
         text = v.substr(v.sel()[0])
 
