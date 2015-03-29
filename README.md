@@ -28,6 +28,13 @@ the pull request back to that branch.
 
 ## Changelog
 
+- **v2.13.1**, *29 Mar 2015*
+  - Adds support for Apex language (thanks @michacom)
+  - Fixes identifying multidimensional arrays in C/C++
+  - Fixes reformatting and reparsing docblocks in Java
+  - Adds options to disable:
+    - opening an inline docblock with space (`jsdocs_quick_open_inline`)
+    - inline comment decoration (`jsdocs_decorate`)
 - **v2.13.0**, *11 Dec 2014*
   - ECMAScript 6 support! Including:
     - Arrow functions
@@ -49,8 +56,6 @@ the pull request back to that branch.
 - **v2.12.2**, *11 Apr 2014*
   - Fix for PHP autocompletions
   - Fix `@name` completion for Javascript
-- **v2.12.1**, *4 Mar 2014*
-  - Fix for Sublime Text 3
 
 Older history can be found in [the history file][history].
 
