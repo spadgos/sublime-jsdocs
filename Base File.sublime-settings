@@ -126,5 +126,8 @@
   // If set to true, an extra line break is added after the end of a docblock to separate it from the code.
   "jsdocs_newline_after_block": false,
 
+  // If set to true, Ctrl+Enter while in a single line comment will 'decorate' the comment.
+  "jsdocs_decorate": true,
+
   "jsdocs_development_mode": false
 }

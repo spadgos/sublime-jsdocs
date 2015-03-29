@@ -160,6 +160,8 @@ If you write a double-slash comment and then press `Ctrl+Enter`, DocBlockr will 
     // Foo bar baz //
     /////////////////
 
+This can be disabled by changing the `jsdocs_decorate` setting to `false`.
+
 ### Reparsing a DocBlock
 
 Sometimes, you'll perform some action which clears the fields (sections of text which you can navigate through using `tab`). This leaves you with a number of placeholders in the DocBlock with no easy way to jump to them.
@@ -273,6 +275,8 @@ You can access the configuration settings by selecting `Preferences -> Package S
 - `jsdocs_newline_after_block` *(Boolean)* If true, an extra line break is added after the end of a docblock to separate it from the code. Default `false`
 
 - `jsdocs_param_name` *(Boolean)* If true, the name of a function parameter is added to the template. If false, it is omitted. Default: `true`
+
+- `jsdocs_decorate` *(Boolean)* If false, disable decoration of single line comments with <kbd>Ctrl+Enter</kbd>. Default: `true`
 
 ## Contributors
 

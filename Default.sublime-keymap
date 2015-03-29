@@ -200,13 +200,15 @@
   // decorate a double-slash comment
   { "keys": ["ctrl+enter"], "command": "jsdocs_decorate",
     "context": [
-      { "key": "selector", "operator": "equal", "operand": "comment.line.double-slash"}
+      { "key": "setting.jsdocs_decorate", "operator": "equal", "operand": true, "match_all": true },
+      { "key": "selector",                "operator": "equal", "operand": "comment.line.double-slash", "match_all": true }
     ]
   },
   // decorate a double-slash comment
   { "keys": ["ctrl+keypad_enter"], "command": "jsdocs_decorate",
     "context": [
-      { "key": "selector", "operator": "equal", "operand": "comment.line.double-slash"}
+      { "key": "setting.jsdocs_decorate", "operator": "equal", "operand": true, "match_all": true },
+      { "key": "selector",                "operator": "equal", "operand": "comment.line.double-slash", "match_all": true }
     ]
   },
   // join lines inside a comment block, stripping the leading asterisk
