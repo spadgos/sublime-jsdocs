@@ -129,5 +129,8 @@
   // If set to true, Ctrl+Enter while in a single line comment will 'decorate' the comment.
   "jsdocs_decorate": true,
 
+  // If set to true, typing /**<space> will open an inline docblock
+  "jsdocs_quick_open_inline": true,
+
   "jsdocs_development_mode": false
 }
