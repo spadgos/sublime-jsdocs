@@ -21,6 +21,7 @@ Many thanks to all those who have sent bug reports and especially to those who s
 - Marc-Antoine Parent (@maparent)
 - Marc Neuhaus (@mneuhaus)
 - Mat Gadd (@Drarok)
+- Michacom (@michacom)
 - Michael Barany (@mbarany)
 - Milos Levacic (@levacic)
 - Nick Dowdell (@mikulad13)
