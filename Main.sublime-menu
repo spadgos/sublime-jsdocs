@@ -18,6 +18,16 @@
                             {
                                 "command": "open_file", "args":
                                 {
+                                    "file": "${packages}/DocBlockr/README.md"
+                                },
+                                "caption": "README"
+                            },
+                            {
+                                "caption": "-"
+                            },
+                            {
+                                "command": "open_file", "args":
+                                {
                                     "file": "${packages}/DocBlockr/Base File.sublime-settings"
                                 },
                                 "caption": "Settings – Default"
@@ -28,8 +38,7 @@
                                     "file": "${packages}/User/Base File.sublime-settings"
                                 },
                                 "caption": "Settings – User"
-                            },
-                            { "caption": "-" }
+                            }
                         ]
                     }
                 ]
