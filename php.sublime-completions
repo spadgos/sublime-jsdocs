@@ -32,7 +32,7 @@
     {"trigger":"@throws",           "contents":"@throws ${1:[type]} ${2:[<description>]}"},
     {"trigger":"@todo",             "contents":"@todo ${1:[description]}"},
     {"trigger":"@uses",             "contents":"@uses ${1:[FQSEN]} ${2:[<description>]}"},
-    {"trigger":"var",               "contents":"@var ${1:[type]} ${2:[<description>]}"},
+    {"trigger":"@var",              "contents":"@var ${1:[type]} ${2:[<description>]}"},
     {"trigger":"@version",          "contents":"@version ${1:[<vector>]} ${2:[<description>]}"},
 
     // Inline
