@@ -1,5 +1,5 @@
 """
-DocBlockr v2.13.1
+DocBlockr v2.13.2
 by Nick Fisher, and all the great people listed in CONTRIBUTORS.md
 https://github.com/spadgos/sublime-jsdocs
 
@@ -1166,13 +1166,15 @@ class JsdocsJava(JsdocsParser):
         throws = group_dict["throws"] or ""
 
         arg_list = []
-        for arg in full_args.split(","):
+        for arg in splitByCommas(full_args):
             arg_list.append(arg.strip().split(" ")[-1])
         args = ",".join(arg_list)
+
         throws_list = []
-        for arg in throws.split(","):
+        for arg in splitByCommas(throws):
             throws_list.append(arg.strip().split(" ")[-1])
         throws = ",".join(throws_list)
+
         return (name, args, retval, throws)
 
     def parseVar(self, line):
