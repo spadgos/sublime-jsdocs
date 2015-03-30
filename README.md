@@ -28,6 +28,10 @@ the pull request back to that branch.
 
 ## Changelog
 
+- **v2.13.2**, *30 Mar 2015*
+  - Updated PHPDoc autocompletions to align with the new spec (thanks to [Gerard Roche](https://github.com/gerardroche))
+  - Properly handle the case when commas appear inside a type name in Java
+  - Added link to README in the preferences menu
 - **v2.13.1**, *29 Mar 2015*
   - Adds support for Apex language (thanks @michacom)
   - Fixes identifying multidimensional arrays in C/C++
@@ -53,9 +57,6 @@ the pull request back to that branch.
   - Parameter name can be omitted with `jsdocs_param_name` option, thanks to [Daniel Kurecka](https://github.com/danielkurecka)
   - Inline docblocks are expanded with <kbd>space</kbd>, thanks to Daniel Kurecka
   - Java array types handled properly, thanks to [Alessio Linares](https://github.com/Galbar)
-- **v2.12.2**, *11 Apr 2014*
-  - Fix for PHP autocompletions
-  - Fix `@name` completion for Javascript
 
 Older history can be found in [the history file][history].
 

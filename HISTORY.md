@@ -1,5 +1,9 @@
 # DocBlockr Extended Changelog
 
+- **v2.13.2**, *30 Mar 2015*
+  - Updated PHPDoc autocompletions to align with the new spec (thanks to [Gerard Roche](https://github.com/gerardroche))
+  - Properly handle the case when commas appear inside a type name in Java
+  - Added link to README in the preferences menu
 - **v2.13.1**, *29 Mar 2015*
   - Adds support for Apex language (thanks @michacom)
   - Fixes identifying multidimensional arrays in C/C++
