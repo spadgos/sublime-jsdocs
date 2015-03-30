@@ -1,34 +1,62 @@
 {
   "scope": "source.php comment.block.documentation",
-  "completions":
-  [
-    { "trigger" : "@api",           "contents": ""},
-    { "trigger" : "@author",        "contents": "@author ${1:[author]} ${3:<${2:[email]}>}" },
-    { "trigger" : "@category",      "contents": "@category ${1:[category]}"},
-    { "trigger" : "@copyright",     "contents": "@copyright ${1:[description]}"},
-    { "trigger" : "@deprecated",    "contents": "@deprecated ${1:[description]}"},
-    { "trigger" : "@example",       "contents": "@example\n* "},
-    { "trigger" : "@global",        "contents": "@global ${1:[type]} ${2:name}"},
-    { "trigger" : "@internal",      "contents": ""},
-    { "trigger" : "@license",       "contents": "@license ${1:[url]} ${2:[description]}"},
-    { "trigger" : "@link",          "contents": "@link ${1:[url]} ${2:[description]}"},
-    { "trigger" : "@method",        "contents": "@method {${1:[return type]}} ${2:[name]}() ${2:[name]}(${3:[args]}) ${4:[description]}"},
-    { "trigger" : "@package",       "contents": "@package ${1:[name]}"},
-    { "trigger" : "@param",         "contents": "@param ${1:[type]} ${2:[varname]} ${3:[description]}" },
-    { "trigger" : "@property",      "contents": "@property ${1:[type]} ${2:[varname]} ${3:[description]}"},
-    { "trigger" : "@return",        "contents": "@return ${1:[type]} ${2:[description]}" },
-    { "trigger" : "@see",           "contents": "@see ${1:[description]}"},
-    { "trigger" : "@since",         "contents": "@since ${1:[version]}"},
-    { "trigger" : "@subpackage",    "contents": "@subpackage ${1:[name]}"},
-    { "trigger" : "@throws",        "contents": "@throws ${1:[exceptionType]} If ${2:[this condition is met]}"},
-    { "trigger" : "@todo",          "contents": "@todo ${1:[description]}"},
-    { "trigger" : "@type",          "contents": "@type ${1:[type]} ${2:[description]}"},
-    { "trigger" : "@uses",          "contents": "@uses ${1:[object]} ${2:[description]}"},
-    { "trigger" : "@var",           "contents": "@var ${1:[type]} ${2:[description]}"},
-    { "trigger" : "@version",       "contents": "@version ${1:[version]}"},
-    { "trigger" : "{@example}",     "contents": "{@example ${1:[path]}}"},
-    { "trigger" : "{@inheritdoc}",  "contents": ""},
-    { "trigger" : "{@internal}",    "contents": "{@internal ${1:[description]}}"},
-    { "trigger" : "{@link}",        "contents": "{@link ${1:[url]}}"}
+  "completions": [
+
+    // Based on the phpDocumentor latest documentation at http://phpdoc.org/docs/latest/index.html
+
+    // Not able to add trigger descriptions, e.g. "trigger" : "@api\tPHPDoc",
+    // because there are sublime text bugs with handing the @ symbol when used
+    // with a description.
+
+    {"trigger":"@api",              "contents":"@api"},
+    {"trigger":"@author",           "contents":"@author ${1:[name]} ${2/.+/</}${2:[email address]}${2/.+/>/}"},
+    {"trigger":"@copyright",        "contents":"@copyright ${1:[description]}"},
+    {"trigger":"@deprecated",       "contents":"@deprecated${1: ${2:[version]} ${3:[description]}}"},
+    {"trigger":"@example",          "contents":"@example ${1:[URI]} ${2:[description]}"},
+    {"trigger":"@filesource",       "contents":"@filesource"},
+    {"trigger":"@global",           "contents":"@global ${1:[type]} ${2:[name | description]}"},
+    {"trigger":"@ignore",           "contents":"@ignore ${1:[description]}"},
+    {"trigger":"@internal",         "contents":"@internal ${1:[description]}"},
+    {"trigger":"@license",          "contents":"@license ${1:[URI]} ${2:[name]}"},
+    {"trigger":"@link",             "contents":"@link ${1:[URI]} ${2:[description]}"},
+    {"trigger":"@method",           "contents":"@method ${1:[return type]} ${2:[name]}(${3:[[type] [parameter], ...]}) ${4:[description]}"},
+    {"trigger":"@package",          "contents":"@package ${1:[level 1]\\[level 2]\\[etc.]}"},
+    {"trigger":"@param",            "contents":"@param ${1:[type]} \\$${2:[name]} ${3:[description]}"},
+    {"trigger":"@property",         "contents":"@property ${1:[type]} \\$${2:[name]} ${3:[description]}"},
+    {"trigger":"@property-read",    "contents":"@property-read ${1:[type]} \\$${2:[name]} ${3:[description]}"},
+    {"trigger":"@property-write",   "contents":"@property-write ${1:[type]} \\$${2:[name]} ${3:[description]}"},
+    {"trigger":"@return",           "contents":"@return ${1:[type]} ${2:[description]}"},
+    {"trigger":"@see",              "contents":"@see ${1:[URI | FQSEN]} ${2:[description]}"},
+    {"trigger":"@since",            "contents":"@since ${1:[version} ${2:[description]}"},
+    {"trigger":"@source",           "contents":"@source ${1:[start-line [number-of-lines]]} ${2:[description]}"},
+    {"trigger":"@throws",           "contents":"@throws ${1:[type]} ${2:[description]}"},
+    {"trigger":"@todo",             "contents":"@todo ${1:[description]}"},
+    {"trigger":"@uses",             "contents":"@uses ${1:[FQSEN]} ${2:[description]}"},
+    {"trigger":"@var",              "contents":"@var ${1:[type]} ${2:[description]}"},
+    {"trigger":"@version",          "contents":"@version ${1:[vector]} ${2:[description]}"},
+
+    // Inline
+
+    // Note: Inline completions are commented out because because triggers won't
+    // work properly with a brace character
+
+    // {"trigger":"{@example}",        "contents":"example ${1:[URI]} ${2:[description]}}"},
+    // {"trigger":"{@inheritdoc}",     "contents":"inheritdoc}"},
+    // {"trigger":"{@internal}",       "contents":"internal ${1:[description]}}"},
+    // {"trigger":"{@link}",           "contents":"link ${1:[URI]} ${2:[description]}}"},
+
+    // Deprecated
+
+    // > This tag is considered deprecated and may be removed in a future
+    // > version of phpDocumentor. It is recommended to use the @package tag's
+    // > ability to provide multiple levels.
+    // @see http://phpdoc.org/docs/latest/references/phpdoc/tags/category.html
+    {"trigger":"@category",         "contents":"@category ${1:[description]}"},
+
+    // > This tag is considered deprecated and may be removed in a future
+    // > version of phpDocumentor. It is recommended to use the @package tag's
+    // ability to provide multiple levels.
+    // @see http://phpdoc.org/docs/latest/references/phpdoc/tags/subpackage.html
+    {"trigger":"@subpackage",       "contents":"@subpackage ${1:[name]}"}
   ]
 }
