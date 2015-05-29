@@ -1337,7 +1337,7 @@ class JsdocsDecorateCommand(sublime_plugin.TextCommand):
                 leadingWS = leadingWS - tabCount
                 maxLength = max(maxLength, lineRegion.size())
 
-            lineLength = maxLength - leadingWS
+            lineLength = maxLength - (leadingWS + tabCount)
             leadingWS = tabCount * "\t" + " " * leadingWS
             v.insert(edit, sel.end(), leadingWS + "/" * (lineLength + 3) + "\n")
 
