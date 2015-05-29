@@ -790,6 +790,7 @@ class JsdocsPHP(JsdocsParser):
             if (argType and argVal):
 
                 # function fnc_name(array $x = array())
+                # function fnc_name(array $x = [])
                 argValType = self.guessTypeFromValue(argVal)
                 if argType == argValType:
                     return argType
@@ -841,7 +842,7 @@ class JsdocsPHP(JsdocsParser):
             return "float" if '.' in val else 'int' if shortPrimitives else 'integer'
         if val[0] == '"' or val[0] == "'":
             return "string"
-        if val[:5] == 'array':
+        if val[:5] == 'array' or (val[0] == '[' and val[-1] == ']'):
             return "array"
         if val.lower() in ('true', 'false', 'filenotfound'):
             return 'bool' if shortPrimitives else 'boolean'

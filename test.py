@@ -128,6 +128,54 @@ class TestPHP(ViewTestCase):
             "function fname(\\NS\\ClassA $a, \\NS\\ClassB $b = null) {}"
         ])
 
+    def test_issue_371_with_long_array_syntax(self):
+        self.set_view_content("/**|\npublic function test(array $foo = array()) {}")
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            "/**",
+            " * |SELECTION_BEGIN|[test description]|SELECTION_END|",
+            " * @param  array  $foo [description]",
+            " * @return [type]      [description]",
+            " */",
+            "public function test(array $foo = array()) {}"
+        ])
+
+    def test_issue_371_method_with_short_array_syntax(self):
+        self.set_view_content("/**|\npublic function test(array $foo = []) {}")
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            "/**",
+            " * |SELECTION_BEGIN|[test description]|SELECTION_END|",
+            " * @param  array  $foo [description]",
+            " * @return [type]      [description]",
+            " */",
+            "public function test(array $foo = []) {}"
+        ])
+
+    def test_issue_371_method_with_short_array_syntax_with_whitespace(self):
+
+        self.set_view_content("/**|\npublic function test(  array   $foo    =     [      ]       ) {}")
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            "/**",
+            " * |SELECTION_BEGIN|[test description]|SELECTION_END|",
+            " * @param  array  $foo [description]",
+            " * @return [type]      [description]",
+            " */",
+            "public function test(  array   $foo    =     [      ]       ) {}"
+        ])
+
+    def test_issue_372_property_with_short_array_syntax(self):
+        self.set_view_content("/**|\nprotected $test = [];")
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            "/**",
+            " * |SELECTION_BEGIN|[$test description]|SELECTION_END|",
+            " * @var array",
+            " */",
+            "protected $test = [];"
+        ])
+
 class RunDocBlockrTests(sublime_plugin.WindowCommand):
 
     def run(self):
