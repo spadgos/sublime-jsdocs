@@ -60,14 +60,15 @@ class ViewTestCase(unittest.TestCase):
 class TestPHP(ViewTestCase):
 
     def test_basic(self):
-        self.set_view_content("/**|\nbasic")
+        self.set_view_content("<?php\n/**|\nbasic")
         self.run_doc_blockr()
-        self.assertDocBlockrResult('/**\n * \n */\nbasic')
+        self.assertDocBlockrResult('<?php\n/**\n * \n */\nbasic')
 
     def test_issue_292_php_args_pass_by_reference_missing_ampersand_char(self):
-        self.set_view_content("/**|\nfunction function_name($a1,  $a2 = 'x', array $a3, &$b1, &$b2 = 'x', array &$b3) {}")
+        self.set_view_content("<?php\n/**|\nfunction function_name($a1,  $a2 = 'x', array $a3, &$b1, &$b2 = 'x', array &$b3) {}")
         self.run_doc_blockr()
         self.assertDocBlockrResult([
+            "<?php",
             "/**",
             " * |SELECTION_BEGIN|[function_name description]|SELECTION_END|",
             " * @param  [type] $a1  [description]",
@@ -82,9 +83,10 @@ class TestPHP(ViewTestCase):
         ])
 
     def test_issue_286_php_args_namespace_char_is_missing(self):
-        self.set_view_content("/**|\nfunction function_name(A\\NS\\ClassName $class) {}")
+        self.set_view_content("<?php\n/**|\nfunction function_name(A\\NS\\ClassName $class) {}")
         self.run_doc_blockr()
         self.assertDocBlockrResult([
+            "<?php",
             "/**",
             " * |SELECTION_BEGIN|[function_name description]|SELECTION_END|",
             " * @param  A\\NS\\ClassName $class [description]",
@@ -94,9 +96,10 @@ class TestPHP(ViewTestCase):
         ])
 
     def test_issue_312_array_type_missing_when_param_is_null(self):
-        self.set_view_content("/**|\nfunction fname(array $a, array $b = null) {}")
+        self.set_view_content("<?php\n/**|\nfunction fname(array $a, array $b = null) {}")
         self.run_doc_blockr()
         self.assertDocBlockrResult([
+            "<?php",
             "/**",
             " * |SELECTION_BEGIN|[fname description]|SELECTION_END|",
             " * @param  array      $a [description]",
@@ -107,9 +110,10 @@ class TestPHP(ViewTestCase):
         ])
 
     def test_issue_312_qualified_namespace_type_missing_when_param_is_null(self):
-        self.set_view_content("/**|\nfunction fname(NS\\ClassA $a, NS\\ClassB $b = null) {}")
+        self.set_view_content("<?php\n/**|\nfunction fname(NS\\ClassA $a, NS\\ClassB $b = null) {}")
         self.run_doc_blockr()
         self.assertDocBlockrResult([
+            "<?php",
             "/**",
             " * |SELECTION_BEGIN|[fname description]|SELECTION_END|",
             " * @param  NS\\ClassA      $a [description]",
@@ -120,9 +124,10 @@ class TestPHP(ViewTestCase):
         ])
 
     def test_issue_312_fully_qualified_namespace_type_missing_when_param_is_null(self):
-        self.set_view_content("/**|\nfunction fname(\\NS\\ClassA $a, \\NS\\ClassB $b = null) {}")
+        self.set_view_content("<?php\n/**|\nfunction fname(\\NS\\ClassA $a, \\NS\\ClassB $b = null) {}")
         self.run_doc_blockr()
         self.assertDocBlockrResult([
+            "<?php",
             "/**",
             " * |SELECTION_BEGIN|[fname description]|SELECTION_END|",
             " * @param  \\NS\\ClassA      $a [description]",
@@ -133,9 +138,10 @@ class TestPHP(ViewTestCase):
         ])
 
     def test_issue_371_with_long_array_syntax(self):
-        self.set_view_content("/**|\npublic function test(array $foo = array()) {}")
+        self.set_view_content("<?php\n/**|\npublic function test(array $foo = array()) {}")
         self.run_doc_blockr()
         self.assertDocBlockrResult([
+            "<?php",
             "/**",
             " * |SELECTION_BEGIN|[test description]|SELECTION_END|",
             " * @param  array  $foo [description]",
@@ -145,9 +151,10 @@ class TestPHP(ViewTestCase):
         ])
 
     def test_issue_371_method_with_short_array_syntax(self):
-        self.set_view_content("/**|\npublic function test(array $foo = []) {}")
+        self.set_view_content("<?php\n/**|\npublic function test(array $foo = []) {}")
         self.run_doc_blockr()
         self.assertDocBlockrResult([
+            "<?php",
             "/**",
             " * |SELECTION_BEGIN|[test description]|SELECTION_END|",
             " * @param  array  $foo [description]",
@@ -157,10 +164,10 @@ class TestPHP(ViewTestCase):
         ])
 
     def test_issue_371_method_with_short_array_syntax_with_whitespace(self):
-
-        self.set_view_content("/**|\npublic function test(  array   $foo    =     [      ]       ) {}")
+        self.set_view_content("<?php\n/**|\npublic function test(  array   $foo    =     [      ]       ) {}")
         self.run_doc_blockr()
         self.assertDocBlockrResult([
+            "<?php",
             "/**",
             " * |SELECTION_BEGIN|[test description]|SELECTION_END|",
             " * @param  array  $foo [description]",
@@ -170,9 +177,10 @@ class TestPHP(ViewTestCase):
         ])
 
     def test_issue_372_property_with_short_array_syntax(self):
-        self.set_view_content("/**|\nprotected $test = [];")
+        self.set_view_content("<?php\n/**|\nprotected $test = [];")
         self.run_doc_blockr()
         self.assertDocBlockrResult([
+            "<?php",
             "/**",
             " * |SELECTION_BEGIN|[$test description]|SELECTION_END|",
             " * @var array",
