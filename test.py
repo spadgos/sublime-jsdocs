@@ -5,7 +5,8 @@ import unittest
 class DocBlockrTestReplaceCursorPosition(sublime_plugin.TextCommand):
     def run(self, edit):
         cursor_placeholder = self.view.find('\|', 0)
-        if cursor_placeholder.empty():
+
+        if not cursor_placeholder or cursor_placeholder.empty():
             return
 
         self.view.sel().clear()
@@ -18,6 +19,7 @@ class ViewTestCase(unittest.TestCase):
         self.window = sublime.active_window()
         self.view = self.window.new_file()
         self.view.set_scratch(True)
+        self.view.settings().set('auto_indent', False)
 
         if int(sublime.version()) < 3000:
             self.edit = self.view.begin_edit()
@@ -31,15 +33,14 @@ class ViewTestCase(unittest.TestCase):
             self.view.close()
 
     def set_view_content(self, content):
+        if isinstance(content, list):
+            content = '\n'.join(content)
         self.view.run_command('insert', {'characters': content})
         self.view.run_command('doc_blockr_test_replace_cursor_position')
+        self.view.set_syntax_file(self.get_syntax_file())
 
-        # Allows overriding with custom syntax
-        php_syntax_file = self.view.settings().get('doc_blockr_tests_php_syntax_file')
-        if not php_syntax_file:
-            self.view.set_syntax_file('Packages/PHP/PHP.tmLanguage')
-        else:
-            self.view.set_syntax_file(php_syntax_file)
+    def get_syntax_file(self):
+        raise NotImplementedError('Must be implemented')
 
     def get_view_content(self):
         return self.view.substr(sublime.Region(0, self.view.size()))
@@ -52,12 +53,144 @@ class ViewTestCase(unittest.TestCase):
             expected = '\n'.join(expected)
 
         # TODO test selections; for now just removing the placeholders
+        expected = expected.replace('|CURSOR|', '')
         expected = expected.replace('|SELECTION_BEGIN|', '')
         expected = expected.replace('|SELECTION_END|', '')
 
         self.assertEquals(expected, self.get_view_content())
 
+class TestJavaScript(ViewTestCase):
+
+    def get_syntax_file(self):
+        return 'Packages/JavaScript/JavaScript.tmLanguage'
+
+    def test_basic(self):
+        self.set_view_content("\n/**|\nbasic")
+        self.run_doc_blockr()
+        self.assertDocBlockrResult('\n/**\n * \n */\nbasic')
+
+    def test_empty_doc_blocks_are_created(self):
+        self.set_view_content('/**')
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            "/**",
+            " * |CURSOR|",
+            " */"
+        ])
+
+    def test_that_function_template_is_added(self):
+        self.set_view_content('/**|\nfunction foo () {')
+        self.run_doc_blockr()
+
+        self.assertDocBlockrResult([
+            '/**',
+            ' * |SELECTION_BEGIN|[foo description]|SELECTION_END|',
+            ' * @return {[type]} [description]',
+            ' */',
+            'function foo () {'
+        ])
+
+    def test_parameters_are_added_to_function_templates(self):
+        self.set_view_content('/**|\nfunction foo (bar, baz) {')
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            '/**',
+            ' * |SELECTION_BEGIN|[foo description]|SELECTION_END|',
+            ' * @param  {[type]} bar [description]',
+            ' * @param  {[type]} baz [description]',
+            ' * @return {[type]}     [description]',
+            ' */',
+            'function foo (bar, baz) {'
+        ])
+
+    def test_params_across_multiple_lines_should_be_identified(self):
+        self.set_view_content([
+            '/**|',
+            'function foo(bar,',
+            '             baz,',
+            '             quux',
+            '             ) {'
+        ])
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            '/**',
+            ' * |SELECTION_BEGIN|[foo description]|SELECTION_END|',
+            ' * @param  {[type]} bar  [description]',
+            ' * @param  {[type]} baz  [description]',
+            ' * @param  {[type]} quux [description]',
+            ' * @return {[type]}      [description]',
+            ' */',
+            'function foo(bar,',
+            '             baz,',
+            '             quux',
+            '             ) {'
+        ])
+
+    def test_vars_initialised_to_number_get_placeholders(self):
+        self.set_view_content([
+            '/**|',
+            'var foo = 1;'
+        ])
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            '/**',
+            ' * |SELECTION_BEGIN|[foo description]|SELECTION_END|',
+            ' * @type {Number}',
+            ' */',
+            'var foo = 1;'
+        ])
+
+    def test_vars_string_double_quotes(self):
+        self.set_view_content([
+            '/**|',
+            'var foo = "a";'
+        ])
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            '/**',
+            ' * |SELECTION_BEGIN|[foo description]|SELECTION_END|',
+            ' * @type {String}',
+            ' */',
+            'var foo = "a";'
+        ])
+
+    def test_vars_string_single_quotes(self):
+        self.set_view_content([
+            '/**|',
+            'var foo = \'a\';'
+        ])
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            '/**',
+            ' * |SELECTION_BEGIN|[foo description]|SELECTION_END|',
+            ' * @type {String}',
+            ' */',
+            'var foo = \'a\';'
+        ])
+
+    def test_vars_unknown_type(self):
+        self.set_view_content([
+            '/**|',
+            'var foo = bar;'
+        ])
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            '/**',
+            ' * |SELECTION_BEGIN|[foo description]|SELECTION_END|',
+            ' * @type {[type]}',
+            ' */',
+            'var foo = bar;'
+        ])
+
 class TestPHP(ViewTestCase):
+
+    def get_syntax_file(self):
+        # Allows overriding with custom syntax
+        php_syntax_file = self.view.settings().get('doc_blockr_tests_php_syntax_file')
+        if not php_syntax_file:
+            return 'Packages/PHP/PHP.tmLanguage'
+        else:
+            return php_syntax_file
 
     def test_basic(self):
         self.set_view_content("<?php\n/**|\nbasic")
@@ -191,12 +324,22 @@ class TestPHP(ViewTestCase):
 class RunDocBlockrTests(sublime_plugin.WindowCommand):
 
     def run(self):
-        print('---------------')
+        print('')
         print('DocBlockr Tests')
         print('---------------')
 
         self.window.run_command('show_panel', {'panel': 'console'})
 
+        # TODO should only use one test runner to run all tests
+
+        print('')
+        print('DocBlockr Javascript Tests')
+        unittest.TextTestRunner(verbosity=1).run(
+            unittest.TestLoader().loadTestsFromTestCase(TestJavaScript)
+        )
+
+        print('')
+        print('DocBlockr PHP Tests')
         unittest.TextTestRunner(verbosity=1).run(
             unittest.TestLoader().loadTestsFromTestCase(TestPHP)
         )
