@@ -15,22 +15,26 @@ class DocBlockrTestReplaceCursorPosition(sublime_plugin.TextCommand):
 class ViewTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.view = sublime.active_window().new_file()
+        self.window = sublime.active_window()
+        self.view = self.window.new_file()
         self.view.set_scratch(True)
 
+        if int(sublime.version()) < 3000:
+            self.edit = self.view.begin_edit()
+
     def tearDown(self):
-        if self.view:
-            if int(sublime.version()) < 3000:
-                self.view.window().run_command('close')
-            else:
-                self.view.close()
+        if int(sublime.version()) < 3000:
+            self.view.sel().clear()
+            self.view.end_edit(self.edit)
+            self.window.run_command('close')
+        else:
+            self.view.close()
 
     def set_view_content(self, content):
         self.view.run_command('insert', {'characters': content})
         self.view.run_command('doc_blockr_test_replace_cursor_position')
 
-        # The reason for this is that if a uses a different syntax other
-        # than the default then setting the default syntax won't nothing.
+        # Allows overriding with custom syntax
         php_syntax_file = self.view.settings().get('doc_blockr_tests_php_syntax_file')
         if not php_syntax_file:
             self.view.set_syntax_file('Packages/PHP/PHP.tmLanguage')
