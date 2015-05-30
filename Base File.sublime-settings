@@ -56,6 +56,9 @@
   // Since there seems to be no agreed standard for "@return" or "@returns", use this setting to rename it as you wish.
   "jsdocs_return_tag": "@return",
 
+  // Add a '[function_name description]' for the function block
+  "jsdocs_function_description": true,
+
   // Add a '[description]' placeholder for the return tag?
   "jsdocs_return_description": true,
 

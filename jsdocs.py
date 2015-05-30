@@ -313,9 +313,13 @@ class JsdocsCommand(sublime_plugin.TextCommand):
                 for idx, line in enumerate(out):
                     res = re.match("^\\s*@([a-zA-Z]+)", line)
                     if res and (lastTag != res.group(1)):
+                        if self.settings.get('jsdocs_function_description') == False:
+                            if lastTag != None:
+                                out.insert(idx, "")
+                        else:
+                            out.insert(idx, "")
                         lastTag = res.group(1)
-                        out.insert(idx, "")
-            elif self.settings.get('jsdocs_spacer_between_sections') == 'after_description':
+            elif self.settings.get('jsdocs_spacer_between_sections') == 'after_description' and self.settings.get('jsdocs_function_description'):
                 lastLineIsTag = False
                 for idx, line in enumerate(out):
                     res = re.match("^\\s*@([a-zA-Z]+)", line)
@@ -408,7 +412,8 @@ class JsdocsParser(object):
         extraTagAfter = self.viewSettings.get("jsdocs_extra_tags_go_after") or False
 
         description = self.getNameOverride() or ('[%s%sdescription]' % (escape(name), ' ' if name else ''))
-        out.append("${1:%s}" % description)
+        if self.viewSettings.get('jsdocs_function_description'):
+            out.append("${1:%s}" % description)
 
         if (self.viewSettings.get("jsdocs_autoadd_method_tag") is True):
             out.append("@%s %s" % (

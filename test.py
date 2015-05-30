@@ -81,7 +81,6 @@ class TestJavaScript(ViewTestCase):
     def test_that_function_template_is_added(self):
         self.set_view_content('/**|\nfunction foo () {')
         self.run_doc_blockr()
-
         self.assertDocBlockrResult([
             '/**',
             ' * |SELECTION_BEGIN|[foo description]|SELECTION_END|',
@@ -97,6 +96,48 @@ class TestJavaScript(ViewTestCase):
             '/**',
             ' * |SELECTION_BEGIN|[foo description]|SELECTION_END|',
             ' * @param  {[type]} bar [description]',
+            ' * @param  {[type]} baz [description]',
+            ' * @return {[type]}     [description]',
+            ' */',
+            'function foo (bar, baz) {'
+        ])
+
+    def test_parameters_are_added_to_function_template_with_description_disabled(self):
+        self.set_view_content('/**|\nfunction foo (bar, baz) {')
+        self.view.settings().set('jsdocs_function_description', False)
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            '/**',
+            ' * @param  |SELECTION_BEGIN|{[type]}|SELECTION_END| bar [description]',
+            ' * @param  {[type]} baz [description]',
+            ' * @return {[type]}     [description]',
+            ' */',
+            'function foo (bar, baz) {'
+        ])
+
+    def test_parameters_are_added_to_function_template_with_description_disabled_and_spacers_between_sections(self):
+        self.set_view_content('/**|\nfunction foo (bar, baz) {')
+        self.view.settings().set('jsdocs_function_description', False)
+        self.view.settings().set('jsdocs_spacer_between_sections', True)
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            '/**',
+            ' * @param  |SELECTION_BEGIN|{[type]}|SELECTION_END| bar [description]',
+            ' * @param  {[type]} baz [description]',
+            ' *',
+            ' * @return {[type]}     [description]',
+            ' */',
+            'function foo (bar, baz) {'
+        ])
+
+    def test_parameters_are_added_to_function_template_with_description_disabled_and_spacer_after_description_isset(self):
+        self.set_view_content('/**|\nfunction foo (bar, baz) {')
+        self.view.settings().set('jsdocs_function_description', False)
+        self.view.settings().set('jsdocs_spacer_between_sections', 'after_description')
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            '/**',
+            ' * @param  |SELECTION_BEGIN|{[type]}|SELECTION_END| bar [description]',
             ' * @param  {[type]} baz [description]',
             ' * @return {[type]}     [description]',
             ' */',
@@ -319,6 +360,48 @@ class TestPHP(ViewTestCase):
             " * @var array",
             " */",
             "protected $test = [];"
+        ])
+
+    def test_optional_function_description(self):
+        self.set_view_content("<?php\n/**|\nfunction fname($a) {}")
+        self.view.settings().set('jsdocs_function_description', False)
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            "<?php",
+            "/**",
+            " * @param  |SELECTION_BEGIN|[type]|SELECTION_END| $a [description]",
+            " * @return [type]    [description]",
+            " */",
+            "function fname($a) {}"
+        ])
+
+    def test_optional_function_description_with_spacers_between_sections(self):
+        self.set_view_content("<?php\n/**|\nfunction fname($a) {}")
+        self.view.settings().set('jsdocs_function_description', False)
+        self.view.settings().set('jsdocs_spacer_between_sections', True)
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            "<?php",
+            "/**",
+            " * @param  |SELECTION_BEGIN|[type]|SELECTION_END| $a [description]",
+            " *",
+            " * @return [type]    [description]",
+            " */",
+            "function fname($a) {}"
+        ])
+
+    def test_optional_function_description_with_spacer_after_description_set_to_true(self):
+        self.set_view_content("<?php\n/**|\nfunction fname($a) {}")
+        self.view.settings().set('jsdocs_function_description', False)
+        self.view.settings().set('jsdocs_spacer_between_sections', 'after_description')
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            "<?php",
+            "/**",
+            " * @param  |SELECTION_BEGIN|[type]|SELECTION_END| $a [description]",
+            " * @return [type]    [description]",
+            " */",
+            "function fname($a) {}"
         ])
 
 class RunDocBlockrTests(sublime_plugin.WindowCommand):
