@@ -9,3 +9,4 @@
 /.gitignore                 export-ignore
 /.gitmodules                export-ignore
 /test.py                    export-ignore
+/tests/                     export-ignore
