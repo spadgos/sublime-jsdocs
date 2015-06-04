@@ -28,6 +28,9 @@ the pull request back to that branch.
 
 ## Changelog
 
+- **v2.13.3**, *4 Jun 2015*
+  - PHP array shorthand is identified correctly (thanks to [Gerard Roche](https://github.com/gerardroche))
+  - Decorating comments when using tabs for indentation works better (thanks to [Jack Cherng](https://github.com/jfcherng))
 - **v2.13.2**, *30 Mar 2015*
   - Updated PHPDoc autocompletions to align with the new spec (thanks to [Gerard Roche](https://github.com/gerardroche))
   - Properly handle the case when commas appear inside a type name in Java
@@ -49,14 +52,6 @@ the pull request back to that branch.
     - `@yield` for generator functions
 - **v2.12.4**, *10 Dec 2014*
   - Fixes regression in handling Javascript function expressions
-- **v2.12.3**, *7 Dec 2014*
-  - PHP arguments with pass-by-reference handled properly, thanks to [Gerard Roche](https://github.com/gerardroche)
-  - PHP namespaces handled properly, thanks to Gerard Roche
-  - PHP parameters with default null values handled properly, thanks to Gerard Roche
-  - ECMAScript 6 generator functions handled properly, thanks to [Sergey Zarouski](https://github.com/szarouski)
-  - Parameter name can be omitted with `jsdocs_param_name` option, thanks to [Daniel Kurecka](https://github.com/danielkurecka)
-  - Inline docblocks are expanded with <kbd>space</kbd>, thanks to Daniel Kurecka
-  - Java array types handled properly, thanks to [Alessio Linares](https://github.com/Galbar)
 
 Older history can be found in [the history file][history].
 
