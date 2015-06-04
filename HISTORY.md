@@ -1,5 +1,8 @@
 # DocBlockr Extended Changelog
 
+- **v2.13.3**, *4 Jun 2015*
+  - PHP array shorthand is identified correctly (thanks to [Gerard Roche](https://github.com/gerardroche))
+  - Decorating comments when using tabs for indentation works better (thanks to [Jack Cherng](https://github.com/jfcherng))
 - **v2.13.2**, *30 Mar 2015*
   - Updated PHPDoc autocompletions to align with the new spec (thanks to [Gerard Roche](https://github.com/gerardroche))
   - Properly handle the case when commas appear inside a type name in Java
