@@ -15,6 +15,7 @@ Many thanks to all those who have sent bug reports and especially to those who s
 - Gary Jones (@GaryJones)
 - Geoffrey Huntley (@ghuntley)
 - Gerard Roche (@gerardroche)
+- Jack Cherng (@jfcherng)
 - Jordi Baggiano (@seldaek)
 - Josh Freeman (@freejosh)
 - Korvin Szanto (@KorvinSzanto)
