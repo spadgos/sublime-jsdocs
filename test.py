@@ -2,7 +2,7 @@ import sublime
 import sublime_plugin
 import unittest
 
-class DocBlockrTestReplaceCursorPosition(sublime_plugin.TextCommand):
+class __docblockr_test_replace_cursor_position(sublime_plugin.TextCommand):
     def run(self, edit):
         cursor_placeholder = self.view.find('\|', 0)
 
@@ -46,7 +46,7 @@ class ViewTestCase(unittest.TestCase):
         if isinstance(content, list):
             content = '\n'.join(content)
         self.view.run_command('insert', {'characters': content})
-        self.view.run_command('doc_blockr_test_replace_cursor_position')
+        self.view.run_command('__docblockr_test_replace_cursor_position')
         self.view.set_syntax_file(self.get_syntax_file())
 
     def get_syntax_file(self):
