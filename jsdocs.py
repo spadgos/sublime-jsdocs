@@ -357,13 +357,17 @@ class JsdocsParser(object):
         if self.viewSettings.get('jsdocs_simple_mode'):
             return None
 
-        out = self.parseFunction(line)  # (name, args, retval, options)
-        if (out):
-            return self.formatFunction(*out)
+        try:
+            out = self.parseFunction(line)  # (name, args, retval, options)
+            if (out):
+                return self.formatFunction(*out)
 
-        out = self.parseVar(line)
-        if out:
-            return self.formatVar(*out)
+            out = self.parseVar(line)
+            if out:
+                return self.formatVar(*out)
+        except:
+            # TODO show exception if dev\debug mode
+            return None
 
         return None
 
