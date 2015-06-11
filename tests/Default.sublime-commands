@@ -1,0 +1,6 @@
+[
+    {
+        "caption": "DocBlockr: Run All Tests",
+        "command": "run_doc_blockr_tests"
+    }
+]
