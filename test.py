@@ -407,24 +407,22 @@ class TestPHP(ViewTestCase):
 class RunDocBlockrTests(sublime_plugin.WindowCommand):
 
     def run(self):
-        print('')
-        print('DocBlockr Tests')
-        print('---------------')
 
         self.window.run_command('show_panel', {'panel': 'console'})
 
-        # TODO should only use one test runner to run all tests
-
         print('')
-        print('DocBlockr Javascript Tests')
-        unittest.TextTestRunner(verbosity=1).run(
-            unittest.TestLoader().loadTestsFromTestCase(TestJavaScript)
-        )
+        print('DocBlockr Tests')
+        print('===============')
 
-        print('')
-        print('DocBlockr PHP Tests')
-        unittest.TextTestRunner(verbosity=1).run(
-            unittest.TestLoader().loadTestsFromTestCase(TestPHP)
-        )
+        suite = unittest.TestSuite()
+        test_loader = unittest.TestLoader()
+
+        # TODO move all test cases into tests directory and make test loader auto load testcases from the folder
+
+        suite.addTests(test_loader.loadTestsFromTestCase(TestJavaScript))
+        suite.addTests(test_loader.loadTestsFromTestCase(TestPHP))
+
+        # TODO toggle test verbosity
+        unittest.TextTestRunner(verbosity=1).run(suite)
 
         self.window.focus_group(self.window.active_group())
