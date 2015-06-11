@@ -768,7 +768,7 @@ class JsdocsPHP(JsdocsParser):
             + '(?P<name>' + self.settings['fnIdentifier'] + ')'
             # function fnName
             # (arg1, arg2)
-            + '\\s*\\(\\s*(?P<args>.*)\)',
+            + '\\s*\\(\\s*(?P<args>.*)\\)',
             line
         )
         if not res:
