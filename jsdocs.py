@@ -764,7 +764,7 @@ class JsdocsPHP(JsdocsParser):
 
     def parseFunction(self, line):
         res = re.search(
-            'function\\s+&?(?:\\s+)?'
+            'function\\s+&?\\s*'
             + '(?P<name>' + self.settings['fnIdentifier'] + ')'
             # function fnName
             # (arg1, arg2)
