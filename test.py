@@ -19,7 +19,17 @@ class ViewTestCase(unittest.TestCase):
         self.window = sublime.active_window()
         self.view = self.window.new_file()
         self.view.set_scratch(True)
-        self.view.settings().set('auto_indent', False)
+
+        # TODO there's probably a better way to initialise the testcase default settings
+        settings = self.view.settings()
+        settings.set('auto_indent', False)
+        settings.set('jsdocs_lower_case_primitives', False)
+        settings.set('jsdocs_param_description', True)
+        settings.set('jsdocs_per_section_indent', False)
+        settings.set('jsdocs_return_description', True)
+        settings.set('jsdocs_short_primitives', False)
+        settings.set('jsdocs_spacer_between_sections', False)
+        settings.set('jsdocs_function_description', True)
 
         if int(sublime.version()) < 3000:
             self.edit = self.view.begin_edit()
