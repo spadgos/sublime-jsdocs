@@ -8,5 +8,5 @@
 /.gitattributes             export-ignore
 /.gitignore                 export-ignore
 /.gitmodules                export-ignore
-/test.py                    export-ignore
+/test_runner.py             export-ignore
 /tests/                     export-ignore
