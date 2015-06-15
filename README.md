@@ -24,6 +24,9 @@ the pull request back to that branch.
 
 ## Changelog
 
+- **v2.14.0**, *15 Jun 2015*
+  - Adds `jsdocs_function_description` option (thanks to [Gerard Roche](https://github.com/gerardroche))
+  - Better handling of parser errors (thanks to Gerard Roche)
 - **v2.13.3**, *4 Jun 2015*
   - PHP array shorthand is identified correctly (thanks to [Gerard Roche](https://github.com/gerardroche))
   - Decorating comments when using tabs for indentation works better (thanks to [Jack Cherng](https://github.com/jfcherng))
@@ -46,8 +49,6 @@ the pull request back to that branch.
     - Parameter destructuring
     - Shorthand method initialization
     - `@yield` for generator functions
-- **v2.12.4**, *10 Dec 2014*
-  - Fixes regression in handling Javascript function expressions
 
 Older history can be found in [the history file][history].
 
@@ -276,6 +277,8 @@ You can access the configuration settings by selecting `Preferences -> Package S
 - `jsdocs_decorate` *(Boolean)* If false, disable decoration of single line comments with <kbd>Ctrl+Enter</kbd>. Default: `true`
 
 - `jsdocs_quick_open_inline` *(Boolean)* If true, an inline docblock will be opened when pressing <kbd>Space</kbd> after an opener (`/**`). When set to `false`, these can be opened by pressing <kbd>Shift+Enter</kbd>. Default: `true`
+
+- `jsdocs_function_description` *(Boolean)* If true, a 'description' line will be added for functions. Default: `true`
 
 ## Contributors
 
