@@ -1,5 +1,8 @@
 # DocBlockr Extended Changelog
 
+- **v2.14.0**, *15 Jun 2015*
+  - Adds `jsdocs_function_description` option (thanks to [Gerard Roche](https://github.com/gerardroche))
+  - Better handling of parser errors (thanks to Gerard Roche)
 - **v2.13.3**, *4 Jun 2015*
   - PHP array shorthand is identified correctly (thanks to [Gerard Roche](https://github.com/gerardroche))
   - Decorating comments when using tabs for indentation works better (thanks to [Jack Cherng](https://github.com/jfcherng))
