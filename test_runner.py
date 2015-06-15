@@ -2,7 +2,7 @@ import sublime
 import sublime_plugin
 import unittest
 
-class DocBlockrTestReplaceCursorPosition(sublime_plugin.TextCommand):
+class __docblockr_test_replace_cursor_position(sublime_plugin.TextCommand):
     def run(self, edit):
         cursor_placeholder = self.view.find('\|', 0)
 
@@ -19,7 +19,17 @@ class ViewTestCase(unittest.TestCase):
         self.window = sublime.active_window()
         self.view = self.window.new_file()
         self.view.set_scratch(True)
-        self.view.settings().set('auto_indent', False)
+
+        # TODO there's probably a better way to initialise the testcase default settings
+        settings = self.view.settings()
+        settings.set('auto_indent', False)
+        settings.set('jsdocs_lower_case_primitives', False)
+        settings.set('jsdocs_param_description', True)
+        settings.set('jsdocs_per_section_indent', False)
+        settings.set('jsdocs_return_description', True)
+        settings.set('jsdocs_short_primitives', False)
+        settings.set('jsdocs_spacer_between_sections', False)
+        settings.set('jsdocs_function_description', True)
 
         if int(sublime.version()) < 3000:
             self.edit = self.view.begin_edit()
@@ -36,7 +46,7 @@ class ViewTestCase(unittest.TestCase):
         if isinstance(content, list):
             content = '\n'.join(content)
         self.view.run_command('insert', {'characters': content})
-        self.view.run_command('doc_blockr_test_replace_cursor_position')
+        self.view.run_command('__docblockr_test_replace_cursor_position')
         self.view.set_syntax_file(self.get_syntax_file())
 
     def get_syntax_file(self):
@@ -81,7 +91,6 @@ class TestJavaScript(ViewTestCase):
     def test_that_function_template_is_added(self):
         self.set_view_content('/**|\nfunction foo () {')
         self.run_doc_blockr()
-
         self.assertDocBlockrResult([
             '/**',
             ' * |SELECTION_BEGIN|[foo description]|SELECTION_END|',
@@ -97,6 +106,48 @@ class TestJavaScript(ViewTestCase):
             '/**',
             ' * |SELECTION_BEGIN|[foo description]|SELECTION_END|',
             ' * @param  {[type]} bar [description]',
+            ' * @param  {[type]} baz [description]',
+            ' * @return {[type]}     [description]',
+            ' */',
+            'function foo (bar, baz) {'
+        ])
+
+    def test_parameters_are_added_to_function_template_with_description_disabled(self):
+        self.set_view_content('/**|\nfunction foo (bar, baz) {')
+        self.view.settings().set('jsdocs_function_description', False)
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            '/**',
+            ' * @param  |SELECTION_BEGIN|{[type]}|SELECTION_END| bar [description]',
+            ' * @param  {[type]} baz [description]',
+            ' * @return {[type]}     [description]',
+            ' */',
+            'function foo (bar, baz) {'
+        ])
+
+    def test_parameters_are_added_to_function_template_with_description_disabled_and_spacers_between_sections(self):
+        self.set_view_content('/**|\nfunction foo (bar, baz) {')
+        self.view.settings().set('jsdocs_function_description', False)
+        self.view.settings().set('jsdocs_spacer_between_sections', True)
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            '/**',
+            ' * @param  |SELECTION_BEGIN|{[type]}|SELECTION_END| bar [description]',
+            ' * @param  {[type]} baz [description]',
+            ' *',
+            ' * @return {[type]}     [description]',
+            ' */',
+            'function foo (bar, baz) {'
+        ])
+
+    def test_parameters_are_added_to_function_template_with_description_disabled_and_spacer_after_description_isset(self):
+        self.set_view_content('/**|\nfunction foo (bar, baz) {')
+        self.view.settings().set('jsdocs_function_description', False)
+        self.view.settings().set('jsdocs_spacer_between_sections', 'after_description')
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            '/**',
+            ' * @param  |SELECTION_BEGIN|{[type]}|SELECTION_END| bar [description]',
             ' * @param  {[type]} baz [description]',
             ' * @return {[type]}     [description]',
             ' */',
@@ -321,27 +372,67 @@ class TestPHP(ViewTestCase):
             "protected $test = [];"
         ])
 
+    def test_optional_function_description(self):
+        self.set_view_content("<?php\n/**|\nfunction fname($a) {}")
+        self.view.settings().set('jsdocs_function_description', False)
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            "<?php",
+            "/**",
+            " * @param  |SELECTION_BEGIN|[type]|SELECTION_END| $a [description]",
+            " * @return [type]    [description]",
+            " */",
+            "function fname($a) {}"
+        ])
+
+    def test_optional_function_description_with_spacers_between_sections(self):
+        self.set_view_content("<?php\n/**|\nfunction fname($a) {}")
+        self.view.settings().set('jsdocs_function_description', False)
+        self.view.settings().set('jsdocs_spacer_between_sections', True)
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            "<?php",
+            "/**",
+            " * @param  |SELECTION_BEGIN|[type]|SELECTION_END| $a [description]",
+            " *",
+            " * @return [type]    [description]",
+            " */",
+            "function fname($a) {}"
+        ])
+
+    def test_optional_function_description_with_spacer_after_description_set_to_true(self):
+        self.set_view_content("<?php\n/**|\nfunction fname($a) {}")
+        self.view.settings().set('jsdocs_function_description', False)
+        self.view.settings().set('jsdocs_spacer_between_sections', 'after_description')
+        self.run_doc_blockr()
+        self.assertDocBlockrResult([
+            "<?php",
+            "/**",
+            " * @param  |SELECTION_BEGIN|[type]|SELECTION_END| $a [description]",
+            " * @return [type]    [description]",
+            " */",
+            "function fname($a) {}"
+        ])
+
 class RunDocBlockrTests(sublime_plugin.WindowCommand):
 
     def run(self):
-        print('')
-        print('DocBlockr Tests')
-        print('---------------')
 
         self.window.run_command('show_panel', {'panel': 'console'})
 
-        # TODO should only use one test runner to run all tests
-
         print('')
-        print('DocBlockr Javascript Tests')
-        unittest.TextTestRunner(verbosity=1).run(
-            unittest.TestLoader().loadTestsFromTestCase(TestJavaScript)
-        )
+        print('DocBlockr Tests')
+        print('===============')
 
-        print('')
-        print('DocBlockr PHP Tests')
-        unittest.TextTestRunner(verbosity=1).run(
-            unittest.TestLoader().loadTestsFromTestCase(TestPHP)
-        )
+        suite = unittest.TestSuite()
+        test_loader = unittest.TestLoader()
+
+        # TODO move all test cases into tests directory and make test loader auto load testcases from the folder
+
+        suite.addTests(test_loader.loadTestsFromTestCase(TestJavaScript))
+        suite.addTests(test_loader.loadTestsFromTestCase(TestPHP))
+
+        # TODO toggle test verbosity
+        unittest.TextTestRunner(verbosity=1).run(suite)
 
         self.window.focus_group(self.window.active_group())
