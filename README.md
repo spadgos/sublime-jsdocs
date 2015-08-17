@@ -24,6 +24,8 @@ the pull request back to that branch.
 
 ## Changelog
 
+- **v2.14.1**, *17 Aug 2015*
+  - Fix deindentation bug with reparsing doc blocks
 - **v2.14.0**, *15 Jun 2015*
   - Adds `jsdocs_function_description` option (thanks to [Gerard Roche](https://github.com/gerardroche))
   - Better handling of parser errors (thanks to Gerard Roche)
@@ -41,14 +43,6 @@ the pull request back to that branch.
   - Adds options to disable:
     - opening an inline docblock with space (`jsdocs_quick_open_inline`)
     - inline comment decoration (`jsdocs_decorate`)
-- **v2.13.0**, *11 Dec 2014*
-  - ECMAScript 6 support! Including:
-    - Arrow functions
-    - Default parameter values
-    - Rest parameters
-    - Parameter destructuring
-    - Shorthand method initialization
-    - `@yield` for generator functions
 
 Older history can be found in [the history file][history].
 

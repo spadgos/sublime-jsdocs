@@ -1,5 +1,5 @@
 """
-DocBlockr v2.14.0
+DocBlockr v2.14.1
 by Nick Fisher, and all the great people listed in CONTRIBUTORS.md
 https://github.com/spadgos/sublime-jsdocs
 
@@ -138,7 +138,7 @@ def getDocBlockRegion(view, point):
     due to language files adding scopes inside the DocBlock (eg: to highlight tags)
     """
     start = end = point
-    while start > 0 and view.scope_name(start).find('comment.block') > -1:
+    while start > 0 and view.scope_name(start - 1).find('comment.block') > -1:
         start = start - 1
 
     while end < view.size() and view.scope_name(end).find('comment.block') > -1:

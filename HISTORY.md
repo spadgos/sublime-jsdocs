@@ -1,5 +1,7 @@
 # DocBlockr Extended Changelog
 
+- **v2.14.1**, *17 Aug 2015*
+  - Fix deindentation bug with reparsing doc blocks
 - **v2.14.0**, *15 Jun 2015*
   - Adds `jsdocs_function_description` option (thanks to [Gerard Roche](https://github.com/gerardroche))
   - Better handling of parser errors (thanks to Gerard Roche)
