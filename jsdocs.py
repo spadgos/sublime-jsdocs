@@ -772,13 +772,15 @@ class JsdocsPHP(JsdocsParser):
             + '(?P<name>' + self.settings['fnIdentifier'] + ')'
             # function fnName
             # (arg1, arg2)
-            + '\\s*\\(\\s*(?P<args>.*)\\)',
+            + '\\s*\\(\\s*(?P<args>.*)\\)'
+            # optional return type
+            + '(\\s*?:\\s*(?P<retval>' + self.settings['typeIdentifier'] + '))?',
             line
         )
         if not res:
             return None
 
-        return (res.group('name'), res.group('args'), None)
+        return (res.group('name'), res.group('args'), res.group('retval'))
 
     def getArgType(self, arg):
 
@@ -873,6 +875,10 @@ class JsdocsPHP(JsdocsParser):
                 return 'string'
             if name == '__isset':
                 return 'bool' if shortPrimitives else 'boolean'
+
+        if (retval):
+            return retval
+
         return JsdocsParser.getFunctionReturnType(self, name, retval)
 
 
