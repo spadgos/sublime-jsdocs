@@ -720,8 +720,11 @@ class JsdocsJavascript(JsdocsParser):
             yieldTag = '@yield' + ('s' if self.viewSettings.get('jsdocs_return_tag', '_')[-1] == 's' else '')
             description = ' ${1:[description]}' if self.viewSettings.get('jsdocs_return_description', True) else ''
             out.append({ 'tags': [
-                '%s {${1:[type]}}%s' % (yieldTag, description)
-            ]})
+                '%s {${1:[type]}}%s%s' % (
+                    yieldTag,
+                    ' ' if self.viewSettings.get('jsdocs_align_tags') == 'deep' and not self.viewSettings.get('jsdocs_per_section_indent') else '',
+                    description
+            )]})
         return out
 
     def guessTypeFromValue(self, val):
